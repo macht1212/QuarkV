@@ -1,0 +1,103 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "kvxdb"
+version = "0.1.0"
+description = "Lightweight in-memory key–value database with optional persistence and vector search."
+readme = "README.md"
+requires-python = ">=3.10"
+license = { text = "Apache-2.0" }
+authors = [{ name = "KVXDB Authors" }]
+maintainers = [{ name = "KVXDB Maintainers" }]
+keywords = ["database", "key-value", "kv", "in-memory", "vector-search", "embeddings"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "License :: OSI Approved :: Apache Software License",
+  "Operating System :: OS Independent",
+  "Topic :: Database",
+  "Topic :: Software Development :: Libraries",
+]
+dependencies = []
+
+[project.optional-dependencies]
+dev = [
+  "pre-commit>=3.7",
+  "ruff>=0.5",
+  "black>=24.3",
+  "mypy>=1.10",
+  "pytest>=8.2",
+  "pytest-cov>=5.0",
+]
+ai = [
+  # Choose an embedding backend if desired, e.g. sentence-transformers
+  "numpy>=1.26",
+]
+
+[project.urls]
+Homepage = "https://github.com/your-org/kvxdb"
+Repository = "https://github.com/your-org/kvxdb"
+Issues = "https://github.com/your-org/kvxdb/issues"
+Documentation = "https://github.com/your-org/kvxdb#readme"
+
+[project.scripts]
+kvxdb = "kvxdb.cli:main"
+
+[tool.setuptools]
+package-dir = {"" = "src"}
+include-package-data = true
+
+[tool.setuptools.packages.find]
+where = ["src"]
+include = ["kvxdb*"]
+exclude = ["tests*"]
+
+[tool.ruff]
+line-length = 100
+src = ["src", "tests"]
+target-version = "py310"
+select = ["E", "F", "I", "B", "UP"]
+ignore = [
+  "E203",  # whitespace before ':' (conflicts with black)
+]
+fix = true
+
+[tool.ruff.format]
+# Keep ruff-format consistent with Black styles
+quote-style = "preserve"
+
+[tool.black]
+line-length = 100
+target-version = ["py310"]
+
+[tool.mypy]
+python_version = "3.10"
+warn_unused_configs = true
+warn_return_any = true
+warn_unused_ignores = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+no_implicit_optional = true
+strict_equality = true
+pretty = true
+show_error_codes = true
+files = ["src"]
+
+[tool.pytest.ini_options]
+minversion = "8.0"
+addopts = "-q --maxfail=1 --disable-warnings"
+testpaths = ["tests"]
+pythonpath = ["src"]
+
+[tool.coverage.run]
+source = ["src/kvxdb"]
+branch = true
+
+[tool.coverage.report]
+show_missing = true
+skip_empty = true
