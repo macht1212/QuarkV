@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=68", "wheel"]
+requires = ["setuptools>=80", "wheel"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -15,9 +15,10 @@ keywords = ["database", "key-value", "kv", "in-memory", "vector-search", "embedd
 classifiers = [
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3 :: Only",
-  "Programming Language :: Python :: 3.10",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
   "License :: OSI Approved :: Apache Software License",
   "Operating System :: OS Independent",
   "Topic :: Database",
@@ -36,7 +37,7 @@ dev = [
 ]
 ai = [
   # Choose an embedding backend if desired, e.g. sentence-transformers
-  "numpy>=1.26",
+  "numpy>=2",
 ]
 
 [project.urls]
@@ -60,7 +61,7 @@ exclude = ["tests*"]
 [tool.ruff]
 line-length = 100
 src = ["src", "tests"]
-target-version = "py310"
+target-version = "py311"
 select = ["E", "F", "I", "B", "UP"]
 ignore = [
   "E203",  # whitespace before ':' (conflicts with black)
@@ -76,7 +77,7 @@ line-length = 100
 target-version = ["py310"]
 
 [tool.mypy]
-python_version = "3.10"
+python_version = "3.11"
 warn_unused_configs = true
 warn_return_any = true
 warn_unused_ignores = true
