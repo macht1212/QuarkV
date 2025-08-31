@@ -8,8 +8,8 @@ version = "0.1.0a0"
 description = "Lightweight in-memory key–value database with optional persistence and vector search."
 readme = "README.md"
 license = "Apache-2.0"
-authors = ["KVXDB Authors"]
-maintainers = ["KVXDB Maintainers"]
+authors = ["KVXDB Authors: Alexander Nazimov (@macht1212)"]
+maintainers = ["KVXDB Maintainers: Alexander Nazimov (@macht1212)"]
 keywords = ["database", "key-value", "kv", "in-memory", "vector-search", "embeddings"]
 classifiers = [
   "Programming Language :: Python :: 3",
@@ -43,10 +43,10 @@ setuptools = ">=80.9.0"
 numpy = ">=2"
 
 [tool.poetry.urls]
-Homepage = "https://github.com/your-org/kvxdb"
-Repository = "https://github.com/your-org/kvxdb"
-Issues = "https://github.com/your-org/kvxdb/issues"
-Documentation = "https://github.com/your-org/kvxdb#readme"
+Homepage = "https://github.com/macht1212/kvxdb"
+Repository = "https://github.com/macht1212/kvxdb"
+Issues = "https://github.com/your-org/macht1212/issues"
+Documentation = "https://github.com/macht1212/kvxdb#readme"
 
 [tool.poetry.scripts]
 kvxdb = "kvxdb.cli:main"
