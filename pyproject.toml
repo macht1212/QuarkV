@@ -1,16 +1,15 @@
 [build-system]
-requires = ["setuptools>=80", "wheel"]
-build-backend = "setuptools.build_meta"
+requires = ["poetry-core>=1.9.0"]
+build-backend = "poetry.core.masonry.api"
 
-[project]
+[tool.poetry]
 name = "kvxdb"
-version = "0.1.0"
+version = "0.1.0a0"
 description = "Lightweight in-memory key–value database with optional persistence and vector search."
 readme = "README.md"
-requires-python = ">=3.10"
-license = { text = "Apache-2.0" }
-authors = [{ name = "KVXDB Authors" }]
-maintainers = [{ name = "KVXDB Maintainers" }]
+license = "Apache-2.0"
+authors = ["KVXDB Authors"]
+maintainers = ["KVXDB Maintainers"]
 keywords = ["database", "key-value", "kv", "in-memory", "vector-search", "embeddings"]
 classifiers = [
   "Programming Language :: Python :: 3",
@@ -24,57 +23,52 @@ classifiers = [
   "Topic :: Database",
   "Topic :: Software Development :: Libraries",
 ]
-dependencies = []
-
-[project.optional-dependencies]
-dev = [
-  "pre-commit>=3.7",
-  "ruff>=0.5",
-  "black>=24.3",
-  "mypy>=1.10",
-  "pytest>=8.2",
-  "pytest-cov>=5.0",
-]
-ai = [
-  # Choose an embedding backend if desired, e.g. sentence-transformers
-  "numpy>=2",
+packages = [
+  { include = "kvxdb", from = "src" }
 ]
 
-[project.urls]
+[tool.poetry.dependencies]
+python = ">=3.11"
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = ">=3.7"
+ruff = ">=0.5"
+black = ">=24.3"
+mypy = ">=1.10"
+pytest = ">=8.2"
+pytest-cov = ">=5.0"
+
+[tool.poetry.group.ai.dependencies]
+numpy = ">=2"
+
+[tool.poetry.urls]
 Homepage = "https://github.com/your-org/kvxdb"
 Repository = "https://github.com/your-org/kvxdb"
 Issues = "https://github.com/your-org/kvxdb/issues"
 Documentation = "https://github.com/your-org/kvxdb#readme"
 
-[project.scripts]
+[tool.poetry.scripts]
 kvxdb = "kvxdb.cli:main"
 
-[tool.setuptools]
-package-dir = {"" = "src"}
-include-package-data = true
-
-[tool.setuptools.packages.find]
-where = ["src"]
-include = ["kvxdb*"]
-exclude = ["tests*"]
+[tool.poetry.build]
+script = "build.py"
 
 [tool.ruff]
-line-length = 100
+line-length = 120
 src = ["src", "tests"]
 target-version = "py311"
 select = ["E", "F", "I", "B", "UP"]
 ignore = [
-  "E203",  # whitespace before ':' (conflicts with black)
+  "E203",  # whitespace before ':' (конфликтует с black)
 ]
 fix = true
 
 [tool.ruff.format]
-# Keep ruff-format consistent with Black styles
 quote-style = "preserve"
 
 [tool.black]
-line-length = 100
-target-version = ["py310"]
+line-length = 120
+target-version = ["py311"]
 
 [tool.mypy]
 python_version = "3.11"
