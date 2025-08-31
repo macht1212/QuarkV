@@ -8,8 +8,8 @@ version = "0.1.0a0"
 description = "Lightweight in-memory key–value database with optional persistence and vector search."
 readme = "README.md"
 license = "Apache-2.0"
-authors = ["KVXDB Authors: Alexander Nazimov <>"]
-maintainers = ["KVXDB Maintainers: Alexander Nazimov <>"]
+authors = ["KVXDB Authors: Alexander Nazimov <datamlab.alex@gmail.com>"]
+maintainers = ["KVXDB Maintainers: Alexander Nazimov <datamlab.alex@gmail.com>"]
 keywords = ["database", "key-value", "kv", "in-memory", "vector-search", "embeddings"]
 classifiers = [
   "Programming Language :: Python :: 3",
