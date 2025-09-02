@@ -25,7 +25,14 @@ classifiers = [
 packages = [
   { include = "kvxdb", from = "src" }
 ]
-include = ["src/kvxdb/*.pyx", "src/kvxdb/*.pxd", "src/kvxdb/*.pxi"]
+include = [
+  { path = "src/kvxdb/**/*.so", format = "wheel" },
+  # keep your sources in sdist if you want:
+  { path = "src/kvxdb/**/*.pyx", format = "sdist" },
+  { path = "src/kvxdb/**/*.pxd", format = "sdist" },
+  { path = "src/kvxdb/**/*.pxi", format = "sdist" },
+]
+exclude = ["**/*.c", "**/*.cpp"] 
 
 [tool.poetry.dependencies]
 python = ">=3.11"
