@@ -11,10 +11,10 @@ from setuptools.command.build_ext import build_ext
 
 
 def build() -> None:
-    # ВАЖНО: имя расширения с префиксом src.kvxdb.core.*
+    # Описываем Cython-расширения
     extensions = [
         Extension(
-            "src.kvxdb.core.*",
+            "*",
             ["src/kvxdb/core/*.pyx"],
         )
     ]
@@ -25,33 +25,20 @@ def build() -> None:
         compiler_directives={"binding": True},
     )
 
-    # Сборка
+    # Запускаем build_ext программно
     dist = Distribution({"name": "kvxdb", "ext_modules": ext_modules})
     cmd = build_ext(dist)
     cmd.ensure_finalized()
     cmd.run()
 
-    # Копируем собранные *.so обратно под src/… (на случай, если build_lib отличается)
+    # Копируем собранные *.so обратно под src/, чтобы их увидел editable-режим
     for output in cmd.get_outputs():
         output_path = Path(output)
-        try:
-            rel = output_path.relative_to(cmd.build_lib)  # например: src/kvxdb/core/respParser.cpython-311-...so
-        except ValueError:
-            # если путь не под build_lib, формируем вручную
-            # берём хвост начиная со "src/..."
-            parts = output_path.parts
-            if "src" in parts:
-                idx = parts.index("src")
-                rel = Path(*parts[idx:])  # src/kvxdb/core/...
-            else:
-                # fallback: кладём в src/kvxdb/core/
-                rel = Path("src/kvxdb/core") / output_path.name
-
-        dest = Path("src") / rel.relative_to("src")
+        dest = Path("src") / output_path.relative_to(cmd.build_lib)
         dest.parent.mkdir(parents=True, exist_ok=True)
         shutil.copyfile(output_path, dest)
 
-        # гарантируем читаемость
+        # Делает файл читаемым
         st = os.stat(dest)
         os.chmod(dest, st.st_mode | ((st.st_mode & 0o444) >> 2))
 
