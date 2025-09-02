@@ -1,5 +1,5 @@
 [build-system]
-requires = ["poetry-core>=1.9.0", "setuptools>=80", "wheel>=0.41"]
+requires = ["poetry-core>=1.9.0", "setuptools>=80", "wheel", "Cython>=3.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
@@ -25,10 +25,12 @@ classifiers = [
 packages = [
   { include = "kvxdb", from = "src" }
 ]
+include = ["src/kvxdb/*.pyx", "src/kvxdb/*.pxd", "src/kvxdb/*.pxi"]
 
 [tool.poetry.dependencies]
 python = ">=3.11"
 setuptools = ">=80.9.0"
+cython = "^3.1.3"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = ">=3.7"
