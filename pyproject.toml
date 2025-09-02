@@ -27,7 +27,6 @@ packages = [
 ]
 include = [
   { path = "src/kvxdb/**/*.so", format = "wheel" },
-  # keep your sources in sdist if you want:
   { path = "src/kvxdb/**/*.pyx", format = "sdist" },
   { path = "src/kvxdb/**/*.pxd", format = "sdist" },
   { path = "src/kvxdb/**/*.pxi", format = "sdist" },
