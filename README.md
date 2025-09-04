@@ -1,17 +1,17 @@
-# KVXDB
+# QuarkV
 
-[![PyPI version](https://img.shields.io/pypi/v/kvxdb.svg)](https://pypi.org/project/kvxdb/)
-[![Python versions](https://img.shields.io/pypi/pyversions/kvxdb.svg)](https://pypi.org/project/kvxdb/)
+[![PyPI version](https://img.shields.io/pypi/v/quark.svg)](https://pypi.org/project/quarkv/)
+[![Python versions](https://img.shields.io/pypi/pyversions/quarkv.svg)](https://pypi.org/project/kvxdb/)
 [![Build](https://github.com/your-org/kvxdb/actions/workflows/ci.yml/badge.svg)](https://github.com/your-org/kvxdb/actions)
 [![License](https://img.shields.io/badge/license-Apache%202.0-blue.svg)](LICENSE)
-[![Coverage Status](https://coveralls.io/repos/github/your-org/kvxdb/badge.svg?branch=main)](https://coveralls.io/github/your-org/kvxdb?branch=main)
+[![Coverage Status](https://coveralls.io/repos/github/macht1212/quarkv/badge.svg?branch=main)](https://coveralls.io/github/macht1212/quarkv?branch=main)
 
 ---
 
-**KVXDB** is a lightweight, in-memory key–value database inspired by Redis.  
+**QuarkV** is a lightweight, in-memory key–value database inspired by Redis.  
 It runs in a separate process or thread, with optional persistence and a simple AI module for vector search and external embeddings integration.
 
-- ⚡ **C core** — minimal, portable, predictable.  
+- ⚡ **Cython core** — minimal, portable, predictable.  
 - 🐍 **Python bindings** — clean, modern developer experience.  
 - 💾 **Optional persistence** — snapshot storage to disk.  
 - 🔍 **Vector search** — simple similarity search over vectors.  
@@ -33,12 +33,12 @@ It runs in a separate process or thread, with optional persistence and a simple 
 
 ### Install
 ```bash
-pip install kvxdb
+pip install quarkv
 ```
 
 ### Example
 ```python
-import kvxdb
+import quarkv
 
 # Start database in background process
 db = kvxdb.start()
@@ -57,8 +57,8 @@ db.stop()
 
 ### Run with Docker
 ```bash
-docker build -t kvxdb .
-docker run -p 6379:6379 kvxdb
+docker build -t quarkv .
+docker run -p 7999:7999 quarkv
 ```
 
 ### Run with Docker Compose
@@ -94,7 +94,7 @@ black .
 ## Roadmap
 
 1. **Stage 1 — Minimal KV engine**
-   - C core: basic set/get/delete.
+   - Cython core: basic set/get/delete.
    - Python bindings.
    - Background process management.
 
@@ -113,4 +113,4 @@ black .
 ---
 
 ## License
-KVXDB is licensed under the [Apache License 2.0](LICENSE).
+QuarkV is licensed under the [Apache License 2.0](LICENSE).
