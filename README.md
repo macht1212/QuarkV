@@ -25,7 +25,7 @@ It runs in a separate process or thread, with optional persistence and a simple 
 - **Snapshot persistence** (opt-in).  
 - **Vector similarity search**.  
 - **Embeddings hook** for AI integration.  
-- Installable via **PyPI** (`pip install kvxdb`).  
+- Installable via **PyPI** (`pip install quarkv`).  
 
 ---
 
