@@ -99,9 +99,9 @@ jobs:
         run: |
           # Проверяем наличие pytest через модуль, чтобы не зависеть от консольного скрипта
           if poetry run python - <<'PY'
-import importlib.util, sys
-sys.exit(0 if importlib.util.find_spec("pytest") else 1)
-PY
+          import importlib.util, sys
+          sys.exit(0 if importlib.util.find_spec("pytest") else 1)
+          PY
           then
             poetry run python -m pytest -q
           else
