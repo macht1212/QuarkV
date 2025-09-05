@@ -3,7 +3,7 @@ requires = ["poetry-core>=1.9.0", "setuptools>=80", "wheel", "Cython>=3.0"]
 build-backend = "poetry.core.masonry.api"
 
 [tool.poetry]
-name = "kvxdb"
+name = "quarkv"
 version = "0.1.0a0"
 description = "Lightweight in-memory key–value database with optional persistence and vector search."
 readme = "README.md"
