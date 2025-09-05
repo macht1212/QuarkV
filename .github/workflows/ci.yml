@@ -35,13 +35,25 @@ jobs:
       - name: Install system build tools (for C/C++ extensions)
         run: |
           sudo apt-get update
-          sudo apt-get install -y --no-install-recommends build-essential
+          sudo apt-get install -y --no-install-recommends build-essential python3-dev
 
-      - name: Install pipx & Poetry
+      - name: Install pipx & Poetry (match lockfile)
         run: |
+          set -euo pipefail
           python -m pip install --upgrade pip pipx
           pipx ensurepath
-          pipx install "poetry==${POETRY_VERSION}"
+          if [[ -f poetry.lock ]]; then
+            LOCK_POETRY_VERSION=$(grep -m1 -Eo 'Poetry [0-9]+\.[0-9]+(\.[0-9]+)?' poetry.lock | awk '{print $2}' || true)
+          else
+            LOCK_POETRY_VERSION=""
+          fi
+          if [[ -n "${LOCK_POETRY_VERSION}" ]]; then
+            echo "Installing Poetry ${LOCK_POETRY_VERSION} to match poetry.lock"
+            pipx install "poetry==${LOCK_POETRY_VERSION}" || pipx install poetry
+          else
+            echo "poetry.lock doesn't declare a generator version; installing latest Poetry"
+            pipx install poetry
+          fi
           poetry --version
 
       - name: Cache .venv
@@ -70,7 +82,7 @@ jobs:
 
       - name: Install project (with dev deps)
         run: |
-          poetry install --no-interaction --all-extras
+          poetry install --no-interaction --all-extras --sync
 
       - name: Compile Cython extensions
         run: |
@@ -85,8 +97,13 @@ jobs:
         env:
           PYTHONPATH: ${{ github.workspace }}
         run: |
-          if poetry run python -c "import pytest" 2>/dev/null; then
-            poetry run pytest -q
+          # Проверяем наличие pytest через модуль, чтобы не зависеть от консольного скрипта
+          if poetry run python - <<'PY'
+import importlib.util, sys
+sys.exit(0 if importlib.util.find_spec("pytest") else 1)
+PY
+          then
+            poetry run python -m pytest -q
           else
             echo "pytest не найден среди зависимостей; пропускаем тесты."
           fi
@@ -116,18 +133,30 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Install pipx & Poetry
+      - name: Install pipx & Poetry (match lockfile)
         run: |
+          set -euo pipefail
           python -m pip install --upgrade pip pipx
           pipx ensurepath
-          pipx install "poetry==1.8.3"
+          if [[ -f poetry.lock ]]; then
+            LOCK_POETRY_VERSION=$(grep -m1 -Eo 'Poetry [0-9]+\.[0-9]+(\.[0-9]+)?' poetry.lock | awk '{print $2}' || true)
+          else
+            LOCK_POETRY_VERSION=""
+          fi
+          if [[ -n "${LOCK_POETRY_VERSION}" ]]; then
+            echo "Installing Poetry ${LOCK_POETRY_VERSION} to match poetry.lock"
+            pipx install "poetry==${LOCK_POETRY_VERSION}" || pipx install poetry
+          else
+            echo "poetry.lock doesn't declare a generator version; installing latest Poetry"
+            pipx install poetry
+          fi
           poetry --version
 
       - name: Install build deps
         run: |
           sudo apt-get update
-          sudo apt-get install -y --no-install-recommends build-essential
-          poetry install --no-interaction
+          sudo apt-get install -y --no-install-recommends build-essential python3-dev
+          poetry install --no-interaction --sync
 
       - name: Compile Cython extensions
         run: |
