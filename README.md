@@ -46,7 +46,7 @@ pip install quarkv
 import quarkv
 
 # Start database in background process
-db = kvxdb.start()
+db = quarkv.start()
 
 # Set & get values
 db.set("foo", "bar")
