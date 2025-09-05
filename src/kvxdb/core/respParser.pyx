@@ -1,5 +1,5 @@
 # cython: language_level=3, boundscheck=False, wraparound=False, cdivision=True
-# distutils: language = c++
+# distutils: language = c
 
 from __future__ import annotations
 import asyncio
