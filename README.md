@@ -7,6 +7,11 @@
 [![Coverage Status](https://coveralls.io/repos/github/macht1212/quarkv/badge.svg?branch=main)](https://coveralls.io/github/macht1212/quarkv?branch=main)
 
 ---
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="imgs/white.png" />
+  <source media="(prefers-color-scheme: light)" srcset="imgs/black.png" />
+  <img alt="Лого" src="imgs/black.png">
+</picture>
 
 **QuarkV** is a lightweight, in-memory key–value database inspired by Redis.  
 It runs in a separate process or thread, with optional persistence and a simple AI module for vector search and external embeddings integration.
