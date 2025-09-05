@@ -7,6 +7,11 @@
 [![Coverage Status](https://coveralls.io/repos/github/your-org/kvxdb/badge.svg?branch=main)](https://coveralls.io/github/your-org/kvxdb?branch=main)
 
 ---
+<picture>
+  <source media="(prefers-color-scheme: dark)" srcset="imgs/white.png" />
+  <source media="(prefers-color-scheme: light)" srcset="imgs/black.png" />
+  <img alt="Лого" src="imgs/black.png">
+</picture>
 
 **KVXDB** is a lightweight, in-memory key–value database inspired by Redis.  
 It runs in a separate process or thread, with optional persistence and a simple AI module for vector search and external embeddings integration.
