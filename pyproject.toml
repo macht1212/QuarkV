@@ -23,7 +23,7 @@ classifiers = [
   "Topic :: Software Development :: Libraries",
 ]
 packages = [
-  { include = "kvxdb", from = "src" }
+  { include = "quarkv", from = "src" }
 ]
 include = [
   { path = "src/kvxdb/**/*.so", format = "wheel" },
