@@ -50,19 +50,23 @@ async def _roundtrip():
 
     reader, writer = await asyncio.open_unix_connection(uds)
 
-    writer.write(rp.encode_command("PING")); await writer.drain()
+    writer.write(rp.encode_command("PING")) 
+    await writer.drain()
     got = await read_one(reader)
     assert got == b"+PONG\r\n"
 
-    writer.write(rp.encode_command("SET", "k", "41")); await writer.drain()
+    writer.write(rp.encode_command("SET", "k", "41"))
+    await writer.drain()
     got = await read_one(reader)
     assert got == b"+OK\r\n"
 
-    writer.write(rp.encode_command("INCR", "k")); await writer.drain()
+    writer.write(rp.encode_command("INCR", "k"))
+    await writer.drain()
     got = await read_one(reader)
     assert got == b":42\r\n"
 
-    writer.write(rp.encode_command("GET", "k")); await writer.drain()
+    writer.write(rp.encode_command("GET", "k"))
+    await writer.drain()
     got = await read_one(reader)
     assert got == b"$2\r\n42\r\n"
 

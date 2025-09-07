@@ -70,6 +70,7 @@ target-version = "py311"
 select = ["E", "F", "I", "B", "UP"]
 ignore = [
   "E203",  # whitespace before ':' (конфликтует с black)
+  "F403",
 ]
 fix = true
 
