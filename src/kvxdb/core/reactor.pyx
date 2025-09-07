@@ -367,7 +367,7 @@ cdef class Reactor:
 
     cdef void _process_requests(self, conn_t* c):
         """
-        По умолчанию: построчный протокол. 'PING\\n' -> 'PONG\\n'.
+        Построчный протокол. 'PING\\n' -> 'PONG\\n'.
         Если задан on_request_cb(memoryview), он должен вернуть:
           consumed:int, out:bytes|None, close:bool
         """
@@ -376,8 +376,11 @@ cdef class Reactor:
         cdef size_t pos
         cdef object mv
         cdef size_t cons
-        cdef unsigned char NL = 10  # '\n'
+        cdef unsigned char NL = 10   # '\n'
+        cdef unsigned char CR = 13   # '\r'
+        cdef size_t ln
 
+        # Кастомный callback — единым куском
         if self.on_request_cb is not None:
             mv = PyMemoryView_FromMemory(<char*>c.rbuf, <Py_ssize_t>c.rlen, PyBUF_READ)
             try:
@@ -392,20 +395,30 @@ cdef class Reactor:
                         c_memmove(c.rbuf, c.rbuf + cons, c.rlen - cons)
                     c.rlen -= cons
             if out:
-                self._queue_write(c, out, len(out))
+                # безопасно: мы копируем байты в свой wbuf
+                self._queue_write(c, <const char*>out, <size_t>len(out))
             if close_flag:
                 c.state = CONN_CLOSED
             return
 
-        # демо: ищем '\n' и отвечаем на PING
+        # Демонстрационный обработчик: несколько команд в одном буфере
         while i < c.rlen:
             if <unsigned char>c.rbuf[i] == NL:
                 pos = i
-                if (pos - start + 1) == 5 and c_memcmp(c.rbuf + start, b"PING", 4) == 0:
+                # длина содержимого строки без '\n' (и возможного '\r')
+                ln = pos - start
+                if ln > 0 and <unsigned char>c.rbuf[pos - 1] == CR:
+                    ln -= 1
+
+                if ln == 4 and c_memcmp(c.rbuf + start, b"PING", 4) == 0:
                     self._queue_write(c, b"PONG\n", 5)
+                # здесь можно добавить другие команды
+
+                # следующая строка начинается после '\n'
                 start = i + 1
             i += 1
 
+        # Компактируем хвост (частичная команда без '\n')
         if start > 0:
             with nogil:
                 if start < c.rlen:
