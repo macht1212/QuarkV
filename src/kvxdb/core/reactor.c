@@ -1531,7 +1531,7 @@ static const char* const __pyx_f[] = {
 /* "kvxdb/core/reactor.pyx":10
  * from libc.stdint  cimport uint64_t
  * from libc.stddef  cimport size_t
- * ctypedef long ssize_t   #   Linux/macOS             # <<<<<<<<<<<<<<
+ * ctypedef long ssize_t             # <<<<<<<<<<<<<<
  * 
  * # ---------------- errno ----------------
 */
@@ -1543,7 +1543,7 @@ typedef long __pyx_t_5kvxdb_4core_7reactor_ssize_t;
 struct __pyx_obj_5kvxdb_4core_7reactor_Reactor;
 struct __pyx_t_5kvxdb_4core_7reactor_conn_t;
 
-/* "kvxdb/core/reactor.pyx":101
+/* "kvxdb/core/reactor.pyx":99
  *     return <uint64_t>time(NULL) * 1000
  * 
  * cdef enum ConnState:             # <<<<<<<<<<<<<<
@@ -1555,7 +1555,7 @@ enum __pyx_t_5kvxdb_4core_7reactor_ConnState {
   __pyx_e_5kvxdb_4core_7reactor_CONN_CLOSED = 2
 };
 
-/* "kvxdb/core/reactor.pyx":105
+/* "kvxdb/core/reactor.pyx":103
  *     CONN_CLOSED = 2
  * 
  * cdef struct conn_t:             # <<<<<<<<<<<<<<
@@ -1577,7 +1577,7 @@ struct __pyx_t_5kvxdb_4core_7reactor_conn_t {
   struct __pyx_t_5kvxdb_4core_7reactor_conn_t *prev;
 };
 
-/* "kvxdb/core/reactor.pyx":119
+/* "kvxdb/core/reactor.pyx":117
  *     conn_t*    prev
  * 
  * cdef class Reactor:             # <<<<<<<<<<<<<<
@@ -1615,6 +1615,7 @@ struct __pyx_vtabstruct_5kvxdb_4core_7reactor_Reactor {
   void (*_handle_read)(struct __pyx_obj_5kvxdb_4core_7reactor_Reactor *, struct __pyx_t_5kvxdb_4core_7reactor_conn_t *);
   void (*_handle_write)(struct __pyx_obj_5kvxdb_4core_7reactor_Reactor *, struct __pyx_t_5kvxdb_4core_7reactor_conn_t *);
   void (*_queue_write)(struct __pyx_obj_5kvxdb_4core_7reactor_Reactor *, struct __pyx_t_5kvxdb_4core_7reactor_conn_t *, char const *, size_t);
+  int (*_is_PING)(struct __pyx_obj_5kvxdb_4core_7reactor_Reactor *, char *, size_t);
   void (*_process_requests)(struct __pyx_obj_5kvxdb_4core_7reactor_Reactor *, struct __pyx_t_5kvxdb_4core_7reactor_conn_t *);
   int (*_ensure_pfds_cap)(struct __pyx_obj_5kvxdb_4core_7reactor_Reactor *, int);
   PyObject *(*run)(struct __pyx_obj_5kvxdb_4core_7reactor_Reactor *, int __pyx_skip_dispatch);
@@ -1625,6 +1626,7 @@ static CYTHON_INLINE void __pyx_f_5kvxdb_4core_7reactor_7Reactor__list_del(struc
 static CYTHON_INLINE struct __pyx_t_5kvxdb_4core_7reactor_conn_t *__pyx_f_5kvxdb_4core_7reactor_7Reactor__mk_conn(struct __pyx_obj_5kvxdb_4core_7reactor_Reactor *, int);
 static CYTHON_INLINE void __pyx_f_5kvxdb_4core_7reactor_7Reactor__free_conn(struct __pyx_obj_5kvxdb_4core_7reactor_Reactor *, struct __pyx_t_5kvxdb_4core_7reactor_conn_t *);
 static CYTHON_INLINE int __pyx_f_5kvxdb_4core_7reactor_7Reactor__ensure_cap(struct __pyx_obj_5kvxdb_4core_7reactor_Reactor *, char **, size_t *, size_t, size_t);
+static CYTHON_INLINE int __pyx_f_5kvxdb_4core_7reactor_7Reactor__is_PING(struct __pyx_obj_5kvxdb_4core_7reactor_Reactor *, char *, size_t);
 /* #### Code section: utility_code_proto ### */
 
 /* --- Runtime support code (head) --- */
@@ -2367,6 +2369,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__accept_loop(struct __pyx_obj
 static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_read(struct __pyx_obj_5kvxdb_4core_7reactor_Reactor *__pyx_v_self, struct __pyx_t_5kvxdb_4core_7reactor_conn_t *__pyx_v_c); /* proto*/
 static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_write(CYTHON_UNUSED struct __pyx_obj_5kvxdb_4core_7reactor_Reactor *__pyx_v_self, struct __pyx_t_5kvxdb_4core_7reactor_conn_t *__pyx_v_c); /* proto*/
 static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__queue_write(struct __pyx_obj_5kvxdb_4core_7reactor_Reactor *__pyx_v_self, struct __pyx_t_5kvxdb_4core_7reactor_conn_t *__pyx_v_c, char const *__pyx_v_data, size_t __pyx_v_nbytes); /* proto*/
+static CYTHON_INLINE int __pyx_f_5kvxdb_4core_7reactor_7Reactor__is_PING(CYTHON_UNUSED struct __pyx_obj_5kvxdb_4core_7reactor_Reactor *__pyx_v_self, char *__pyx_v_buf, size_t __pyx_v_start); /* proto*/
 static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__process_requests(struct __pyx_obj_5kvxdb_4core_7reactor_Reactor *__pyx_v_self, struct __pyx_t_5kvxdb_4core_7reactor_conn_t *__pyx_v_c); /* proto*/
 static int __pyx_f_5kvxdb_4core_7reactor_7Reactor__ensure_pfds_cap(struct __pyx_obj_5kvxdb_4core_7reactor_Reactor *__pyx_v_self, int __pyx_v_need); /* proto*/
 static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kvxdb_4core_7reactor_Reactor *__pyx_v_self, int __pyx_skip_dispatch); /* proto*/
@@ -2451,7 +2454,7 @@ static const char __pyx_k_Reactor___reduce_cython[] = "Reactor.__reduce_cython__
 static const char __pyx_k_Reactor___setstate_cython[] = "Reactor.__setstate_cython__";
 static const char __pyx_k_src_kvxdb_core_reactor_pyx[] = "src/kvxdb/core/reactor.pyx";
 static const char __pyx_k_setsockopt_SO_REUSEADDR_failed[] = "setsockopt SO_REUSEADDR failed";
-static const char __pyx_k_A_V3b_a_Kq_a_t_AXS_t1_Q_ARvT_ARz[] = "\200A\330\010%\240V\2503\250b\260\n\270$\270a\360\020\000\t\r\210K\220q\330\010\t\330\014\022\220$\220a\330\020\031\230\024\230[\250\002\250!\330\025\026\330\024\027\220t\320\033,\250A\250X\260S\270\001\340\020\027\220t\2301\330\020\031\230\024\230Q\340\020\024\220A\220R\220v\230T\240\021\330\020\024\220A\220R\220z\240\027\250\001\330\020\024\220A\220R\220{\240!\330\020\026\220a\220u\230A\340\020\024\220D\230\001\330\020\024\220A\330\020\026\220b\230\003\2301\330\024\030\230\001\230\022\2306\240\021\240!\330\024\030\230\001\230\022\230:\240W\250A\330\024\027\220q\230\006\230b\240\001\240\021\330\030\034\230A\230R\230z\250\030\260\024\260Q\260b\270\010\300\002\300!\330\024\030\230\001\230\022\230;\240a\330\024\032\230!\2305\240\001\330\024\030\230\001\230\021\330\024\031\230\021\360\006\000\026\027\330\024\035\230T\240\021\240&\250\010\260\004\260A\330\020\023\2207\230\"\230A\330\024\027\220v\230S\240\001\330\030\031\330\024\032\230'\240\021\240'\250\021\340\020\023\2207\230\"\230A\330\024\027\220t\2301\230B\230i\240s\250'\260\022\2608\2702\270Q\330\030\034\230M\250\021\340\024\030\230\001\330\024\032\230\"\230B\230a\330\030\034\230F\240!\2401\330\030\033\2302\230S\240\001\330\034\037\230t\2401\240B\240i\250s\260(\270\"\270A\330 !\240\031\250!\340 #\2404\240q\250\002\250)\2602\260Q\330$(\250\r\260Q\260a\340 #\2401\240G\2503\250l\270&\300\004\300A\300R\300y\320PR\320R[\320[_\320_`\320`f\320fh\320hi\320ij\330$(\250\016\260a\260q\340\034\037\230q\240\007\240s\250!\330%&\330$(\250\n\260!\2601\330 $\240N\260!\330%&\330$(\250\013\2601\260A\330\030\035\230Q\340\020\023\2206\230\023\230C\230q\330\024$\240J\250d\260!\330\024\027\220t\230<\240w\250a\330\030\031\330\034 \240\013\2501\330\037 \360\010\000\r\022\220\024\220Q\330\014\022\220#\220S\230\001\330\020\025\220R\220q\330\020\024\220K\230q\240\001\330\020\025\220Q\330\014\020\220\010\230\001\330\014\017\210t\2206\230\023\230A\330\020\026\220a\220t\2308\2404\240x\250q\330\014\017\210t\2208\2303\230a\330\020\026\220a\220t""\230:\240T\250\032\2601\330\014\020\220\014\230A";
+static const char __pyx_k_A_V3b_a_Kq_a_t_AXS_t1_Q_ARvT_ARz[] = "\200A\330\010%\240V\2503\250b\260\n\270$\270a\360\020\000\t\r\210K\220q\330\010\t\330\014\022\220$\220a\330\020\031\230\024\230[\250\002\250!\330\025\026\330\024\027\220t\320\033,\250A\250X\260S\270\001\340\020\027\220t\2301\330\020\031\230\024\230Q\340\020\024\220A\220R\220v\230T\240\021\330\020\024\220A\220R\220z\240\027\250\001\330\020\024\220A\220R\220{\240!\330\020\026\220a\220u\230A\340\020\024\220D\230\001\330\020\024\220A\330\020\026\220b\230\003\2301\330\024\030\230\001\230\022\2306\240\021\240!\330\024\030\230\001\230\022\230:\240W\250A\330\024\027\220q\230\006\230b\240\001\240\021\330\030\034\230A\230R\230z\250\030\260\024\260Q\260b\270\010\300\002\300!\330\024\030\230\001\230\022\230;\240a\330\024\032\230!\2305\240\001\330\024\030\230\001\230\021\330\024\031\230\021\340\025\026\330\024\035\230T\240\021\240&\250\010\260\004\260A\330\020\023\2207\230\"\230A\330\024\027\220v\230S\240\001\330\030\031\330\024\032\230'\240\021\240'\250\021\340\020\023\2207\230\"\230A\330\024\027\220t\2301\230B\230i\240s\250'\260\022\2608\2702\270Q\330\030\034\230M\250\021\340\024\030\230\001\330\024\032\230\"\230B\230a\330\030\034\230F\240!\2401\330\030\033\2302\230S\240\001\330\034\037\230t\2401\240B\240i\250s\260(\270\"\270A\330 !\240\031\250!\340 #\2404\240q\250\002\250)\2602\260Q\330$(\250\r\260Q\260a\340 #\2401\240G\2503\250l\270&\300\004\300A\300R\300y\320PR\320R[\320[_\320_`\320`f\320fh\320hi\320ij\330$(\250\016\260a\260q\340\034\037\230q\240\007\240s\250!\330%&\330$(\250\n\260!\2601\330 $\240N\260!\330%&\330$(\250\013\2601\260A\330\030\035\230Q\340\020\023\2206\230\023\230C\230q\330\024$\240J\250d\260!\330\024\027\220t\230<\240w\250a\330\030\031\330\034 \240\013\2501\330\037 \360\010\000\r\022\220\024\220Q\330\014\022\220#\220S\230\001\330\020\025\220R\220q\330\020\024\220K\230q\240\001\330\020\025\220Q\330\014\020\220\010\230\001\330\014\017\210t\2206\230\023\230A\330\020\026\220a\220t\2308\2404\240x\250q\330\014\017\210t\2208\2303\230a\330\020\026\220a\220t\230:\240T""\250\032\2601\330\014\020\220\014\230A";
 static const char __pyx_k_Note_that_Cython_is_deliberately[] = "Note that Cython is deliberately stricter than PEP-484 and rejects subclasses of builtin types. If you need to pass subclasses then set the 'annotation_typing' directive to False.";
 static const char __pyx_k_no_default___reduce___due_to_non[] = "no default __reduce__ due to non-trivial __cinit__";
 /* #### Code section: decls ### */
@@ -2656,20 +2659,20 @@ static CYTHON_SMALL_CODE int __pyx_m_traverse(PyObject *m, visitproc visit, void
 #endif
 /* #### Code section: module_code ### */
 
-/* "kvxdb/core/reactor.pyx":97
+/* "kvxdb/core/reactor.pyx":96
  * 
  * # -------------- helpers ----------------
  * cdef inline uint64_t now_ms() noexcept nogil:             # <<<<<<<<<<<<<<
- *     #
  *     return <uint64_t>time(NULL) * 1000
+ * 
 */
 
 static CYTHON_INLINE uint64_t __pyx_f_5kvxdb_4core_7reactor_now_ms(void) {
   uint64_t __pyx_r;
 
-  /* "kvxdb/core/reactor.pyx":99
+  /* "kvxdb/core/reactor.pyx":97
+ * # -------------- helpers ----------------
  * cdef inline uint64_t now_ms() noexcept nogil:
- *     #
  *     return <uint64_t>time(NULL) * 1000             # <<<<<<<<<<<<<<
  * 
  * cdef enum ConnState:
@@ -2677,12 +2680,12 @@ static CYTHON_INLINE uint64_t __pyx_f_5kvxdb_4core_7reactor_now_ms(void) {
   __pyx_r = (((uint64_t)time(NULL)) * 0x3E8);
   goto __pyx_L0;
 
-  /* "kvxdb/core/reactor.pyx":97
+  /* "kvxdb/core/reactor.pyx":96
  * 
  * # -------------- helpers ----------------
  * cdef inline uint64_t now_ms() noexcept nogil:             # <<<<<<<<<<<<<<
- *     #
  *     return <uint64_t>time(NULL) * 1000
+ * 
 */
 
   /* function exit code */
@@ -2690,7 +2693,7 @@ static CYTHON_INLINE uint64_t __pyx_f_5kvxdb_4core_7reactor_now_ms(void) {
   return __pyx_r;
 }
 
-/* "kvxdb/core/reactor.pyx":135
+/* "kvxdb/core/reactor.pyx":133
  *         int      pfds_cap
  * 
  *     def __cinit__(self, int port,             # <<<<<<<<<<<<<<
@@ -2727,48 +2730,48 @@ static int __pyx_pw_5kvxdb_4core_7reactor_7Reactor_1__cinit__(PyObject *__pyx_v_
   {
     PyObject ** const __pyx_pyargnames[] = {&__pyx_mstate_global->__pyx_n_u_port,&__pyx_mstate_global->__pyx_n_u_tick_ms,&__pyx_mstate_global->__pyx_n_u_max_conns,&__pyx_mstate_global->__pyx_n_u_max_bulk,&__pyx_mstate_global->__pyx_n_u_on_request_cb,&__pyx_mstate_global->__pyx_n_u_on_tick_cb,&__pyx_mstate_global->__pyx_n_u_backlog,&__pyx_mstate_global->__pyx_n_u_host,0};
     const Py_ssize_t __pyx_kwds_len = (__pyx_kwds) ? __Pyx_NumKwargs_VARARGS(__pyx_kwds) : 0;
-    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 135, __pyx_L3_error)
+    if (unlikely(__pyx_kwds_len) < 0) __PYX_ERR(0, 133, __pyx_L3_error)
     if (__pyx_kwds_len > 0) {
       switch (__pyx_nargs) {
         case  8:
         values[7] = __Pyx_ArgRef_VARARGS(__pyx_args, 7);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[7])) __PYX_ERR(0, 135, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[7])) __PYX_ERR(0, 133, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  7:
         values[6] = __Pyx_ArgRef_VARARGS(__pyx_args, 6);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[6])) __PYX_ERR(0, 135, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[6])) __PYX_ERR(0, 133, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  6:
         values[5] = __Pyx_ArgRef_VARARGS(__pyx_args, 5);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 135, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 133, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  5:
         values[4] = __Pyx_ArgRef_VARARGS(__pyx_args, 4);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 135, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 133, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  4:
         values[3] = __Pyx_ArgRef_VARARGS(__pyx_args, 3);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 135, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 133, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  3:
         values[2] = __Pyx_ArgRef_VARARGS(__pyx_args, 2);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 135, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 133, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  2:
         values[1] = __Pyx_ArgRef_VARARGS(__pyx_args, 1);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 135, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 133, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  1:
         values[0] = __Pyx_ArgRef_VARARGS(__pyx_args, 0);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 135, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 133, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  0: break;
         default: goto __pyx_L5_argtuple_error;
       }
       const Py_ssize_t kwd_pos_args = __pyx_nargs;
-      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "__cinit__", 0) < 0) __PYX_ERR(0, 135, __pyx_L3_error)
+      if (__Pyx_ParseKeywords(__pyx_kwds, __pyx_kwvalues, __pyx_pyargnames, 0, values, kwd_pos_args, __pyx_kwds_len, "__cinit__", 0) < 0) __PYX_ERR(0, 133, __pyx_L3_error)
 
-      /* "kvxdb/core/reactor.pyx":139
+      /* "kvxdb/core/reactor.pyx":137
  *                   int max_conns=4096,
  *                   size_t max_bulk=32*1024*1024,
  *                   object on_request_cb=None,             # <<<<<<<<<<<<<<
@@ -2777,7 +2780,7 @@ static int __pyx_pw_5kvxdb_4core_7reactor_7Reactor_1__cinit__(PyObject *__pyx_v_
 */
       if (!values[4]) values[4] = __Pyx_NewRef(((PyObject *)Py_None));
 
-      /* "kvxdb/core/reactor.pyx":140
+      /* "kvxdb/core/reactor.pyx":138
  *                   size_t max_bulk=32*1024*1024,
  *                   object on_request_cb=None,
  *                   object on_tick_cb=None,             # <<<<<<<<<<<<<<
@@ -2787,46 +2790,46 @@ static int __pyx_pw_5kvxdb_4core_7reactor_7Reactor_1__cinit__(PyObject *__pyx_v_
       if (!values[5]) values[5] = __Pyx_NewRef(((PyObject *)Py_None));
       if (!values[7]) values[7] = __Pyx_NewRef(((PyObject*)__pyx_mstate_global->__pyx_kp_b_0_0_0_0));
       for (Py_ssize_t i = __pyx_nargs; i < 1; i++) {
-        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("__cinit__", 0, 1, 8, i); __PYX_ERR(0, 135, __pyx_L3_error) }
+        if (unlikely(!values[i])) { __Pyx_RaiseArgtupleInvalid("__cinit__", 0, 1, 8, i); __PYX_ERR(0, 133, __pyx_L3_error) }
       }
     } else {
       switch (__pyx_nargs) {
         case  8:
         values[7] = __Pyx_ArgRef_VARARGS(__pyx_args, 7);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[7])) __PYX_ERR(0, 135, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[7])) __PYX_ERR(0, 133, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  7:
         values[6] = __Pyx_ArgRef_VARARGS(__pyx_args, 6);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[6])) __PYX_ERR(0, 135, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[6])) __PYX_ERR(0, 133, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  6:
         values[5] = __Pyx_ArgRef_VARARGS(__pyx_args, 5);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 135, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[5])) __PYX_ERR(0, 133, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  5:
         values[4] = __Pyx_ArgRef_VARARGS(__pyx_args, 4);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 135, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[4])) __PYX_ERR(0, 133, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  4:
         values[3] = __Pyx_ArgRef_VARARGS(__pyx_args, 3);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 135, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[3])) __PYX_ERR(0, 133, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  3:
         values[2] = __Pyx_ArgRef_VARARGS(__pyx_args, 2);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 135, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[2])) __PYX_ERR(0, 133, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  2:
         values[1] = __Pyx_ArgRef_VARARGS(__pyx_args, 1);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 135, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[1])) __PYX_ERR(0, 133, __pyx_L3_error)
         CYTHON_FALLTHROUGH;
         case  1:
         values[0] = __Pyx_ArgRef_VARARGS(__pyx_args, 0);
-        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 135, __pyx_L3_error)
+        if (!CYTHON_ASSUME_SAFE_MACROS && unlikely(!values[0])) __PYX_ERR(0, 133, __pyx_L3_error)
         break;
         default: goto __pyx_L5_argtuple_error;
       }
 
-      /* "kvxdb/core/reactor.pyx":139
+      /* "kvxdb/core/reactor.pyx":137
  *                   int max_conns=4096,
  *                   size_t max_bulk=32*1024*1024,
  *                   object on_request_cb=None,             # <<<<<<<<<<<<<<
@@ -2835,7 +2838,7 @@ static int __pyx_pw_5kvxdb_4core_7reactor_7Reactor_1__cinit__(PyObject *__pyx_v_
 */
       if (!values[4]) values[4] = __Pyx_NewRef(((PyObject *)Py_None));
 
-      /* "kvxdb/core/reactor.pyx":140
+      /* "kvxdb/core/reactor.pyx":138
  *                   size_t max_bulk=32*1024*1024,
  *                   object on_request_cb=None,
  *                   object on_tick_cb=None,             # <<<<<<<<<<<<<<
@@ -2845,26 +2848,26 @@ static int __pyx_pw_5kvxdb_4core_7reactor_7Reactor_1__cinit__(PyObject *__pyx_v_
       if (!values[5]) values[5] = __Pyx_NewRef(((PyObject *)Py_None));
       if (!values[7]) values[7] = __Pyx_NewRef(((PyObject*)__pyx_mstate_global->__pyx_kp_b_0_0_0_0));
     }
-    __pyx_v_port = __Pyx_PyLong_As_int(values[0]); if (unlikely((__pyx_v_port == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 135, __pyx_L3_error)
+    __pyx_v_port = __Pyx_PyLong_As_int(values[0]); if (unlikely((__pyx_v_port == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 133, __pyx_L3_error)
     if (values[1]) {
-      __pyx_v_tick_ms = __Pyx_PyLong_As_int(values[1]); if (unlikely((__pyx_v_tick_ms == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 136, __pyx_L3_error)
+      __pyx_v_tick_ms = __Pyx_PyLong_As_int(values[1]); if (unlikely((__pyx_v_tick_ms == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 134, __pyx_L3_error)
     } else {
       __pyx_v_tick_ms = ((int)20);
     }
     if (values[2]) {
-      __pyx_v_max_conns = __Pyx_PyLong_As_int(values[2]); if (unlikely((__pyx_v_max_conns == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 137, __pyx_L3_error)
+      __pyx_v_max_conns = __Pyx_PyLong_As_int(values[2]); if (unlikely((__pyx_v_max_conns == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 135, __pyx_L3_error)
     } else {
       __pyx_v_max_conns = ((int)0x1000);
     }
     if (values[3]) {
-      __pyx_v_max_bulk = __Pyx_PyLong_As_size_t(values[3]); if (unlikely((__pyx_v_max_bulk == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 138, __pyx_L3_error)
+      __pyx_v_max_bulk = __Pyx_PyLong_As_size_t(values[3]); if (unlikely((__pyx_v_max_bulk == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 136, __pyx_L3_error)
     } else {
       __pyx_v_max_bulk = ((size_t)0x2000000);
     }
     __pyx_v_on_request_cb = values[4];
     __pyx_v_on_tick_cb = values[5];
     if (values[6]) {
-      __pyx_v_backlog = __Pyx_PyLong_As_int(values[6]); if (unlikely((__pyx_v_backlog == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 141, __pyx_L3_error)
+      __pyx_v_backlog = __Pyx_PyLong_As_int(values[6]); if (unlikely((__pyx_v_backlog == (int)-1) && PyErr_Occurred())) __PYX_ERR(0, 139, __pyx_L3_error)
     } else {
       __pyx_v_backlog = ((int)0x400);
     }
@@ -2872,7 +2875,7 @@ static int __pyx_pw_5kvxdb_4core_7reactor_7Reactor_1__cinit__(PyObject *__pyx_v_
   }
   goto __pyx_L6_skip;
   __pyx_L5_argtuple_error:;
-  __Pyx_RaiseArgtupleInvalid("__cinit__", 0, 1, 8, __pyx_nargs); __PYX_ERR(0, 135, __pyx_L3_error)
+  __Pyx_RaiseArgtupleInvalid("__cinit__", 0, 1, 8, __pyx_nargs); __PYX_ERR(0, 133, __pyx_L3_error)
   __pyx_L6_skip:;
   goto __pyx_L4_argument_unpacking_done;
   __pyx_L3_error:;
@@ -2883,10 +2886,10 @@ static int __pyx_pw_5kvxdb_4core_7reactor_7Reactor_1__cinit__(PyObject *__pyx_v_
   __Pyx_RefNannyFinishContext();
   return -1;
   __pyx_L4_argument_unpacking_done:;
-  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_host), (&PyBytes_Type), 1, "host", 1))) __PYX_ERR(0, 142, __pyx_L1_error)
+  if (unlikely(!__Pyx_ArgTypeTest(((PyObject *)__pyx_v_host), (&PyBytes_Type), 1, "host", 1))) __PYX_ERR(0, 140, __pyx_L1_error)
   __pyx_r = __pyx_pf_5kvxdb_4core_7reactor_7Reactor___cinit__(((struct __pyx_obj_5kvxdb_4core_7reactor_Reactor *)__pyx_v_self), __pyx_v_port, __pyx_v_tick_ms, __pyx_v_max_conns, __pyx_v_max_bulk, __pyx_v_on_request_cb, __pyx_v_on_tick_cb, __pyx_v_backlog, __pyx_v_host);
 
-  /* "kvxdb/core/reactor.pyx":135
+  /* "kvxdb/core/reactor.pyx":133
  *         int      pfds_cap
  * 
  *     def __cinit__(self, int port,             # <<<<<<<<<<<<<<
@@ -2931,7 +2934,7 @@ static int __pyx_pf_5kvxdb_4core_7reactor_7Reactor___cinit__(struct __pyx_obj_5k
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__cinit__", 0);
 
-  /* "kvxdb/core/reactor.pyx":143
+  /* "kvxdb/core/reactor.pyx":141
  *                   int backlog=1024,
  *                   bytes host=b"0.0.0.0"):
  *         self.lfd = -1             # <<<<<<<<<<<<<<
@@ -2940,7 +2943,7 @@ static int __pyx_pf_5kvxdb_4core_7reactor_7Reactor___cinit__(struct __pyx_obj_5k
 */
   __pyx_v_self->lfd = -1;
 
-  /* "kvxdb/core/reactor.pyx":144
+  /* "kvxdb/core/reactor.pyx":142
  *                   bytes host=b"0.0.0.0"):
  *         self.lfd = -1
  *         self.head = NULL             # <<<<<<<<<<<<<<
@@ -2949,7 +2952,7 @@ static int __pyx_pf_5kvxdb_4core_7reactor_7Reactor___cinit__(struct __pyx_obj_5k
 */
   __pyx_v_self->head = NULL;
 
-  /* "kvxdb/core/reactor.pyx":145
+  /* "kvxdb/core/reactor.pyx":143
  *         self.lfd = -1
  *         self.head = NULL
  *         self.cur_conns = 0             # <<<<<<<<<<<<<<
@@ -2958,7 +2961,7 @@ static int __pyx_pf_5kvxdb_4core_7reactor_7Reactor___cinit__(struct __pyx_obj_5k
 */
   __pyx_v_self->cur_conns = 0;
 
-  /* "kvxdb/core/reactor.pyx":146
+  /* "kvxdb/core/reactor.pyx":144
  *         self.head = NULL
  *         self.cur_conns = 0
  *         self.max_conns = max_conns             # <<<<<<<<<<<<<<
@@ -2967,7 +2970,7 @@ static int __pyx_pf_5kvxdb_4core_7reactor_7Reactor___cinit__(struct __pyx_obj_5k
 */
   __pyx_v_self->max_conns = __pyx_v_max_conns;
 
-  /* "kvxdb/core/reactor.pyx":147
+  /* "kvxdb/core/reactor.pyx":145
  *         self.cur_conns = 0
  *         self.max_conns = max_conns
  *         self.max_bulk = max_bulk             # <<<<<<<<<<<<<<
@@ -2976,7 +2979,7 @@ static int __pyx_pf_5kvxdb_4core_7reactor_7Reactor___cinit__(struct __pyx_obj_5k
 */
   __pyx_v_self->max_bulk = __pyx_v_max_bulk;
 
-  /* "kvxdb/core/reactor.pyx":148
+  /* "kvxdb/core/reactor.pyx":146
  *         self.max_conns = max_conns
  *         self.max_bulk = max_bulk
  *         self.tick_ms = tick_ms if tick_ms >= 10 else 10             # <<<<<<<<<<<<<<
@@ -2991,7 +2994,7 @@ static int __pyx_pf_5kvxdb_4core_7reactor_7Reactor___cinit__(struct __pyx_obj_5k
   }
   __pyx_v_self->tick_ms = __pyx_t_1;
 
-  /* "kvxdb/core/reactor.pyx":149
+  /* "kvxdb/core/reactor.pyx":147
  *         self.max_bulk = max_bulk
  *         self.tick_ms = tick_ms if tick_ms >= 10 else 10
  *         self.on_request_cb = on_request_cb             # <<<<<<<<<<<<<<
@@ -3004,7 +3007,7 @@ static int __pyx_pf_5kvxdb_4core_7reactor_7Reactor___cinit__(struct __pyx_obj_5k
   __Pyx_DECREF(__pyx_v_self->on_request_cb);
   __pyx_v_self->on_request_cb = __pyx_v_on_request_cb;
 
-  /* "kvxdb/core/reactor.pyx":150
+  /* "kvxdb/core/reactor.pyx":148
  *         self.tick_ms = tick_ms if tick_ms >= 10 else 10
  *         self.on_request_cb = on_request_cb
  *         self.on_tick_cb = on_tick_cb             # <<<<<<<<<<<<<<
@@ -3017,7 +3020,7 @@ static int __pyx_pf_5kvxdb_4core_7reactor_7Reactor___cinit__(struct __pyx_obj_5k
   __Pyx_DECREF(__pyx_v_self->on_tick_cb);
   __pyx_v_self->on_tick_cb = __pyx_v_on_tick_cb;
 
-  /* "kvxdb/core/reactor.pyx":151
+  /* "kvxdb/core/reactor.pyx":149
  *         self.on_request_cb = on_request_cb
  *         self.on_tick_cb = on_tick_cb
  *         self.backlog = backlog             # <<<<<<<<<<<<<<
@@ -3026,7 +3029,7 @@ static int __pyx_pf_5kvxdb_4core_7reactor_7Reactor___cinit__(struct __pyx_obj_5k
 */
   __pyx_v_self->backlog = __pyx_v_backlog;
 
-  /* "kvxdb/core/reactor.pyx":152
+  /* "kvxdb/core/reactor.pyx":150
  *         self.on_tick_cb = on_tick_cb
  *         self.backlog = backlog
  *         self.running = 0             # <<<<<<<<<<<<<<
@@ -3035,7 +3038,7 @@ static int __pyx_pf_5kvxdb_4core_7reactor_7Reactor___cinit__(struct __pyx_obj_5k
 */
   __pyx_v_self->running = 0;
 
-  /* "kvxdb/core/reactor.pyx":153
+  /* "kvxdb/core/reactor.pyx":151
  *         self.backlog = backlog
  *         self.running = 0
  *         self.pfds = NULL             # <<<<<<<<<<<<<<
@@ -3044,7 +3047,7 @@ static int __pyx_pf_5kvxdb_4core_7reactor_7Reactor___cinit__(struct __pyx_obj_5k
 */
   __pyx_v_self->pfds = NULL;
 
-  /* "kvxdb/core/reactor.pyx":154
+  /* "kvxdb/core/reactor.pyx":152
  *         self.running = 0
  *         self.pfds = NULL
  *         self.pconns = NULL             # <<<<<<<<<<<<<<
@@ -3053,7 +3056,7 @@ static int __pyx_pf_5kvxdb_4core_7reactor_7Reactor___cinit__(struct __pyx_obj_5k
 */
   __pyx_v_self->pconns = NULL;
 
-  /* "kvxdb/core/reactor.pyx":155
+  /* "kvxdb/core/reactor.pyx":153
  *         self.pfds = NULL
  *         self.pconns = NULL
  *         self.pfds_cap = 0             # <<<<<<<<<<<<<<
@@ -3062,7 +3065,7 @@ static int __pyx_pf_5kvxdb_4core_7reactor_7Reactor___cinit__(struct __pyx_obj_5k
 */
   __pyx_v_self->pfds_cap = 0;
 
-  /* "kvxdb/core/reactor.pyx":157
+  /* "kvxdb/core/reactor.pyx":155
  *         self.pfds_cap = 0
  * 
  *         cdef int yes = 1             # <<<<<<<<<<<<<<
@@ -3071,17 +3074,17 @@ static int __pyx_pf_5kvxdb_4core_7reactor_7Reactor___cinit__(struct __pyx_obj_5k
 */
   __pyx_v_yes = 1;
 
-  /* "kvxdb/core/reactor.pyx":161
+  /* "kvxdb/core/reactor.pyx":158
+ *         cdef sockaddr_in addr
  * 
- *         # socket()
  *         self.lfd = socket(AF_INET, SOCK_STREAM, 0)             # <<<<<<<<<<<<<<
  *         if self.lfd < 0:
  *             raise OSError(errno, "socket failed")
 */
   __pyx_v_self->lfd = socket(AF_INET, SOCK_STREAM, 0);
 
-  /* "kvxdb/core/reactor.pyx":162
- *         # socket()
+  /* "kvxdb/core/reactor.pyx":159
+ * 
  *         self.lfd = socket(AF_INET, SOCK_STREAM, 0)
  *         if self.lfd < 0:             # <<<<<<<<<<<<<<
  *             raise OSError(errno, "socket failed")
@@ -3090,17 +3093,17 @@ static int __pyx_pf_5kvxdb_4core_7reactor_7Reactor___cinit__(struct __pyx_obj_5k
   __pyx_t_2 = (__pyx_v_self->lfd < 0);
   if (unlikely(__pyx_t_2)) {
 
-    /* "kvxdb/core/reactor.pyx":163
+    /* "kvxdb/core/reactor.pyx":160
  *         self.lfd = socket(AF_INET, SOCK_STREAM, 0)
  *         if self.lfd < 0:
  *             raise OSError(errno, "socket failed")             # <<<<<<<<<<<<<<
  * 
- *         # CLOEXEC + NONBLOCK
+ *         cdef int flags = fcntl(self.lfd, F_GETFD)
 */
     __pyx_t_4 = NULL;
     __Pyx_INCREF(__pyx_builtin_OSError);
     __pyx_t_5 = __pyx_builtin_OSError; 
-    __pyx_t_6 = __Pyx_PyLong_From_int(errno); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 163, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyLong_From_int(errno); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 160, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __pyx_t_7 = 1;
     {
@@ -3109,15 +3112,15 @@ static int __pyx_pf_5kvxdb_4core_7reactor_7Reactor___cinit__(struct __pyx_obj_5k
       __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-      if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 163, __pyx_L1_error)
+      if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 160, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
     }
     __Pyx_Raise(__pyx_t_3, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __PYX_ERR(0, 163, __pyx_L1_error)
+    __PYX_ERR(0, 160, __pyx_L1_error)
 
-    /* "kvxdb/core/reactor.pyx":162
- *         # socket()
+    /* "kvxdb/core/reactor.pyx":159
+ * 
  *         self.lfd = socket(AF_INET, SOCK_STREAM, 0)
  *         if self.lfd < 0:             # <<<<<<<<<<<<<<
  *             raise OSError(errno, "socket failed")
@@ -3125,17 +3128,17 @@ static int __pyx_pf_5kvxdb_4core_7reactor_7Reactor___cinit__(struct __pyx_obj_5k
 */
   }
 
-  /* "kvxdb/core/reactor.pyx":166
+  /* "kvxdb/core/reactor.pyx":162
+ *             raise OSError(errno, "socket failed")
  * 
- *         # CLOEXEC + NONBLOCK
  *         cdef int flags = fcntl(self.lfd, F_GETFD)             # <<<<<<<<<<<<<<
  *         fcntl(self.lfd, F_SETFD, flags | FD_CLOEXEC)
  *         flags = fcntl(self.lfd, F_GETFL)
 */
   __pyx_v_flags = fcntl(__pyx_v_self->lfd, F_GETFD);
 
-  /* "kvxdb/core/reactor.pyx":167
- *         # CLOEXEC + NONBLOCK
+  /* "kvxdb/core/reactor.pyx":163
+ * 
  *         cdef int flags = fcntl(self.lfd, F_GETFD)
  *         fcntl(self.lfd, F_SETFD, flags | FD_CLOEXEC)             # <<<<<<<<<<<<<<
  *         flags = fcntl(self.lfd, F_GETFL)
@@ -3143,7 +3146,7 @@ static int __pyx_pf_5kvxdb_4core_7reactor_7Reactor___cinit__(struct __pyx_obj_5k
 */
   (void)(fcntl(__pyx_v_self->lfd, F_SETFD, (__pyx_v_flags | FD_CLOEXEC)));
 
-  /* "kvxdb/core/reactor.pyx":168
+  /* "kvxdb/core/reactor.pyx":164
  *         cdef int flags = fcntl(self.lfd, F_GETFD)
  *         fcntl(self.lfd, F_SETFD, flags | FD_CLOEXEC)
  *         flags = fcntl(self.lfd, F_GETFL)             # <<<<<<<<<<<<<<
@@ -3152,18 +3155,18 @@ static int __pyx_pf_5kvxdb_4core_7reactor_7Reactor___cinit__(struct __pyx_obj_5k
 */
   __pyx_v_flags = fcntl(__pyx_v_self->lfd, F_GETFL);
 
-  /* "kvxdb/core/reactor.pyx":169
+  /* "kvxdb/core/reactor.pyx":165
  *         fcntl(self.lfd, F_SETFD, flags | FD_CLOEXEC)
  *         flags = fcntl(self.lfd, F_GETFL)
  *         fcntl(self.lfd, F_SETFL, flags | O_NONBLOCK)             # <<<<<<<<<<<<<<
  * 
- *         # REUSEADDR / REUSEPORT
+ *         if setsockopt(self.lfd, SOL_SOCKET, SO_REUSEADDR, &yes, <socklen_t>sizeof(int)) != 0:
 */
   (void)(fcntl(__pyx_v_self->lfd, F_SETFL, (__pyx_v_flags | O_NONBLOCK)));
 
-  /* "kvxdb/core/reactor.pyx":172
+  /* "kvxdb/core/reactor.pyx":167
+ *         fcntl(self.lfd, F_SETFL, flags | O_NONBLOCK)
  * 
- *         # REUSEADDR / REUSEPORT
  *         if setsockopt(self.lfd, SOL_SOCKET, SO_REUSEADDR, &yes, <socklen_t>sizeof(int)) != 0:             # <<<<<<<<<<<<<<
  *             self._cleanup()
  *             raise OSError(errno, "setsockopt SO_REUSEADDR failed")
@@ -3171,8 +3174,8 @@ static int __pyx_pf_5kvxdb_4core_7reactor_7Reactor___cinit__(struct __pyx_obj_5k
   __pyx_t_2 = (setsockopt(__pyx_v_self->lfd, SOL_SOCKET, SO_REUSEADDR, (&__pyx_v_yes), ((socklen_t)(sizeof(int)))) != 0);
   if (unlikely(__pyx_t_2)) {
 
-    /* "kvxdb/core/reactor.pyx":173
- *         # REUSEADDR / REUSEPORT
+    /* "kvxdb/core/reactor.pyx":168
+ * 
  *         if setsockopt(self.lfd, SOL_SOCKET, SO_REUSEADDR, &yes, <socklen_t>sizeof(int)) != 0:
  *             self._cleanup()             # <<<<<<<<<<<<<<
  *             raise OSError(errno, "setsockopt SO_REUSEADDR failed")
@@ -3180,7 +3183,7 @@ static int __pyx_pf_5kvxdb_4core_7reactor_7Reactor___cinit__(struct __pyx_obj_5k
 */
     ((struct __pyx_vtabstruct_5kvxdb_4core_7reactor_Reactor *)__pyx_v_self->__pyx_vtab)->_cleanup(__pyx_v_self);
 
-    /* "kvxdb/core/reactor.pyx":174
+    /* "kvxdb/core/reactor.pyx":169
  *         if setsockopt(self.lfd, SOL_SOCKET, SO_REUSEADDR, &yes, <socklen_t>sizeof(int)) != 0:
  *             self._cleanup()
  *             raise OSError(errno, "setsockopt SO_REUSEADDR failed")             # <<<<<<<<<<<<<<
@@ -3190,7 +3193,7 @@ static int __pyx_pf_5kvxdb_4core_7reactor_7Reactor___cinit__(struct __pyx_obj_5k
     __pyx_t_5 = NULL;
     __Pyx_INCREF(__pyx_builtin_OSError);
     __pyx_t_6 = __pyx_builtin_OSError; 
-    __pyx_t_4 = __Pyx_PyLong_From_int(errno); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 174, __pyx_L1_error)
+    __pyx_t_4 = __Pyx_PyLong_From_int(errno); if (unlikely(!__pyx_t_4)) __PYX_ERR(0, 169, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_4);
     __pyx_t_7 = 1;
     {
@@ -3199,42 +3202,42 @@ static int __pyx_pf_5kvxdb_4core_7reactor_7Reactor___cinit__(struct __pyx_obj_5k
       __Pyx_XDECREF(__pyx_t_5); __pyx_t_5 = 0;
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-      if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 174, __pyx_L1_error)
+      if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 169, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
     }
     __Pyx_Raise(__pyx_t_3, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __PYX_ERR(0, 174, __pyx_L1_error)
+    __PYX_ERR(0, 169, __pyx_L1_error)
 
-    /* "kvxdb/core/reactor.pyx":172
+    /* "kvxdb/core/reactor.pyx":167
+ *         fcntl(self.lfd, F_SETFL, flags | O_NONBLOCK)
  * 
- *         # REUSEADDR / REUSEPORT
  *         if setsockopt(self.lfd, SOL_SOCKET, SO_REUSEADDR, &yes, <socklen_t>sizeof(int)) != 0:             # <<<<<<<<<<<<<<
  *             self._cleanup()
  *             raise OSError(errno, "setsockopt SO_REUSEADDR failed")
 */
   }
 
-  /* "kvxdb/core/reactor.pyx":175
+  /* "kvxdb/core/reactor.pyx":170
  *             self._cleanup()
  *             raise OSError(errno, "setsockopt SO_REUSEADDR failed")
  *         setsockopt(self.lfd, SOL_SOCKET, SO_REUSEPORT, &yes, <socklen_t>sizeof(int))             # <<<<<<<<<<<<<<
  * 
- *         # bind()
+ *         c_memset(&addr, 0, sizeof(addr))
 */
   (void)(setsockopt(__pyx_v_self->lfd, SOL_SOCKET, SO_REUSEPORT, (&__pyx_v_yes), ((socklen_t)(sizeof(int)))));
 
-  /* "kvxdb/core/reactor.pyx":178
+  /* "kvxdb/core/reactor.pyx":172
+ *         setsockopt(self.lfd, SOL_SOCKET, SO_REUSEPORT, &yes, <socklen_t>sizeof(int))
  * 
- *         # bind()
  *         c_memset(&addr, 0, sizeof(addr))             # <<<<<<<<<<<<<<
  *         addr.sin_family = AF_INET
  *         addr.sin_port = htons(<unsigned short>port)
 */
   (void)(memset((&__pyx_v_addr), 0, (sizeof(__pyx_v_addr))));
 
-  /* "kvxdb/core/reactor.pyx":179
- *         # bind()
+  /* "kvxdb/core/reactor.pyx":173
+ * 
  *         c_memset(&addr, 0, sizeof(addr))
  *         addr.sin_family = AF_INET             # <<<<<<<<<<<<<<
  *         addr.sin_port = htons(<unsigned short>port)
@@ -3242,7 +3245,7 @@ static int __pyx_pf_5kvxdb_4core_7reactor_7Reactor___cinit__(struct __pyx_obj_5k
 */
   __pyx_v_addr.sin_family = AF_INET;
 
-  /* "kvxdb/core/reactor.pyx":180
+  /* "kvxdb/core/reactor.pyx":174
  *         c_memset(&addr, 0, sizeof(addr))
  *         addr.sin_family = AF_INET
  *         addr.sin_port = htons(<unsigned short>port)             # <<<<<<<<<<<<<<
@@ -3251,7 +3254,7 @@ static int __pyx_pf_5kvxdb_4core_7reactor_7Reactor___cinit__(struct __pyx_obj_5k
 */
   __pyx_v_addr.sin_port = htons(((unsigned short)__pyx_v_port));
 
-  /* "kvxdb/core/reactor.pyx":181
+  /* "kvxdb/core/reactor.pyx":175
  *         addr.sin_family = AF_INET
  *         addr.sin_port = htons(<unsigned short>port)
  *         cdef const char* host_c = host             # <<<<<<<<<<<<<<
@@ -3260,12 +3263,12 @@ static int __pyx_pf_5kvxdb_4core_7reactor_7Reactor___cinit__(struct __pyx_obj_5k
 */
   if (unlikely(__pyx_v_host == Py_None)) {
     PyErr_SetString(PyExc_TypeError, "expected bytes, NoneType found");
-    __PYX_ERR(0, 181, __pyx_L1_error)
+    __PYX_ERR(0, 175, __pyx_L1_error)
   }
-  __pyx_t_8 = __Pyx_PyBytes_AsString(__pyx_v_host); if (unlikely((!__pyx_t_8) && PyErr_Occurred())) __PYX_ERR(0, 181, __pyx_L1_error)
+  __pyx_t_8 = __Pyx_PyBytes_AsString(__pyx_v_host); if (unlikely((!__pyx_t_8) && PyErr_Occurred())) __PYX_ERR(0, 175, __pyx_L1_error)
   __pyx_v_host_c = __pyx_t_8;
 
-  /* "kvxdb/core/reactor.pyx":182
+  /* "kvxdb/core/reactor.pyx":176
  *         addr.sin_port = htons(<unsigned short>port)
  *         cdef const char* host_c = host
  *         addr.sin_addr.s_addr = inet_addr(host_c)             # <<<<<<<<<<<<<<
@@ -3274,7 +3277,7 @@ static int __pyx_pf_5kvxdb_4core_7reactor_7Reactor___cinit__(struct __pyx_obj_5k
 */
   __pyx_v_addr.sin_addr.s_addr = inet_addr(__pyx_v_host_c);
 
-  /* "kvxdb/core/reactor.pyx":183
+  /* "kvxdb/core/reactor.pyx":177
  *         cdef const char* host_c = host
  *         addr.sin_addr.s_addr = inet_addr(host_c)
  *         if bind(self.lfd, <const sockaddr*>&addr, <socklen_t>sizeof(addr)) != 0:             # <<<<<<<<<<<<<<
@@ -3284,7 +3287,7 @@ static int __pyx_pf_5kvxdb_4core_7reactor_7Reactor___cinit__(struct __pyx_obj_5k
   __pyx_t_2 = (bind(__pyx_v_self->lfd, ((struct sockaddr const *)(&__pyx_v_addr)), ((socklen_t)(sizeof(__pyx_v_addr)))) != 0);
   if (unlikely(__pyx_t_2)) {
 
-    /* "kvxdb/core/reactor.pyx":184
+    /* "kvxdb/core/reactor.pyx":178
  *         addr.sin_addr.s_addr = inet_addr(host_c)
  *         if bind(self.lfd, <const sockaddr*>&addr, <socklen_t>sizeof(addr)) != 0:
  *             self._cleanup()             # <<<<<<<<<<<<<<
@@ -3293,7 +3296,7 @@ static int __pyx_pf_5kvxdb_4core_7reactor_7Reactor___cinit__(struct __pyx_obj_5k
 */
     ((struct __pyx_vtabstruct_5kvxdb_4core_7reactor_Reactor *)__pyx_v_self->__pyx_vtab)->_cleanup(__pyx_v_self);
 
-    /* "kvxdb/core/reactor.pyx":185
+    /* "kvxdb/core/reactor.pyx":179
  *         if bind(self.lfd, <const sockaddr*>&addr, <socklen_t>sizeof(addr)) != 0:
  *             self._cleanup()
  *             raise OSError(errno, "bind failed")             # <<<<<<<<<<<<<<
@@ -3303,7 +3306,7 @@ static int __pyx_pf_5kvxdb_4core_7reactor_7Reactor___cinit__(struct __pyx_obj_5k
     __pyx_t_6 = NULL;
     __Pyx_INCREF(__pyx_builtin_OSError);
     __pyx_t_4 = __pyx_builtin_OSError; 
-    __pyx_t_5 = __Pyx_PyLong_From_int(errno); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 185, __pyx_L1_error)
+    __pyx_t_5 = __Pyx_PyLong_From_int(errno); if (unlikely(!__pyx_t_5)) __PYX_ERR(0, 179, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_5);
     __pyx_t_7 = 1;
     {
@@ -3312,14 +3315,14 @@ static int __pyx_pf_5kvxdb_4core_7reactor_7Reactor___cinit__(struct __pyx_obj_5k
       __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
       __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-      if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 185, __pyx_L1_error)
+      if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 179, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
     }
     __Pyx_Raise(__pyx_t_3, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __PYX_ERR(0, 185, __pyx_L1_error)
+    __PYX_ERR(0, 179, __pyx_L1_error)
 
-    /* "kvxdb/core/reactor.pyx":183
+    /* "kvxdb/core/reactor.pyx":177
  *         cdef const char* host_c = host
  *         addr.sin_addr.s_addr = inet_addr(host_c)
  *         if bind(self.lfd, <const sockaddr*>&addr, <socklen_t>sizeof(addr)) != 0:             # <<<<<<<<<<<<<<
@@ -3328,7 +3331,7 @@ static int __pyx_pf_5kvxdb_4core_7reactor_7Reactor___cinit__(struct __pyx_obj_5k
 */
   }
 
-  /* "kvxdb/core/reactor.pyx":187
+  /* "kvxdb/core/reactor.pyx":181
  *             raise OSError(errno, "bind failed")
  * 
  *         if listen(self.lfd, self.backlog) != 0:             # <<<<<<<<<<<<<<
@@ -3338,7 +3341,7 @@ static int __pyx_pf_5kvxdb_4core_7reactor_7Reactor___cinit__(struct __pyx_obj_5k
   __pyx_t_2 = (listen(__pyx_v_self->lfd, __pyx_v_self->backlog) != 0);
   if (unlikely(__pyx_t_2)) {
 
-    /* "kvxdb/core/reactor.pyx":188
+    /* "kvxdb/core/reactor.pyx":182
  * 
  *         if listen(self.lfd, self.backlog) != 0:
  *             self._cleanup()             # <<<<<<<<<<<<<<
@@ -3347,7 +3350,7 @@ static int __pyx_pf_5kvxdb_4core_7reactor_7Reactor___cinit__(struct __pyx_obj_5k
 */
     ((struct __pyx_vtabstruct_5kvxdb_4core_7reactor_Reactor *)__pyx_v_self->__pyx_vtab)->_cleanup(__pyx_v_self);
 
-    /* "kvxdb/core/reactor.pyx":189
+    /* "kvxdb/core/reactor.pyx":183
  *         if listen(self.lfd, self.backlog) != 0:
  *             self._cleanup()
  *             raise OSError(errno, "listen failed")             # <<<<<<<<<<<<<<
@@ -3357,7 +3360,7 @@ static int __pyx_pf_5kvxdb_4core_7reactor_7Reactor___cinit__(struct __pyx_obj_5k
     __pyx_t_4 = NULL;
     __Pyx_INCREF(__pyx_builtin_OSError);
     __pyx_t_5 = __pyx_builtin_OSError; 
-    __pyx_t_6 = __Pyx_PyLong_From_int(errno); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 189, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyLong_From_int(errno); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 183, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
     __pyx_t_7 = 1;
     {
@@ -3366,14 +3369,14 @@ static int __pyx_pf_5kvxdb_4core_7reactor_7Reactor___cinit__(struct __pyx_obj_5k
       __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
       __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
       __Pyx_DECREF(__pyx_t_5); __pyx_t_5 = 0;
-      if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 189, __pyx_L1_error)
+      if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 183, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_3);
     }
     __Pyx_Raise(__pyx_t_3, 0, 0, 0);
     __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-    __PYX_ERR(0, 189, __pyx_L1_error)
+    __PYX_ERR(0, 183, __pyx_L1_error)
 
-    /* "kvxdb/core/reactor.pyx":187
+    /* "kvxdb/core/reactor.pyx":181
  *             raise OSError(errno, "bind failed")
  * 
  *         if listen(self.lfd, self.backlog) != 0:             # <<<<<<<<<<<<<<
@@ -3382,7 +3385,7 @@ static int __pyx_pf_5kvxdb_4core_7reactor_7Reactor___cinit__(struct __pyx_obj_5k
 */
   }
 
-  /* "kvxdb/core/reactor.pyx":135
+  /* "kvxdb/core/reactor.pyx":133
  *         int      pfds_cap
  * 
  *     def __cinit__(self, int port,             # <<<<<<<<<<<<<<
@@ -3405,7 +3408,7 @@ static int __pyx_pf_5kvxdb_4core_7reactor_7Reactor___cinit__(struct __pyx_obj_5k
   return __pyx_r;
 }
 
-/* "kvxdb/core/reactor.pyx":191
+/* "kvxdb/core/reactor.pyx":185
  *             raise OSError(errno, "listen failed")
  * 
  *     cdef void _cleanup(self) noexcept nogil:             # <<<<<<<<<<<<<<
@@ -3416,7 +3419,7 @@ static int __pyx_pf_5kvxdb_4core_7reactor_7Reactor___cinit__(struct __pyx_obj_5k
 static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__cleanup(struct __pyx_obj_5kvxdb_4core_7reactor_Reactor *__pyx_v_self) {
   int __pyx_t_1;
 
-  /* "kvxdb/core/reactor.pyx":192
+  /* "kvxdb/core/reactor.pyx":186
  * 
  *     cdef void _cleanup(self) noexcept nogil:
  *         if self.lfd >= 0:             # <<<<<<<<<<<<<<
@@ -3426,7 +3429,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__cleanup(struct __pyx_obj_5kv
   __pyx_t_1 = (__pyx_v_self->lfd >= 0);
   if (__pyx_t_1) {
 
-    /* "kvxdb/core/reactor.pyx":193
+    /* "kvxdb/core/reactor.pyx":187
  *     cdef void _cleanup(self) noexcept nogil:
  *         if self.lfd >= 0:
  *             c_close(self.lfd)             # <<<<<<<<<<<<<<
@@ -3435,7 +3438,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__cleanup(struct __pyx_obj_5kv
 */
     (void)(close(__pyx_v_self->lfd));
 
-    /* "kvxdb/core/reactor.pyx":192
+    /* "kvxdb/core/reactor.pyx":186
  * 
  *     cdef void _cleanup(self) noexcept nogil:
  *         if self.lfd >= 0:             # <<<<<<<<<<<<<<
@@ -3444,7 +3447,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__cleanup(struct __pyx_obj_5kv
 */
   }
 
-  /* "kvxdb/core/reactor.pyx":194
+  /* "kvxdb/core/reactor.pyx":188
  *         if self.lfd >= 0:
  *             c_close(self.lfd)
  *         self.lfd = -1             # <<<<<<<<<<<<<<
@@ -3453,7 +3456,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__cleanup(struct __pyx_obj_5kv
 */
   __pyx_v_self->lfd = -1;
 
-  /* "kvxdb/core/reactor.pyx":191
+  /* "kvxdb/core/reactor.pyx":185
  *             raise OSError(errno, "listen failed")
  * 
  *     cdef void _cleanup(self) noexcept nogil:             # <<<<<<<<<<<<<<
@@ -3464,7 +3467,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__cleanup(struct __pyx_obj_5kv
   /* function exit code */
 }
 
-/* "kvxdb/core/reactor.pyx":196
+/* "kvxdb/core/reactor.pyx":190
  *         self.lfd = -1
  * 
  *     def close(self):             # <<<<<<<<<<<<<<
@@ -3526,7 +3529,7 @@ static PyObject *__pyx_pf_5kvxdb_4core_7reactor_7Reactor_2close(struct __pyx_obj
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("close", 0);
 
-  /* "kvxdb/core/reactor.pyx":197
+  /* "kvxdb/core/reactor.pyx":191
  * 
  *     def close(self):
  *         self.stop()             # <<<<<<<<<<<<<<
@@ -3540,12 +3543,12 @@ static PyObject *__pyx_pf_5kvxdb_4core_7reactor_7Reactor_2close(struct __pyx_obj
     PyObject *__pyx_callargs[2] = {__pyx_t_2, NULL};
     __pyx_t_1 = __Pyx_PyObject_FastCallMethod(__pyx_mstate_global->__pyx_n_u_stop, __pyx_callargs+__pyx_t_3, (1-__pyx_t_3) | (1*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
     __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
-    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 197, __pyx_L1_error)
+    if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 191, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_1);
   }
   __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-  /* "kvxdb/core/reactor.pyx":198
+  /* "kvxdb/core/reactor.pyx":192
  *     def close(self):
  *         self.stop()
  *         if self.lfd >= 0:             # <<<<<<<<<<<<<<
@@ -3555,7 +3558,7 @@ static PyObject *__pyx_pf_5kvxdb_4core_7reactor_7Reactor_2close(struct __pyx_obj
   __pyx_t_4 = (__pyx_v_self->lfd >= 0);
   if (__pyx_t_4) {
 
-    /* "kvxdb/core/reactor.pyx":199
+    /* "kvxdb/core/reactor.pyx":193
  *         self.stop()
  *         if self.lfd >= 0:
  *             c_close(self.lfd)             # <<<<<<<<<<<<<<
@@ -3564,7 +3567,7 @@ static PyObject *__pyx_pf_5kvxdb_4core_7reactor_7Reactor_2close(struct __pyx_obj
 */
     (void)(close(__pyx_v_self->lfd));
 
-    /* "kvxdb/core/reactor.pyx":200
+    /* "kvxdb/core/reactor.pyx":194
  *         if self.lfd >= 0:
  *             c_close(self.lfd)
  *             self.lfd = -1             # <<<<<<<<<<<<<<
@@ -3573,7 +3576,7 @@ static PyObject *__pyx_pf_5kvxdb_4core_7reactor_7Reactor_2close(struct __pyx_obj
 */
     __pyx_v_self->lfd = -1;
 
-    /* "kvxdb/core/reactor.pyx":198
+    /* "kvxdb/core/reactor.pyx":192
  *     def close(self):
  *         self.stop()
  *         if self.lfd >= 0:             # <<<<<<<<<<<<<<
@@ -3582,7 +3585,7 @@ static PyObject *__pyx_pf_5kvxdb_4core_7reactor_7Reactor_2close(struct __pyx_obj
 */
   }
 
-  /* "kvxdb/core/reactor.pyx":196
+  /* "kvxdb/core/reactor.pyx":190
  *         self.lfd = -1
  * 
  *     def close(self):             # <<<<<<<<<<<<<<
@@ -3604,7 +3607,7 @@ static PyObject *__pyx_pf_5kvxdb_4core_7reactor_7Reactor_2close(struct __pyx_obj
   return __pyx_r;
 }
 
-/* "kvxdb/core/reactor.pyx":202
+/* "kvxdb/core/reactor.pyx":196
  *             self.lfd = -1
  * 
  *     def stop(self):             # <<<<<<<<<<<<<<
@@ -3659,7 +3662,7 @@ static PyObject *__pyx_pf_5kvxdb_4core_7reactor_7Reactor_4stop(struct __pyx_obj_
   __Pyx_RefNannyDeclarations
   __Pyx_RefNannySetupContext("stop", 0);
 
-  /* "kvxdb/core/reactor.pyx":203
+  /* "kvxdb/core/reactor.pyx":197
  * 
  *     def stop(self):
  *         self.running = 0             # <<<<<<<<<<<<<<
@@ -3668,7 +3671,7 @@ static PyObject *__pyx_pf_5kvxdb_4core_7reactor_7Reactor_4stop(struct __pyx_obj_
 */
   __pyx_v_self->running = 0;
 
-  /* "kvxdb/core/reactor.pyx":202
+  /* "kvxdb/core/reactor.pyx":196
  *             self.lfd = -1
  * 
  *     def stop(self):             # <<<<<<<<<<<<<<
@@ -3683,7 +3686,7 @@ static PyObject *__pyx_pf_5kvxdb_4core_7reactor_7Reactor_4stop(struct __pyx_obj_
   return __pyx_r;
 }
 
-/* "kvxdb/core/reactor.pyx":206
+/* "kvxdb/core/reactor.pyx":200
  * 
  *     # --- conn list management ---
  *     cdef inline void _list_add(self, conn_t* c) noexcept nogil:             # <<<<<<<<<<<<<<
@@ -3695,7 +3698,7 @@ static CYTHON_INLINE void __pyx_f_5kvxdb_4core_7reactor_7Reactor__list_add(struc
   struct __pyx_t_5kvxdb_4core_7reactor_conn_t *__pyx_t_1;
   int __pyx_t_2;
 
-  /* "kvxdb/core/reactor.pyx":207
+  /* "kvxdb/core/reactor.pyx":201
  *     # --- conn list management ---
  *     cdef inline void _list_add(self, conn_t* c) noexcept nogil:
  *         c.prev = NULL             # <<<<<<<<<<<<<<
@@ -3704,7 +3707,7 @@ static CYTHON_INLINE void __pyx_f_5kvxdb_4core_7reactor_7Reactor__list_add(struc
 */
   __pyx_v_c->prev = NULL;
 
-  /* "kvxdb/core/reactor.pyx":208
+  /* "kvxdb/core/reactor.pyx":202
  *     cdef inline void _list_add(self, conn_t* c) noexcept nogil:
  *         c.prev = NULL
  *         c.next = self.head             # <<<<<<<<<<<<<<
@@ -3714,7 +3717,7 @@ static CYTHON_INLINE void __pyx_f_5kvxdb_4core_7reactor_7Reactor__list_add(struc
   __pyx_t_1 = __pyx_v_self->head;
   __pyx_v_c->next = __pyx_t_1;
 
-  /* "kvxdb/core/reactor.pyx":209
+  /* "kvxdb/core/reactor.pyx":203
  *         c.prev = NULL
  *         c.next = self.head
  *         if self.head != NULL:             # <<<<<<<<<<<<<<
@@ -3724,7 +3727,7 @@ static CYTHON_INLINE void __pyx_f_5kvxdb_4core_7reactor_7Reactor__list_add(struc
   __pyx_t_2 = (__pyx_v_self->head != NULL);
   if (__pyx_t_2) {
 
-    /* "kvxdb/core/reactor.pyx":210
+    /* "kvxdb/core/reactor.pyx":204
  *         c.next = self.head
  *         if self.head != NULL:
  *             self.head.prev = c             # <<<<<<<<<<<<<<
@@ -3733,7 +3736,7 @@ static CYTHON_INLINE void __pyx_f_5kvxdb_4core_7reactor_7Reactor__list_add(struc
 */
     __pyx_v_self->head->prev = __pyx_v_c;
 
-    /* "kvxdb/core/reactor.pyx":209
+    /* "kvxdb/core/reactor.pyx":203
  *         c.prev = NULL
  *         c.next = self.head
  *         if self.head != NULL:             # <<<<<<<<<<<<<<
@@ -3742,7 +3745,7 @@ static CYTHON_INLINE void __pyx_f_5kvxdb_4core_7reactor_7Reactor__list_add(struc
 */
   }
 
-  /* "kvxdb/core/reactor.pyx":211
+  /* "kvxdb/core/reactor.pyx":205
  *         if self.head != NULL:
  *             self.head.prev = c
  *         self.head = c             # <<<<<<<<<<<<<<
@@ -3751,7 +3754,7 @@ static CYTHON_INLINE void __pyx_f_5kvxdb_4core_7reactor_7Reactor__list_add(struc
 */
   __pyx_v_self->head = __pyx_v_c;
 
-  /* "kvxdb/core/reactor.pyx":206
+  /* "kvxdb/core/reactor.pyx":200
  * 
  *     # --- conn list management ---
  *     cdef inline void _list_add(self, conn_t* c) noexcept nogil:             # <<<<<<<<<<<<<<
@@ -3762,7 +3765,7 @@ static CYTHON_INLINE void __pyx_f_5kvxdb_4core_7reactor_7Reactor__list_add(struc
   /* function exit code */
 }
 
-/* "kvxdb/core/reactor.pyx":213
+/* "kvxdb/core/reactor.pyx":207
  *         self.head = c
  * 
  *     cdef inline void _list_del(self, conn_t* c) noexcept nogil:             # <<<<<<<<<<<<<<
@@ -3774,7 +3777,7 @@ static CYTHON_INLINE void __pyx_f_5kvxdb_4core_7reactor_7Reactor__list_del(struc
   int __pyx_t_1;
   struct __pyx_t_5kvxdb_4core_7reactor_conn_t *__pyx_t_2;
 
-  /* "kvxdb/core/reactor.pyx":214
+  /* "kvxdb/core/reactor.pyx":208
  * 
  *     cdef inline void _list_del(self, conn_t* c) noexcept nogil:
  *         if c.prev != NULL:             # <<<<<<<<<<<<<<
@@ -3784,7 +3787,7 @@ static CYTHON_INLINE void __pyx_f_5kvxdb_4core_7reactor_7Reactor__list_del(struc
   __pyx_t_1 = (__pyx_v_c->prev != NULL);
   if (__pyx_t_1) {
 
-    /* "kvxdb/core/reactor.pyx":215
+    /* "kvxdb/core/reactor.pyx":209
  *     cdef inline void _list_del(self, conn_t* c) noexcept nogil:
  *         if c.prev != NULL:
  *             c.prev.next = c.next             # <<<<<<<<<<<<<<
@@ -3794,7 +3797,7 @@ static CYTHON_INLINE void __pyx_f_5kvxdb_4core_7reactor_7Reactor__list_del(struc
     __pyx_t_2 = __pyx_v_c->next;
     __pyx_v_c->prev->next = __pyx_t_2;
 
-    /* "kvxdb/core/reactor.pyx":214
+    /* "kvxdb/core/reactor.pyx":208
  * 
  *     cdef inline void _list_del(self, conn_t* c) noexcept nogil:
  *         if c.prev != NULL:             # <<<<<<<<<<<<<<
@@ -3804,7 +3807,7 @@ static CYTHON_INLINE void __pyx_f_5kvxdb_4core_7reactor_7Reactor__list_del(struc
     goto __pyx_L3;
   }
 
-  /* "kvxdb/core/reactor.pyx":217
+  /* "kvxdb/core/reactor.pyx":211
  *             c.prev.next = c.next
  *         else:
  *             self.head = c.next             # <<<<<<<<<<<<<<
@@ -3817,7 +3820,7 @@ static CYTHON_INLINE void __pyx_f_5kvxdb_4core_7reactor_7Reactor__list_del(struc
   }
   __pyx_L3:;
 
-  /* "kvxdb/core/reactor.pyx":218
+  /* "kvxdb/core/reactor.pyx":212
  *         else:
  *             self.head = c.next
  *         if c.next != NULL:             # <<<<<<<<<<<<<<
@@ -3827,7 +3830,7 @@ static CYTHON_INLINE void __pyx_f_5kvxdb_4core_7reactor_7Reactor__list_del(struc
   __pyx_t_1 = (__pyx_v_c->next != NULL);
   if (__pyx_t_1) {
 
-    /* "kvxdb/core/reactor.pyx":219
+    /* "kvxdb/core/reactor.pyx":213
  *             self.head = c.next
  *         if c.next != NULL:
  *             c.next.prev = c.prev             # <<<<<<<<<<<<<<
@@ -3837,7 +3840,7 @@ static CYTHON_INLINE void __pyx_f_5kvxdb_4core_7reactor_7Reactor__list_del(struc
     __pyx_t_2 = __pyx_v_c->prev;
     __pyx_v_c->next->prev = __pyx_t_2;
 
-    /* "kvxdb/core/reactor.pyx":218
+    /* "kvxdb/core/reactor.pyx":212
  *         else:
  *             self.head = c.next
  *         if c.next != NULL:             # <<<<<<<<<<<<<<
@@ -3846,7 +3849,7 @@ static CYTHON_INLINE void __pyx_f_5kvxdb_4core_7reactor_7Reactor__list_del(struc
 */
   }
 
-  /* "kvxdb/core/reactor.pyx":220
+  /* "kvxdb/core/reactor.pyx":214
  *         if c.next != NULL:
  *             c.next.prev = c.prev
  *         c.prev = c.next = NULL             # <<<<<<<<<<<<<<
@@ -3856,7 +3859,7 @@ static CYTHON_INLINE void __pyx_f_5kvxdb_4core_7reactor_7Reactor__list_del(struc
   __pyx_v_c->prev = NULL;
   __pyx_v_c->next = NULL;
 
-  /* "kvxdb/core/reactor.pyx":213
+  /* "kvxdb/core/reactor.pyx":207
  *         self.head = c
  * 
  *     cdef inline void _list_del(self, conn_t* c) noexcept nogil:             # <<<<<<<<<<<<<<
@@ -3867,7 +3870,7 @@ static CYTHON_INLINE void __pyx_f_5kvxdb_4core_7reactor_7Reactor__list_del(struc
   /* function exit code */
 }
 
-/* "kvxdb/core/reactor.pyx":222
+/* "kvxdb/core/reactor.pyx":216
  *         c.prev = c.next = NULL
  * 
  *     cdef inline conn_t* _mk_conn(self, int fd) noexcept nogil:             # <<<<<<<<<<<<<<
@@ -3881,7 +3884,7 @@ static CYTHON_INLINE struct __pyx_t_5kvxdb_4core_7reactor_conn_t *__pyx_f_5kvxdb
   int __pyx_t_1;
   int __pyx_t_2;
 
-  /* "kvxdb/core/reactor.pyx":223
+  /* "kvxdb/core/reactor.pyx":217
  * 
  *     cdef inline conn_t* _mk_conn(self, int fd) noexcept nogil:
  *         cdef conn_t* c = <conn_t*>c_malloc(sizeof(conn_t))             # <<<<<<<<<<<<<<
@@ -3890,7 +3893,7 @@ static CYTHON_INLINE struct __pyx_t_5kvxdb_4core_7reactor_conn_t *__pyx_f_5kvxdb
 */
   __pyx_v_c = ((struct __pyx_t_5kvxdb_4core_7reactor_conn_t *)malloc((sizeof(struct __pyx_t_5kvxdb_4core_7reactor_conn_t))));
 
-  /* "kvxdb/core/reactor.pyx":224
+  /* "kvxdb/core/reactor.pyx":218
  *     cdef inline conn_t* _mk_conn(self, int fd) noexcept nogil:
  *         cdef conn_t* c = <conn_t*>c_malloc(sizeof(conn_t))
  *         if c == NULL:             # <<<<<<<<<<<<<<
@@ -3900,7 +3903,7 @@ static CYTHON_INLINE struct __pyx_t_5kvxdb_4core_7reactor_conn_t *__pyx_f_5kvxdb
   __pyx_t_1 = (__pyx_v_c == NULL);
   if (__pyx_t_1) {
 
-    /* "kvxdb/core/reactor.pyx":225
+    /* "kvxdb/core/reactor.pyx":219
  *         cdef conn_t* c = <conn_t*>c_malloc(sizeof(conn_t))
  *         if c == NULL:
  *             return NULL             # <<<<<<<<<<<<<<
@@ -3910,7 +3913,7 @@ static CYTHON_INLINE struct __pyx_t_5kvxdb_4core_7reactor_conn_t *__pyx_f_5kvxdb
     __pyx_r = NULL;
     goto __pyx_L0;
 
-    /* "kvxdb/core/reactor.pyx":224
+    /* "kvxdb/core/reactor.pyx":218
  *     cdef inline conn_t* _mk_conn(self, int fd) noexcept nogil:
  *         cdef conn_t* c = <conn_t*>c_malloc(sizeof(conn_t))
  *         if c == NULL:             # <<<<<<<<<<<<<<
@@ -3919,7 +3922,7 @@ static CYTHON_INLINE struct __pyx_t_5kvxdb_4core_7reactor_conn_t *__pyx_f_5kvxdb
 */
   }
 
-  /* "kvxdb/core/reactor.pyx":226
+  /* "kvxdb/core/reactor.pyx":220
  *         if c == NULL:
  *             return NULL
  *         c.fd = fd             # <<<<<<<<<<<<<<
@@ -3928,7 +3931,7 @@ static CYTHON_INLINE struct __pyx_t_5kvxdb_4core_7reactor_conn_t *__pyx_f_5kvxdb
 */
   __pyx_v_c->fd = __pyx_v_fd;
 
-  /* "kvxdb/core/reactor.pyx":227
+  /* "kvxdb/core/reactor.pyx":221
  *             return NULL
  *         c.fd = fd
  *         c.state = CONN_RECV             # <<<<<<<<<<<<<<
@@ -3937,7 +3940,7 @@ static CYTHON_INLINE struct __pyx_t_5kvxdb_4core_7reactor_conn_t *__pyx_f_5kvxdb
 */
   __pyx_v_c->state = __pyx_e_5kvxdb_4core_7reactor_CONN_RECV;
 
-  /* "kvxdb/core/reactor.pyx":228
+  /* "kvxdb/core/reactor.pyx":222
  *         c.fd = fd
  *         c.state = CONN_RECV
  *         c.rcap = 4096             # <<<<<<<<<<<<<<
@@ -3946,7 +3949,7 @@ static CYTHON_INLINE struct __pyx_t_5kvxdb_4core_7reactor_conn_t *__pyx_f_5kvxdb
 */
   __pyx_v_c->rcap = 0x1000;
 
-  /* "kvxdb/core/reactor.pyx":229
+  /* "kvxdb/core/reactor.pyx":223
  *         c.state = CONN_RECV
  *         c.rcap = 4096
  *         c.wcap = 4096             # <<<<<<<<<<<<<<
@@ -3955,7 +3958,7 @@ static CYTHON_INLINE struct __pyx_t_5kvxdb_4core_7reactor_conn_t *__pyx_f_5kvxdb
 */
   __pyx_v_c->wcap = 0x1000;
 
-  /* "kvxdb/core/reactor.pyx":230
+  /* "kvxdb/core/reactor.pyx":224
  *         c.rcap = 4096
  *         c.wcap = 4096
  *         c.rlen = 0             # <<<<<<<<<<<<<<
@@ -3964,7 +3967,7 @@ static CYTHON_INLINE struct __pyx_t_5kvxdb_4core_7reactor_conn_t *__pyx_f_5kvxdb
 */
   __pyx_v_c->rlen = 0;
 
-  /* "kvxdb/core/reactor.pyx":231
+  /* "kvxdb/core/reactor.pyx":225
  *         c.wcap = 4096
  *         c.rlen = 0
  *         c.wlen = 0             # <<<<<<<<<<<<<<
@@ -3973,7 +3976,7 @@ static CYTHON_INLINE struct __pyx_t_5kvxdb_4core_7reactor_conn_t *__pyx_f_5kvxdb
 */
   __pyx_v_c->wlen = 0;
 
-  /* "kvxdb/core/reactor.pyx":232
+  /* "kvxdb/core/reactor.pyx":226
  *         c.rlen = 0
  *         c.wlen = 0
  *         c.woff = 0             # <<<<<<<<<<<<<<
@@ -3982,7 +3985,7 @@ static CYTHON_INLINE struct __pyx_t_5kvxdb_4core_7reactor_conn_t *__pyx_f_5kvxdb
 */
   __pyx_v_c->woff = 0;
 
-  /* "kvxdb/core/reactor.pyx":233
+  /* "kvxdb/core/reactor.pyx":227
  *         c.wlen = 0
  *         c.woff = 0
  *         c.last_active_ms = now_ms()             # <<<<<<<<<<<<<<
@@ -3991,7 +3994,7 @@ static CYTHON_INLINE struct __pyx_t_5kvxdb_4core_7reactor_conn_t *__pyx_f_5kvxdb
 */
   __pyx_v_c->last_active_ms = __pyx_f_5kvxdb_4core_7reactor_now_ms();
 
-  /* "kvxdb/core/reactor.pyx":234
+  /* "kvxdb/core/reactor.pyx":228
  *         c.woff = 0
  *         c.last_active_ms = now_ms()
  *         c.rbuf = <char*>c_malloc(c.rcap)             # <<<<<<<<<<<<<<
@@ -4000,7 +4003,7 @@ static CYTHON_INLINE struct __pyx_t_5kvxdb_4core_7reactor_conn_t *__pyx_f_5kvxdb
 */
   __pyx_v_c->rbuf = ((char *)malloc(__pyx_v_c->rcap));
 
-  /* "kvxdb/core/reactor.pyx":235
+  /* "kvxdb/core/reactor.pyx":229
  *         c.last_active_ms = now_ms()
  *         c.rbuf = <char*>c_malloc(c.rcap)
  *         c.wbuf = <char*>c_malloc(c.wcap)             # <<<<<<<<<<<<<<
@@ -4009,7 +4012,7 @@ static CYTHON_INLINE struct __pyx_t_5kvxdb_4core_7reactor_conn_t *__pyx_f_5kvxdb
 */
   __pyx_v_c->wbuf = ((char *)malloc(__pyx_v_c->wcap));
 
-  /* "kvxdb/core/reactor.pyx":236
+  /* "kvxdb/core/reactor.pyx":230
  *         c.rbuf = <char*>c_malloc(c.rcap)
  *         c.wbuf = <char*>c_malloc(c.wcap)
  *         c.prev = NULL             # <<<<<<<<<<<<<<
@@ -4018,7 +4021,7 @@ static CYTHON_INLINE struct __pyx_t_5kvxdb_4core_7reactor_conn_t *__pyx_f_5kvxdb
 */
   __pyx_v_c->prev = NULL;
 
-  /* "kvxdb/core/reactor.pyx":237
+  /* "kvxdb/core/reactor.pyx":231
  *         c.wbuf = <char*>c_malloc(c.wcap)
  *         c.prev = NULL
  *         c.next = NULL             # <<<<<<<<<<<<<<
@@ -4027,7 +4030,7 @@ static CYTHON_INLINE struct __pyx_t_5kvxdb_4core_7reactor_conn_t *__pyx_f_5kvxdb
 */
   __pyx_v_c->next = NULL;
 
-  /* "kvxdb/core/reactor.pyx":238
+  /* "kvxdb/core/reactor.pyx":232
  *         c.prev = NULL
  *         c.next = NULL
  *         if (c.rbuf == NULL) or (c.wbuf == NULL):             # <<<<<<<<<<<<<<
@@ -4045,7 +4048,7 @@ static CYTHON_INLINE struct __pyx_t_5kvxdb_4core_7reactor_conn_t *__pyx_f_5kvxdb
   __pyx_L5_bool_binop_done:;
   if (__pyx_t_1) {
 
-    /* "kvxdb/core/reactor.pyx":239
+    /* "kvxdb/core/reactor.pyx":233
  *         c.next = NULL
  *         if (c.rbuf == NULL) or (c.wbuf == NULL):
  *             if c.rbuf: c_free(c.rbuf)             # <<<<<<<<<<<<<<
@@ -4057,7 +4060,7 @@ static CYTHON_INLINE struct __pyx_t_5kvxdb_4core_7reactor_conn_t *__pyx_f_5kvxdb
       free(__pyx_v_c->rbuf);
     }
 
-    /* "kvxdb/core/reactor.pyx":240
+    /* "kvxdb/core/reactor.pyx":234
  *         if (c.rbuf == NULL) or (c.wbuf == NULL):
  *             if c.rbuf: c_free(c.rbuf)
  *             if c.wbuf: c_free(c.wbuf)             # <<<<<<<<<<<<<<
@@ -4069,7 +4072,7 @@ static CYTHON_INLINE struct __pyx_t_5kvxdb_4core_7reactor_conn_t *__pyx_f_5kvxdb
       free(__pyx_v_c->wbuf);
     }
 
-    /* "kvxdb/core/reactor.pyx":241
+    /* "kvxdb/core/reactor.pyx":235
  *             if c.rbuf: c_free(c.rbuf)
  *             if c.wbuf: c_free(c.wbuf)
  *             c_free(c)             # <<<<<<<<<<<<<<
@@ -4078,7 +4081,7 @@ static CYTHON_INLINE struct __pyx_t_5kvxdb_4core_7reactor_conn_t *__pyx_f_5kvxdb
 */
     free(__pyx_v_c);
 
-    /* "kvxdb/core/reactor.pyx":242
+    /* "kvxdb/core/reactor.pyx":236
  *             if c.wbuf: c_free(c.wbuf)
  *             c_free(c)
  *             return NULL             # <<<<<<<<<<<<<<
@@ -4088,7 +4091,7 @@ static CYTHON_INLINE struct __pyx_t_5kvxdb_4core_7reactor_conn_t *__pyx_f_5kvxdb
     __pyx_r = NULL;
     goto __pyx_L0;
 
-    /* "kvxdb/core/reactor.pyx":238
+    /* "kvxdb/core/reactor.pyx":232
  *         c.prev = NULL
  *         c.next = NULL
  *         if (c.rbuf == NULL) or (c.wbuf == NULL):             # <<<<<<<<<<<<<<
@@ -4097,7 +4100,7 @@ static CYTHON_INLINE struct __pyx_t_5kvxdb_4core_7reactor_conn_t *__pyx_f_5kvxdb
 */
   }
 
-  /* "kvxdb/core/reactor.pyx":243
+  /* "kvxdb/core/reactor.pyx":237
  *             c_free(c)
  *             return NULL
  *         return c             # <<<<<<<<<<<<<<
@@ -4107,7 +4110,7 @@ static CYTHON_INLINE struct __pyx_t_5kvxdb_4core_7reactor_conn_t *__pyx_f_5kvxdb
   __pyx_r = __pyx_v_c;
   goto __pyx_L0;
 
-  /* "kvxdb/core/reactor.pyx":222
+  /* "kvxdb/core/reactor.pyx":216
  *         c.prev = c.next = NULL
  * 
  *     cdef inline conn_t* _mk_conn(self, int fd) noexcept nogil:             # <<<<<<<<<<<<<<
@@ -4120,7 +4123,7 @@ static CYTHON_INLINE struct __pyx_t_5kvxdb_4core_7reactor_conn_t *__pyx_f_5kvxdb
   return __pyx_r;
 }
 
-/* "kvxdb/core/reactor.pyx":245
+/* "kvxdb/core/reactor.pyx":239
  *         return c
  * 
  *     cdef inline void _free_conn(self, conn_t* c) noexcept nogil:             # <<<<<<<<<<<<<<
@@ -4131,7 +4134,7 @@ static CYTHON_INLINE struct __pyx_t_5kvxdb_4core_7reactor_conn_t *__pyx_f_5kvxdb
 static CYTHON_INLINE void __pyx_f_5kvxdb_4core_7reactor_7Reactor__free_conn(CYTHON_UNUSED struct __pyx_obj_5kvxdb_4core_7reactor_Reactor *__pyx_v_self, struct __pyx_t_5kvxdb_4core_7reactor_conn_t *__pyx_v_c) {
   int __pyx_t_1;
 
-  /* "kvxdb/core/reactor.pyx":246
+  /* "kvxdb/core/reactor.pyx":240
  * 
  *     cdef inline void _free_conn(self, conn_t* c) noexcept nogil:
  *         if c == NULL:             # <<<<<<<<<<<<<<
@@ -4141,7 +4144,7 @@ static CYTHON_INLINE void __pyx_f_5kvxdb_4core_7reactor_7Reactor__free_conn(CYTH
   __pyx_t_1 = (__pyx_v_c == NULL);
   if (__pyx_t_1) {
 
-    /* "kvxdb/core/reactor.pyx":247
+    /* "kvxdb/core/reactor.pyx":241
  *     cdef inline void _free_conn(self, conn_t* c) noexcept nogil:
  *         if c == NULL:
  *             return             # <<<<<<<<<<<<<<
@@ -4150,7 +4153,7 @@ static CYTHON_INLINE void __pyx_f_5kvxdb_4core_7reactor_7Reactor__free_conn(CYTH
 */
     goto __pyx_L0;
 
-    /* "kvxdb/core/reactor.pyx":246
+    /* "kvxdb/core/reactor.pyx":240
  * 
  *     cdef inline void _free_conn(self, conn_t* c) noexcept nogil:
  *         if c == NULL:             # <<<<<<<<<<<<<<
@@ -4159,7 +4162,7 @@ static CYTHON_INLINE void __pyx_f_5kvxdb_4core_7reactor_7Reactor__free_conn(CYTH
 */
   }
 
-  /* "kvxdb/core/reactor.pyx":248
+  /* "kvxdb/core/reactor.pyx":242
  *         if c == NULL:
  *             return
  *         if c.fd >= 0:             # <<<<<<<<<<<<<<
@@ -4169,7 +4172,7 @@ static CYTHON_INLINE void __pyx_f_5kvxdb_4core_7reactor_7Reactor__free_conn(CYTH
   __pyx_t_1 = (__pyx_v_c->fd >= 0);
   if (__pyx_t_1) {
 
-    /* "kvxdb/core/reactor.pyx":249
+    /* "kvxdb/core/reactor.pyx":243
  *             return
  *         if c.fd >= 0:
  *             c_close(c.fd)             # <<<<<<<<<<<<<<
@@ -4178,7 +4181,7 @@ static CYTHON_INLINE void __pyx_f_5kvxdb_4core_7reactor_7Reactor__free_conn(CYTH
 */
     (void)(close(__pyx_v_c->fd));
 
-    /* "kvxdb/core/reactor.pyx":250
+    /* "kvxdb/core/reactor.pyx":244
  *         if c.fd >= 0:
  *             c_close(c.fd)
  *             c.fd = -1             # <<<<<<<<<<<<<<
@@ -4187,7 +4190,7 @@ static CYTHON_INLINE void __pyx_f_5kvxdb_4core_7reactor_7Reactor__free_conn(CYTH
 */
     __pyx_v_c->fd = -1;
 
-    /* "kvxdb/core/reactor.pyx":248
+    /* "kvxdb/core/reactor.pyx":242
  *         if c == NULL:
  *             return
  *         if c.fd >= 0:             # <<<<<<<<<<<<<<
@@ -4196,7 +4199,7 @@ static CYTHON_INLINE void __pyx_f_5kvxdb_4core_7reactor_7Reactor__free_conn(CYTH
 */
   }
 
-  /* "kvxdb/core/reactor.pyx":251
+  /* "kvxdb/core/reactor.pyx":245
  *             c_close(c.fd)
  *             c.fd = -1
  *         if c.rbuf != NULL:             # <<<<<<<<<<<<<<
@@ -4206,7 +4209,7 @@ static CYTHON_INLINE void __pyx_f_5kvxdb_4core_7reactor_7Reactor__free_conn(CYTH
   __pyx_t_1 = (__pyx_v_c->rbuf != NULL);
   if (__pyx_t_1) {
 
-    /* "kvxdb/core/reactor.pyx":252
+    /* "kvxdb/core/reactor.pyx":246
  *             c.fd = -1
  *         if c.rbuf != NULL:
  *             c_free(c.rbuf); c.rbuf = NULL             # <<<<<<<<<<<<<<
@@ -4216,7 +4219,7 @@ static CYTHON_INLINE void __pyx_f_5kvxdb_4core_7reactor_7Reactor__free_conn(CYTH
     free(__pyx_v_c->rbuf);
     __pyx_v_c->rbuf = NULL;
 
-    /* "kvxdb/core/reactor.pyx":251
+    /* "kvxdb/core/reactor.pyx":245
  *             c_close(c.fd)
  *             c.fd = -1
  *         if c.rbuf != NULL:             # <<<<<<<<<<<<<<
@@ -4225,7 +4228,7 @@ static CYTHON_INLINE void __pyx_f_5kvxdb_4core_7reactor_7Reactor__free_conn(CYTH
 */
   }
 
-  /* "kvxdb/core/reactor.pyx":253
+  /* "kvxdb/core/reactor.pyx":247
  *         if c.rbuf != NULL:
  *             c_free(c.rbuf); c.rbuf = NULL
  *         if c.wbuf != NULL:             # <<<<<<<<<<<<<<
@@ -4235,7 +4238,7 @@ static CYTHON_INLINE void __pyx_f_5kvxdb_4core_7reactor_7Reactor__free_conn(CYTH
   __pyx_t_1 = (__pyx_v_c->wbuf != NULL);
   if (__pyx_t_1) {
 
-    /* "kvxdb/core/reactor.pyx":254
+    /* "kvxdb/core/reactor.pyx":248
  *             c_free(c.rbuf); c.rbuf = NULL
  *         if c.wbuf != NULL:
  *             c_free(c.wbuf); c.wbuf = NULL             # <<<<<<<<<<<<<<
@@ -4245,7 +4248,7 @@ static CYTHON_INLINE void __pyx_f_5kvxdb_4core_7reactor_7Reactor__free_conn(CYTH
     free(__pyx_v_c->wbuf);
     __pyx_v_c->wbuf = NULL;
 
-    /* "kvxdb/core/reactor.pyx":253
+    /* "kvxdb/core/reactor.pyx":247
  *         if c.rbuf != NULL:
  *             c_free(c.rbuf); c.rbuf = NULL
  *         if c.wbuf != NULL:             # <<<<<<<<<<<<<<
@@ -4254,7 +4257,7 @@ static CYTHON_INLINE void __pyx_f_5kvxdb_4core_7reactor_7Reactor__free_conn(CYTH
 */
   }
 
-  /* "kvxdb/core/reactor.pyx":255
+  /* "kvxdb/core/reactor.pyx":249
  *         if c.wbuf != NULL:
  *             c_free(c.wbuf); c.wbuf = NULL
  *         c_free(c)             # <<<<<<<<<<<<<<
@@ -4263,7 +4266,7 @@ static CYTHON_INLINE void __pyx_f_5kvxdb_4core_7reactor_7Reactor__free_conn(CYTH
 */
   free(__pyx_v_c);
 
-  /* "kvxdb/core/reactor.pyx":245
+  /* "kvxdb/core/reactor.pyx":239
  *         return c
  * 
  *     cdef inline void _free_conn(self, conn_t* c) noexcept nogil:             # <<<<<<<<<<<<<<
@@ -4275,7 +4278,7 @@ static CYTHON_INLINE void __pyx_f_5kvxdb_4core_7reactor_7Reactor__free_conn(CYTH
   __pyx_L0:;
 }
 
-/* "kvxdb/core/reactor.pyx":257
+/* "kvxdb/core/reactor.pyx":251
  *         c_free(c)
  * 
  *     cdef inline int _ensure_cap(self, char** buf, size_t* cap, size_t need, size_t hard_max) noexcept nogil:             # <<<<<<<<<<<<<<
@@ -4289,7 +4292,7 @@ static CYTHON_INLINE int __pyx_f_5kvxdb_4core_7reactor_7Reactor__ensure_cap(CYTH
   int __pyx_r;
   int __pyx_t_1;
 
-  /* "kvxdb/core/reactor.pyx":258
+  /* "kvxdb/core/reactor.pyx":252
  * 
  *     cdef inline int _ensure_cap(self, char** buf, size_t* cap, size_t need, size_t hard_max) noexcept nogil:
  *         if cap[0] >= need:             # <<<<<<<<<<<<<<
@@ -4299,7 +4302,7 @@ static CYTHON_INLINE int __pyx_f_5kvxdb_4core_7reactor_7Reactor__ensure_cap(CYTH
   __pyx_t_1 = ((__pyx_v_cap[0]) >= __pyx_v_need);
   if (__pyx_t_1) {
 
-    /* "kvxdb/core/reactor.pyx":259
+    /* "kvxdb/core/reactor.pyx":253
  *     cdef inline int _ensure_cap(self, char** buf, size_t* cap, size_t need, size_t hard_max) noexcept nogil:
  *         if cap[0] >= need:
  *             return 0             # <<<<<<<<<<<<<<
@@ -4309,7 +4312,7 @@ static CYTHON_INLINE int __pyx_f_5kvxdb_4core_7reactor_7Reactor__ensure_cap(CYTH
     __pyx_r = 0;
     goto __pyx_L0;
 
-    /* "kvxdb/core/reactor.pyx":258
+    /* "kvxdb/core/reactor.pyx":252
  * 
  *     cdef inline int _ensure_cap(self, char** buf, size_t* cap, size_t need, size_t hard_max) noexcept nogil:
  *         if cap[0] >= need:             # <<<<<<<<<<<<<<
@@ -4318,7 +4321,7 @@ static CYTHON_INLINE int __pyx_f_5kvxdb_4core_7reactor_7Reactor__ensure_cap(CYTH
 */
   }
 
-  /* "kvxdb/core/reactor.pyx":260
+  /* "kvxdb/core/reactor.pyx":254
  *         if cap[0] >= need:
  *             return 0
  *         cdef size_t newcap = cap[0]             # <<<<<<<<<<<<<<
@@ -4327,7 +4330,7 @@ static CYTHON_INLINE int __pyx_f_5kvxdb_4core_7reactor_7Reactor__ensure_cap(CYTH
 */
   __pyx_v_newcap = (__pyx_v_cap[0]);
 
-  /* "kvxdb/core/reactor.pyx":261
+  /* "kvxdb/core/reactor.pyx":255
  *             return 0
  *         cdef size_t newcap = cap[0]
  *         while newcap < need:             # <<<<<<<<<<<<<<
@@ -4338,7 +4341,7 @@ static CYTHON_INLINE int __pyx_f_5kvxdb_4core_7reactor_7Reactor__ensure_cap(CYTH
     __pyx_t_1 = (__pyx_v_newcap < __pyx_v_need);
     if (!__pyx_t_1) break;
 
-    /* "kvxdb/core/reactor.pyx":262
+    /* "kvxdb/core/reactor.pyx":256
  *         cdef size_t newcap = cap[0]
  *         while newcap < need:
  *             newcap = newcap * 2             # <<<<<<<<<<<<<<
@@ -4347,7 +4350,7 @@ static CYTHON_INLINE int __pyx_f_5kvxdb_4core_7reactor_7Reactor__ensure_cap(CYTH
 */
     __pyx_v_newcap = (__pyx_v_newcap * 2);
 
-    /* "kvxdb/core/reactor.pyx":263
+    /* "kvxdb/core/reactor.pyx":257
  *         while newcap < need:
  *             newcap = newcap * 2
  *             if newcap > hard_max:             # <<<<<<<<<<<<<<
@@ -4357,7 +4360,7 @@ static CYTHON_INLINE int __pyx_f_5kvxdb_4core_7reactor_7Reactor__ensure_cap(CYTH
     __pyx_t_1 = (__pyx_v_newcap > __pyx_v_hard_max);
     if (__pyx_t_1) {
 
-      /* "kvxdb/core/reactor.pyx":264
+      /* "kvxdb/core/reactor.pyx":258
  *             newcap = newcap * 2
  *             if newcap > hard_max:
  *                 newcap = hard_max             # <<<<<<<<<<<<<<
@@ -4366,7 +4369,7 @@ static CYTHON_INLINE int __pyx_f_5kvxdb_4core_7reactor_7Reactor__ensure_cap(CYTH
 */
       __pyx_v_newcap = __pyx_v_hard_max;
 
-      /* "kvxdb/core/reactor.pyx":265
+      /* "kvxdb/core/reactor.pyx":259
  *             if newcap > hard_max:
  *                 newcap = hard_max
  *                 break             # <<<<<<<<<<<<<<
@@ -4375,7 +4378,7 @@ static CYTHON_INLINE int __pyx_f_5kvxdb_4core_7reactor_7Reactor__ensure_cap(CYTH
 */
       goto __pyx_L5_break;
 
-      /* "kvxdb/core/reactor.pyx":263
+      /* "kvxdb/core/reactor.pyx":257
  *         while newcap < need:
  *             newcap = newcap * 2
  *             if newcap > hard_max:             # <<<<<<<<<<<<<<
@@ -4386,7 +4389,7 @@ static CYTHON_INLINE int __pyx_f_5kvxdb_4core_7reactor_7Reactor__ensure_cap(CYTH
   }
   __pyx_L5_break:;
 
-  /* "kvxdb/core/reactor.pyx":266
+  /* "kvxdb/core/reactor.pyx":260
  *                 newcap = hard_max
  *                 break
  *         if newcap < need:             # <<<<<<<<<<<<<<
@@ -4396,7 +4399,7 @@ static CYTHON_INLINE int __pyx_f_5kvxdb_4core_7reactor_7Reactor__ensure_cap(CYTH
   __pyx_t_1 = (__pyx_v_newcap < __pyx_v_need);
   if (__pyx_t_1) {
 
-    /* "kvxdb/core/reactor.pyx":267
+    /* "kvxdb/core/reactor.pyx":261
  *                 break
  *         if newcap < need:
  *             return -1             # <<<<<<<<<<<<<<
@@ -4406,7 +4409,7 @@ static CYTHON_INLINE int __pyx_f_5kvxdb_4core_7reactor_7Reactor__ensure_cap(CYTH
     __pyx_r = -1;
     goto __pyx_L0;
 
-    /* "kvxdb/core/reactor.pyx":266
+    /* "kvxdb/core/reactor.pyx":260
  *                 newcap = hard_max
  *                 break
  *         if newcap < need:             # <<<<<<<<<<<<<<
@@ -4415,7 +4418,7 @@ static CYTHON_INLINE int __pyx_f_5kvxdb_4core_7reactor_7Reactor__ensure_cap(CYTH
 */
   }
 
-  /* "kvxdb/core/reactor.pyx":268
+  /* "kvxdb/core/reactor.pyx":262
  *         if newcap < need:
  *             return -1
  *         cdef void* p = c_realloc(<void*>buf[0], newcap)             # <<<<<<<<<<<<<<
@@ -4424,7 +4427,7 @@ static CYTHON_INLINE int __pyx_f_5kvxdb_4core_7reactor_7Reactor__ensure_cap(CYTH
 */
   __pyx_v_p = realloc(((void *)(__pyx_v_buf[0])), __pyx_v_newcap);
 
-  /* "kvxdb/core/reactor.pyx":269
+  /* "kvxdb/core/reactor.pyx":263
  *             return -1
  *         cdef void* p = c_realloc(<void*>buf[0], newcap)
  *         if p == NULL:             # <<<<<<<<<<<<<<
@@ -4434,7 +4437,7 @@ static CYTHON_INLINE int __pyx_f_5kvxdb_4core_7reactor_7Reactor__ensure_cap(CYTH
   __pyx_t_1 = (__pyx_v_p == NULL);
   if (__pyx_t_1) {
 
-    /* "kvxdb/core/reactor.pyx":270
+    /* "kvxdb/core/reactor.pyx":264
  *         cdef void* p = c_realloc(<void*>buf[0], newcap)
  *         if p == NULL:
  *             return -1             # <<<<<<<<<<<<<<
@@ -4444,7 +4447,7 @@ static CYTHON_INLINE int __pyx_f_5kvxdb_4core_7reactor_7Reactor__ensure_cap(CYTH
     __pyx_r = -1;
     goto __pyx_L0;
 
-    /* "kvxdb/core/reactor.pyx":269
+    /* "kvxdb/core/reactor.pyx":263
  *             return -1
  *         cdef void* p = c_realloc(<void*>buf[0], newcap)
  *         if p == NULL:             # <<<<<<<<<<<<<<
@@ -4453,7 +4456,7 @@ static CYTHON_INLINE int __pyx_f_5kvxdb_4core_7reactor_7Reactor__ensure_cap(CYTH
 */
   }
 
-  /* "kvxdb/core/reactor.pyx":271
+  /* "kvxdb/core/reactor.pyx":265
  *         if p == NULL:
  *             return -1
  *         buf[0] = <char*>p             # <<<<<<<<<<<<<<
@@ -4462,7 +4465,7 @@ static CYTHON_INLINE int __pyx_f_5kvxdb_4core_7reactor_7Reactor__ensure_cap(CYTH
 */
   (__pyx_v_buf[0]) = ((char *)__pyx_v_p);
 
-  /* "kvxdb/core/reactor.pyx":272
+  /* "kvxdb/core/reactor.pyx":266
  *             return -1
  *         buf[0] = <char*>p
  *         cap[0] = newcap             # <<<<<<<<<<<<<<
@@ -4471,7 +4474,7 @@ static CYTHON_INLINE int __pyx_f_5kvxdb_4core_7reactor_7Reactor__ensure_cap(CYTH
 */
   (__pyx_v_cap[0]) = __pyx_v_newcap;
 
-  /* "kvxdb/core/reactor.pyx":273
+  /* "kvxdb/core/reactor.pyx":267
  *         buf[0] = <char*>p
  *         cap[0] = newcap
  *         return 0             # <<<<<<<<<<<<<<
@@ -4481,7 +4484,7 @@ static CYTHON_INLINE int __pyx_f_5kvxdb_4core_7reactor_7Reactor__ensure_cap(CYTH
   __pyx_r = 0;
   goto __pyx_L0;
 
-  /* "kvxdb/core/reactor.pyx":257
+  /* "kvxdb/core/reactor.pyx":251
  *         c_free(c)
  * 
  *     cdef inline int _ensure_cap(self, char** buf, size_t* cap, size_t need, size_t hard_max) noexcept nogil:             # <<<<<<<<<<<<<<
@@ -4494,7 +4497,7 @@ static CYTHON_INLINE int __pyx_f_5kvxdb_4core_7reactor_7Reactor__ensure_cap(CYTH
   return __pyx_r;
 }
 
-/* "kvxdb/core/reactor.pyx":275
+/* "kvxdb/core/reactor.pyx":269
  *         return 0
  * 
  *     cdef void _accept_loop(self):             # <<<<<<<<<<<<<<
@@ -4509,7 +4512,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__accept_loop(struct __pyx_obj
   int __pyx_t_1;
   int __pyx_t_2;
 
-  /* "kvxdb/core/reactor.pyx":279
+  /* "kvxdb/core/reactor.pyx":273
  *         cdef int fl
  *         cdef conn_t* c
  *         with nogil:             # <<<<<<<<<<<<<<
@@ -4523,7 +4526,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__accept_loop(struct __pyx_obj
       __Pyx_FastGIL_Remember();
       /*try:*/ {
 
-        /* "kvxdb/core/reactor.pyx":280
+        /* "kvxdb/core/reactor.pyx":274
  *         cdef conn_t* c
  *         with nogil:
  *             while True:             # <<<<<<<<<<<<<<
@@ -4532,7 +4535,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__accept_loop(struct __pyx_obj
 */
         while (1) {
 
-          /* "kvxdb/core/reactor.pyx":281
+          /* "kvxdb/core/reactor.pyx":275
  *         with nogil:
  *             while True:
  *                 nfd = accept(self.lfd, NULL, NULL)             # <<<<<<<<<<<<<<
@@ -4541,7 +4544,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__accept_loop(struct __pyx_obj
 */
           __pyx_v_nfd = accept(__pyx_v_self->lfd, NULL, NULL);
 
-          /* "kvxdb/core/reactor.pyx":282
+          /* "kvxdb/core/reactor.pyx":276
  *             while True:
  *                 nfd = accept(self.lfd, NULL, NULL)
  *                 if nfd < 0:             # <<<<<<<<<<<<<<
@@ -4551,7 +4554,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__accept_loop(struct __pyx_obj
           __pyx_t_1 = (__pyx_v_nfd < 0);
           if (__pyx_t_1) {
 
-            /* "kvxdb/core/reactor.pyx":283
+            /* "kvxdb/core/reactor.pyx":277
  *                 nfd = accept(self.lfd, NULL, NULL)
  *                 if nfd < 0:
  *                     if errno == EINTR:             # <<<<<<<<<<<<<<
@@ -4561,7 +4564,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__accept_loop(struct __pyx_obj
             __pyx_t_1 = (errno == EINTR);
             if (__pyx_t_1) {
 
-              /* "kvxdb/core/reactor.pyx":284
+              /* "kvxdb/core/reactor.pyx":278
  *                 if nfd < 0:
  *                     if errno == EINTR:
  *                         continue             # <<<<<<<<<<<<<<
@@ -4570,7 +4573,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__accept_loop(struct __pyx_obj
 */
               goto __pyx_L6_continue;
 
-              /* "kvxdb/core/reactor.pyx":283
+              /* "kvxdb/core/reactor.pyx":277
  *                 nfd = accept(self.lfd, NULL, NULL)
  *                 if nfd < 0:
  *                     if errno == EINTR:             # <<<<<<<<<<<<<<
@@ -4579,7 +4582,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__accept_loop(struct __pyx_obj
 */
             }
 
-            /* "kvxdb/core/reactor.pyx":285
+            /* "kvxdb/core/reactor.pyx":279
  *                     if errno == EINTR:
  *                         continue
  *                     if errno == EAGAIN or errno == EWOULDBLOCK:             # <<<<<<<<<<<<<<
@@ -4597,7 +4600,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__accept_loop(struct __pyx_obj
             __pyx_L11_bool_binop_done:;
             if (__pyx_t_1) {
 
-              /* "kvxdb/core/reactor.pyx":286
+              /* "kvxdb/core/reactor.pyx":280
  *                         continue
  *                     if errno == EAGAIN or errno == EWOULDBLOCK:
  *                         break             # <<<<<<<<<<<<<<
@@ -4606,7 +4609,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__accept_loop(struct __pyx_obj
 */
               goto __pyx_L7_break;
 
-              /* "kvxdb/core/reactor.pyx":285
+              /* "kvxdb/core/reactor.pyx":279
  *                     if errno == EINTR:
  *                         continue
  *                     if errno == EAGAIN or errno == EWOULDBLOCK:             # <<<<<<<<<<<<<<
@@ -4615,16 +4618,16 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__accept_loop(struct __pyx_obj
 */
             }
 
-            /* "kvxdb/core/reactor.pyx":287
+            /* "kvxdb/core/reactor.pyx":281
  *                     if errno == EAGAIN or errno == EWOULDBLOCK:
  *                         break
  *                     break             # <<<<<<<<<<<<<<
  * 
- *                 # fcntl(...)  varargs:  GIL
+ *                 with gil:
 */
             goto __pyx_L7_break;
 
-            /* "kvxdb/core/reactor.pyx":282
+            /* "kvxdb/core/reactor.pyx":276
  *             while True:
  *                 nfd = accept(self.lfd, NULL, NULL)
  *                 if nfd < 0:             # <<<<<<<<<<<<<<
@@ -4633,9 +4636,9 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__accept_loop(struct __pyx_obj
 */
           }
 
-          /* "kvxdb/core/reactor.pyx":290
+          /* "kvxdb/core/reactor.pyx":283
+ *                     break
  * 
- *                 # fcntl(...)  varargs:  GIL
  *                 with gil:             # <<<<<<<<<<<<<<
  *                     fl = fcntl(nfd, F_GETFD)
  *                     fcntl(nfd, F_SETFD, fl | FD_CLOEXEC)
@@ -4644,8 +4647,8 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__accept_loop(struct __pyx_obj
               PyGILState_STATE __pyx_gilstate_save = __Pyx_PyGILState_Ensure();
               /*try:*/ {
 
-                /* "kvxdb/core/reactor.pyx":291
- *                 # fcntl(...)  varargs:  GIL
+                /* "kvxdb/core/reactor.pyx":284
+ * 
  *                 with gil:
  *                     fl = fcntl(nfd, F_GETFD)             # <<<<<<<<<<<<<<
  *                     fcntl(nfd, F_SETFD, fl | FD_CLOEXEC)
@@ -4653,7 +4656,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__accept_loop(struct __pyx_obj
 */
                 __pyx_v_fl = fcntl(__pyx_v_nfd, F_GETFD);
 
-                /* "kvxdb/core/reactor.pyx":292
+                /* "kvxdb/core/reactor.pyx":285
  *                 with gil:
  *                     fl = fcntl(nfd, F_GETFD)
  *                     fcntl(nfd, F_SETFD, fl | FD_CLOEXEC)             # <<<<<<<<<<<<<<
@@ -4662,7 +4665,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__accept_loop(struct __pyx_obj
 */
                 (void)(fcntl(__pyx_v_nfd, F_SETFD, (__pyx_v_fl | FD_CLOEXEC)));
 
-                /* "kvxdb/core/reactor.pyx":293
+                /* "kvxdb/core/reactor.pyx":286
  *                     fl = fcntl(nfd, F_GETFD)
  *                     fcntl(nfd, F_SETFD, fl | FD_CLOEXEC)
  *                     fl = fcntl(nfd, F_GETFL)             # <<<<<<<<<<<<<<
@@ -4671,7 +4674,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__accept_loop(struct __pyx_obj
 */
                 __pyx_v_fl = fcntl(__pyx_v_nfd, F_GETFL);
 
-                /* "kvxdb/core/reactor.pyx":294
+                /* "kvxdb/core/reactor.pyx":287
  *                     fcntl(nfd, F_SETFD, fl | FD_CLOEXEC)
  *                     fl = fcntl(nfd, F_GETFL)
  *                     fcntl(nfd, F_SETFL, fl | O_NONBLOCK)             # <<<<<<<<<<<<<<
@@ -4681,9 +4684,9 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__accept_loop(struct __pyx_obj
                 (void)(fcntl(__pyx_v_nfd, F_SETFL, (__pyx_v_fl | O_NONBLOCK)));
               }
 
-              /* "kvxdb/core/reactor.pyx":290
+              /* "kvxdb/core/reactor.pyx":283
+ *                     break
  * 
- *                 # fcntl(...)  varargs:  GIL
  *                 with gil:             # <<<<<<<<<<<<<<
  *                     fl = fcntl(nfd, F_GETFD)
  *                     fcntl(nfd, F_SETFD, fl | FD_CLOEXEC)
@@ -4697,7 +4700,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__accept_loop(struct __pyx_obj
               }
           }
 
-          /* "kvxdb/core/reactor.pyx":296
+          /* "kvxdb/core/reactor.pyx":289
  *                     fcntl(nfd, F_SETFL, fl | O_NONBLOCK)
  * 
  *                 if self.cur_conns >= self.max_conns:             # <<<<<<<<<<<<<<
@@ -4707,7 +4710,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__accept_loop(struct __pyx_obj
           __pyx_t_1 = (__pyx_v_self->cur_conns >= __pyx_v_self->max_conns);
           if (__pyx_t_1) {
 
-            /* "kvxdb/core/reactor.pyx":297
+            /* "kvxdb/core/reactor.pyx":290
  * 
  *                 if self.cur_conns >= self.max_conns:
  *                     c_close(nfd)             # <<<<<<<<<<<<<<
@@ -4716,7 +4719,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__accept_loop(struct __pyx_obj
 */
             (void)(close(__pyx_v_nfd));
 
-            /* "kvxdb/core/reactor.pyx":298
+            /* "kvxdb/core/reactor.pyx":291
  *                 if self.cur_conns >= self.max_conns:
  *                     c_close(nfd)
  *                     continue             # <<<<<<<<<<<<<<
@@ -4725,7 +4728,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__accept_loop(struct __pyx_obj
 */
             goto __pyx_L6_continue;
 
-            /* "kvxdb/core/reactor.pyx":296
+            /* "kvxdb/core/reactor.pyx":289
  *                     fcntl(nfd, F_SETFL, fl | O_NONBLOCK)
  * 
  *                 if self.cur_conns >= self.max_conns:             # <<<<<<<<<<<<<<
@@ -4734,7 +4737,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__accept_loop(struct __pyx_obj
 */
           }
 
-          /* "kvxdb/core/reactor.pyx":300
+          /* "kvxdb/core/reactor.pyx":293
  *                     continue
  * 
  *                 c = self._mk_conn(nfd)             # <<<<<<<<<<<<<<
@@ -4743,7 +4746,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__accept_loop(struct __pyx_obj
 */
           __pyx_v_c = __pyx_f_5kvxdb_4core_7reactor_7Reactor__mk_conn(__pyx_v_self, __pyx_v_nfd);
 
-          /* "kvxdb/core/reactor.pyx":301
+          /* "kvxdb/core/reactor.pyx":294
  * 
  *                 c = self._mk_conn(nfd)
  *                 if c == NULL:             # <<<<<<<<<<<<<<
@@ -4753,7 +4756,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__accept_loop(struct __pyx_obj
           __pyx_t_1 = (__pyx_v_c == NULL);
           if (__pyx_t_1) {
 
-            /* "kvxdb/core/reactor.pyx":302
+            /* "kvxdb/core/reactor.pyx":295
  *                 c = self._mk_conn(nfd)
  *                 if c == NULL:
  *                     c_close(nfd)             # <<<<<<<<<<<<<<
@@ -4762,7 +4765,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__accept_loop(struct __pyx_obj
 */
             (void)(close(__pyx_v_nfd));
 
-            /* "kvxdb/core/reactor.pyx":303
+            /* "kvxdb/core/reactor.pyx":296
  *                 if c == NULL:
  *                     c_close(nfd)
  *                     continue             # <<<<<<<<<<<<<<
@@ -4771,7 +4774,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__accept_loop(struct __pyx_obj
 */
             goto __pyx_L6_continue;
 
-            /* "kvxdb/core/reactor.pyx":301
+            /* "kvxdb/core/reactor.pyx":294
  * 
  *                 c = self._mk_conn(nfd)
  *                 if c == NULL:             # <<<<<<<<<<<<<<
@@ -4780,7 +4783,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__accept_loop(struct __pyx_obj
 */
           }
 
-          /* "kvxdb/core/reactor.pyx":305
+          /* "kvxdb/core/reactor.pyx":298
  *                     continue
  * 
  *                 self.cur_conns += 1             # <<<<<<<<<<<<<<
@@ -4789,7 +4792,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__accept_loop(struct __pyx_obj
 */
           __pyx_v_self->cur_conns = (__pyx_v_self->cur_conns + 1);
 
-          /* "kvxdb/core/reactor.pyx":306
+          /* "kvxdb/core/reactor.pyx":299
  * 
  *                 self.cur_conns += 1
  *                 self._list_add(c)             # <<<<<<<<<<<<<<
@@ -4802,7 +4805,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__accept_loop(struct __pyx_obj
         __pyx_L7_break:;
       }
 
-      /* "kvxdb/core/reactor.pyx":279
+      /* "kvxdb/core/reactor.pyx":273
  *         cdef int fl
  *         cdef conn_t* c
  *         with nogil:             # <<<<<<<<<<<<<<
@@ -4819,7 +4822,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__accept_loop(struct __pyx_obj
       }
   }
 
-  /* "kvxdb/core/reactor.pyx":275
+  /* "kvxdb/core/reactor.pyx":269
  *         return 0
  * 
  *     cdef void _accept_loop(self):             # <<<<<<<<<<<<<<
@@ -4830,7 +4833,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__accept_loop(struct __pyx_obj
   /* function exit code */
 }
 
-/* "kvxdb/core/reactor.pyx":308
+/* "kvxdb/core/reactor.pyx":301
  *                 self._list_add(c)
  * 
  *     cdef void _handle_read(self, conn_t* c):             # <<<<<<<<<<<<<<
@@ -4847,7 +4850,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_read(struct __pyx_obj
   const char *__pyx_filename = NULL;
   int __pyx_clineno = 0;
 
-  /* "kvxdb/core/reactor.pyx":311
+  /* "kvxdb/core/reactor.pyx":304
  *         cdef ssize_t n
  *         cdef size_t free_space
  *         with nogil:             # <<<<<<<<<<<<<<
@@ -4861,7 +4864,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_read(struct __pyx_obj
       __Pyx_FastGIL_Remember();
       /*try:*/ {
 
-        /* "kvxdb/core/reactor.pyx":312
+        /* "kvxdb/core/reactor.pyx":305
  *         cdef size_t free_space
  *         with nogil:
  *             while True:             # <<<<<<<<<<<<<<
@@ -4870,7 +4873,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_read(struct __pyx_obj
 */
         while (1) {
 
-          /* "kvxdb/core/reactor.pyx":313
+          /* "kvxdb/core/reactor.pyx":306
  *         with nogil:
  *             while True:
  *                 if c.rlen == c.rcap:             # <<<<<<<<<<<<<<
@@ -4880,7 +4883,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_read(struct __pyx_obj
           __pyx_t_1 = (__pyx_v_c->rlen == __pyx_v_c->rcap);
           if (__pyx_t_1) {
 
-            /* "kvxdb/core/reactor.pyx":314
+            /* "kvxdb/core/reactor.pyx":307
  *             while True:
  *                 if c.rlen == c.rcap:
  *                     if self._ensure_cap(&c.rbuf, &c.rcap, c.rlen + 4096, self.max_bulk) != 0:             # <<<<<<<<<<<<<<
@@ -4890,7 +4893,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_read(struct __pyx_obj
             __pyx_t_1 = (__pyx_f_5kvxdb_4core_7reactor_7Reactor__ensure_cap(__pyx_v_self, (&__pyx_v_c->rbuf), (&__pyx_v_c->rcap), (__pyx_v_c->rlen + 0x1000), __pyx_v_self->max_bulk) != 0);
             if (__pyx_t_1) {
 
-              /* "kvxdb/core/reactor.pyx":315
+              /* "kvxdb/core/reactor.pyx":308
  *                 if c.rlen == c.rcap:
  *                     if self._ensure_cap(&c.rbuf, &c.rcap, c.rlen + 4096, self.max_bulk) != 0:
  *                         c.state = CONN_CLOSED             # <<<<<<<<<<<<<<
@@ -4899,7 +4902,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_read(struct __pyx_obj
 */
               __pyx_v_c->state = __pyx_e_5kvxdb_4core_7reactor_CONN_CLOSED;
 
-              /* "kvxdb/core/reactor.pyx":316
+              /* "kvxdb/core/reactor.pyx":309
  *                     if self._ensure_cap(&c.rbuf, &c.rcap, c.rlen + 4096, self.max_bulk) != 0:
  *                         c.state = CONN_CLOSED
  *                         return             # <<<<<<<<<<<<<<
@@ -4908,7 +4911,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_read(struct __pyx_obj
 */
               goto __pyx_L3_return;
 
-              /* "kvxdb/core/reactor.pyx":314
+              /* "kvxdb/core/reactor.pyx":307
  *             while True:
  *                 if c.rlen == c.rcap:
  *                     if self._ensure_cap(&c.rbuf, &c.rcap, c.rlen + 4096, self.max_bulk) != 0:             # <<<<<<<<<<<<<<
@@ -4917,7 +4920,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_read(struct __pyx_obj
 */
             }
 
-            /* "kvxdb/core/reactor.pyx":313
+            /* "kvxdb/core/reactor.pyx":306
  *         with nogil:
  *             while True:
  *                 if c.rlen == c.rcap:             # <<<<<<<<<<<<<<
@@ -4926,7 +4929,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_read(struct __pyx_obj
 */
           }
 
-          /* "kvxdb/core/reactor.pyx":317
+          /* "kvxdb/core/reactor.pyx":310
  *                         c.state = CONN_CLOSED
  *                         return
  *                 free_space = c.rcap - c.rlen             # <<<<<<<<<<<<<<
@@ -4935,7 +4938,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_read(struct __pyx_obj
 */
           __pyx_v_free_space = (__pyx_v_c->rcap - __pyx_v_c->rlen);
 
-          /* "kvxdb/core/reactor.pyx":318
+          /* "kvxdb/core/reactor.pyx":311
  *                         return
  *                 free_space = c.rcap - c.rlen
  *                 n = c_read(c.fd, c.rbuf + c.rlen, free_space)             # <<<<<<<<<<<<<<
@@ -4944,7 +4947,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_read(struct __pyx_obj
 */
           __pyx_v_n = read(__pyx_v_c->fd, (__pyx_v_c->rbuf + __pyx_v_c->rlen), __pyx_v_free_space);
 
-          /* "kvxdb/core/reactor.pyx":319
+          /* "kvxdb/core/reactor.pyx":312
  *                 free_space = c.rcap - c.rlen
  *                 n = c_read(c.fd, c.rbuf + c.rlen, free_space)
  *                 if n == 0:             # <<<<<<<<<<<<<<
@@ -4954,7 +4957,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_read(struct __pyx_obj
           __pyx_t_1 = (__pyx_v_n == 0);
           if (__pyx_t_1) {
 
-            /* "kvxdb/core/reactor.pyx":320
+            /* "kvxdb/core/reactor.pyx":313
  *                 n = c_read(c.fd, c.rbuf + c.rlen, free_space)
  *                 if n == 0:
  *                     c.state = CONN_CLOSED             # <<<<<<<<<<<<<<
@@ -4963,7 +4966,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_read(struct __pyx_obj
 */
             __pyx_v_c->state = __pyx_e_5kvxdb_4core_7reactor_CONN_CLOSED;
 
-            /* "kvxdb/core/reactor.pyx":321
+            /* "kvxdb/core/reactor.pyx":314
  *                 if n == 0:
  *                     c.state = CONN_CLOSED
  *                     return             # <<<<<<<<<<<<<<
@@ -4972,7 +4975,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_read(struct __pyx_obj
 */
             goto __pyx_L3_return;
 
-            /* "kvxdb/core/reactor.pyx":319
+            /* "kvxdb/core/reactor.pyx":312
  *                 free_space = c.rcap - c.rlen
  *                 n = c_read(c.fd, c.rbuf + c.rlen, free_space)
  *                 if n == 0:             # <<<<<<<<<<<<<<
@@ -4981,7 +4984,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_read(struct __pyx_obj
 */
           }
 
-          /* "kvxdb/core/reactor.pyx":322
+          /* "kvxdb/core/reactor.pyx":315
  *                     c.state = CONN_CLOSED
  *                     return
  *                 if n < 0:             # <<<<<<<<<<<<<<
@@ -4991,7 +4994,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_read(struct __pyx_obj
           __pyx_t_1 = (__pyx_v_n < 0);
           if (__pyx_t_1) {
 
-            /* "kvxdb/core/reactor.pyx":323
+            /* "kvxdb/core/reactor.pyx":316
  *                     return
  *                 if n < 0:
  *                     if errno == EINTR:             # <<<<<<<<<<<<<<
@@ -5001,7 +5004,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_read(struct __pyx_obj
             __pyx_t_1 = (errno == EINTR);
             if (__pyx_t_1) {
 
-              /* "kvxdb/core/reactor.pyx":324
+              /* "kvxdb/core/reactor.pyx":317
  *                 if n < 0:
  *                     if errno == EINTR:
  *                         continue             # <<<<<<<<<<<<<<
@@ -5010,7 +5013,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_read(struct __pyx_obj
 */
               goto __pyx_L6_continue;
 
-              /* "kvxdb/core/reactor.pyx":323
+              /* "kvxdb/core/reactor.pyx":316
  *                     return
  *                 if n < 0:
  *                     if errno == EINTR:             # <<<<<<<<<<<<<<
@@ -5019,7 +5022,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_read(struct __pyx_obj
 */
             }
 
-            /* "kvxdb/core/reactor.pyx":325
+            /* "kvxdb/core/reactor.pyx":318
  *                     if errno == EINTR:
  *                         continue
  *                     if errno == EAGAIN or errno == EWOULDBLOCK:             # <<<<<<<<<<<<<<
@@ -5037,7 +5040,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_read(struct __pyx_obj
             __pyx_L14_bool_binop_done:;
             if (__pyx_t_1) {
 
-              /* "kvxdb/core/reactor.pyx":326
+              /* "kvxdb/core/reactor.pyx":319
  *                         continue
  *                     if errno == EAGAIN or errno == EWOULDBLOCK:
  *                         break             # <<<<<<<<<<<<<<
@@ -5046,7 +5049,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_read(struct __pyx_obj
 */
               goto __pyx_L7_break;
 
-              /* "kvxdb/core/reactor.pyx":325
+              /* "kvxdb/core/reactor.pyx":318
  *                     if errno == EINTR:
  *                         continue
  *                     if errno == EAGAIN or errno == EWOULDBLOCK:             # <<<<<<<<<<<<<<
@@ -5055,7 +5058,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_read(struct __pyx_obj
 */
             }
 
-            /* "kvxdb/core/reactor.pyx":327
+            /* "kvxdb/core/reactor.pyx":320
  *                     if errno == EAGAIN or errno == EWOULDBLOCK:
  *                         break
  *                     c.state = CONN_CLOSED             # <<<<<<<<<<<<<<
@@ -5064,7 +5067,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_read(struct __pyx_obj
 */
             __pyx_v_c->state = __pyx_e_5kvxdb_4core_7reactor_CONN_CLOSED;
 
-            /* "kvxdb/core/reactor.pyx":328
+            /* "kvxdb/core/reactor.pyx":321
  *                         break
  *                     c.state = CONN_CLOSED
  *                     return             # <<<<<<<<<<<<<<
@@ -5073,7 +5076,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_read(struct __pyx_obj
 */
             goto __pyx_L3_return;
 
-            /* "kvxdb/core/reactor.pyx":322
+            /* "kvxdb/core/reactor.pyx":315
  *                     c.state = CONN_CLOSED
  *                     return
  *                 if n < 0:             # <<<<<<<<<<<<<<
@@ -5082,7 +5085,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_read(struct __pyx_obj
 */
           }
 
-          /* "kvxdb/core/reactor.pyx":329
+          /* "kvxdb/core/reactor.pyx":322
  *                     c.state = CONN_CLOSED
  *                     return
  *                 c.rlen += <size_t>n             # <<<<<<<<<<<<<<
@@ -5091,7 +5094,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_read(struct __pyx_obj
 */
           __pyx_v_c->rlen = (__pyx_v_c->rlen + ((size_t)__pyx_v_n));
 
-          /* "kvxdb/core/reactor.pyx":330
+          /* "kvxdb/core/reactor.pyx":323
  *                     return
  *                 c.rlen += <size_t>n
  *                 c.last_active_ms = now_ms()             # <<<<<<<<<<<<<<
@@ -5100,7 +5103,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_read(struct __pyx_obj
 */
           __pyx_v_c->last_active_ms = __pyx_f_5kvxdb_4core_7reactor_now_ms();
 
-          /* "kvxdb/core/reactor.pyx":331
+          /* "kvxdb/core/reactor.pyx":324
  *                 c.rlen += <size_t>n
  *                 c.last_active_ms = now_ms()
  *                 if c.rlen > self.max_bulk:             # <<<<<<<<<<<<<<
@@ -5110,7 +5113,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_read(struct __pyx_obj
           __pyx_t_1 = (__pyx_v_c->rlen > __pyx_v_self->max_bulk);
           if (__pyx_t_1) {
 
-            /* "kvxdb/core/reactor.pyx":332
+            /* "kvxdb/core/reactor.pyx":325
  *                 c.last_active_ms = now_ms()
  *                 if c.rlen > self.max_bulk:
  *                     c.state = CONN_CLOSED             # <<<<<<<<<<<<<<
@@ -5119,7 +5122,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_read(struct __pyx_obj
 */
             __pyx_v_c->state = __pyx_e_5kvxdb_4core_7reactor_CONN_CLOSED;
 
-            /* "kvxdb/core/reactor.pyx":333
+            /* "kvxdb/core/reactor.pyx":326
  *                 if c.rlen > self.max_bulk:
  *                     c.state = CONN_CLOSED
  *                     return             # <<<<<<<<<<<<<<
@@ -5128,7 +5131,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_read(struct __pyx_obj
 */
             goto __pyx_L3_return;
 
-            /* "kvxdb/core/reactor.pyx":331
+            /* "kvxdb/core/reactor.pyx":324
  *                 c.rlen += <size_t>n
  *                 c.last_active_ms = now_ms()
  *                 if c.rlen > self.max_bulk:             # <<<<<<<<<<<<<<
@@ -5141,7 +5144,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_read(struct __pyx_obj
         __pyx_L7_break:;
       }
 
-      /* "kvxdb/core/reactor.pyx":311
+      /* "kvxdb/core/reactor.pyx":304
  *         cdef ssize_t n
  *         cdef size_t free_space
  *         with nogil:             # <<<<<<<<<<<<<<
@@ -5163,18 +5166,18 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_read(struct __pyx_obj
       }
   }
 
-  /* "kvxdb/core/reactor.pyx":335
+  /* "kvxdb/core/reactor.pyx":328
  *                     return
  * 
  *         self._process_requests(c)             # <<<<<<<<<<<<<<
  * 
- *         # >>> :
+ *         #
 */
-  ((struct __pyx_vtabstruct_5kvxdb_4core_7reactor_Reactor *)__pyx_v_self->__pyx_vtab)->_process_requests(__pyx_v_self, __pyx_v_c); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 335, __pyx_L1_error)
+  ((struct __pyx_vtabstruct_5kvxdb_4core_7reactor_Reactor *)__pyx_v_self->__pyx_vtab)->_process_requests(__pyx_v_self, __pyx_v_c); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 328, __pyx_L1_error)
 
-  /* "kvxdb/core/reactor.pyx":338
+  /* "kvxdb/core/reactor.pyx":331
  * 
- *         # >>> :
+ *         #
  *         if c.state != CONN_CLOSED and c.wlen > c.woff:             # <<<<<<<<<<<<<<
  *             self._handle_write(c)
  * 
@@ -5190,25 +5193,25 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_read(struct __pyx_obj
   __pyx_L18_bool_binop_done:;
   if (__pyx_t_1) {
 
-    /* "kvxdb/core/reactor.pyx":339
- *         # >>> :
+    /* "kvxdb/core/reactor.pyx":332
+ *         #
  *         if c.state != CONN_CLOSED and c.wlen > c.woff:
  *             self._handle_write(c)             # <<<<<<<<<<<<<<
  * 
  *     cdef void _handle_write(self, conn_t* c):
 */
-    ((struct __pyx_vtabstruct_5kvxdb_4core_7reactor_Reactor *)__pyx_v_self->__pyx_vtab)->_handle_write(__pyx_v_self, __pyx_v_c); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 339, __pyx_L1_error)
+    ((struct __pyx_vtabstruct_5kvxdb_4core_7reactor_Reactor *)__pyx_v_self->__pyx_vtab)->_handle_write(__pyx_v_self, __pyx_v_c); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 332, __pyx_L1_error)
 
-    /* "kvxdb/core/reactor.pyx":338
+    /* "kvxdb/core/reactor.pyx":331
  * 
- *         # >>> :
+ *         #
  *         if c.state != CONN_CLOSED and c.wlen > c.woff:             # <<<<<<<<<<<<<<
  *             self._handle_write(c)
  * 
 */
   }
 
-  /* "kvxdb/core/reactor.pyx":308
+  /* "kvxdb/core/reactor.pyx":301
  *                 self._list_add(c)
  * 
  *     cdef void _handle_read(self, conn_t* c):             # <<<<<<<<<<<<<<
@@ -5223,7 +5226,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_read(struct __pyx_obj
   __pyx_L0:;
 }
 
-/* "kvxdb/core/reactor.pyx":341
+/* "kvxdb/core/reactor.pyx":334
  *             self._handle_write(c)
  * 
  *     cdef void _handle_write(self, conn_t* c):             # <<<<<<<<<<<<<<
@@ -5236,7 +5239,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_write(CYTHON_UNUSED s
   int __pyx_t_1;
   int __pyx_t_2;
 
-  /* "kvxdb/core/reactor.pyx":342
+  /* "kvxdb/core/reactor.pyx":335
  * 
  *     cdef void _handle_write(self, conn_t* c):
  *         if c.wlen == c.woff:             # <<<<<<<<<<<<<<
@@ -5246,7 +5249,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_write(CYTHON_UNUSED s
   __pyx_t_1 = (__pyx_v_c->wlen == __pyx_v_c->woff);
   if (__pyx_t_1) {
 
-    /* "kvxdb/core/reactor.pyx":343
+    /* "kvxdb/core/reactor.pyx":336
  *     cdef void _handle_write(self, conn_t* c):
  *         if c.wlen == c.woff:
  *             return             # <<<<<<<<<<<<<<
@@ -5255,7 +5258,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_write(CYTHON_UNUSED s
 */
     goto __pyx_L0;
 
-    /* "kvxdb/core/reactor.pyx":342
+    /* "kvxdb/core/reactor.pyx":335
  * 
  *     cdef void _handle_write(self, conn_t* c):
  *         if c.wlen == c.woff:             # <<<<<<<<<<<<<<
@@ -5264,7 +5267,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_write(CYTHON_UNUSED s
 */
   }
 
-  /* "kvxdb/core/reactor.pyx":345
+  /* "kvxdb/core/reactor.pyx":338
  *             return
  *         cdef ssize_t n
  *         with nogil:             # <<<<<<<<<<<<<<
@@ -5278,7 +5281,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_write(CYTHON_UNUSED s
       __Pyx_FastGIL_Remember();
       /*try:*/ {
 
-        /* "kvxdb/core/reactor.pyx":346
+        /* "kvxdb/core/reactor.pyx":339
  *         cdef ssize_t n
  *         with nogil:
  *             while c.woff < c.wlen:             # <<<<<<<<<<<<<<
@@ -5289,7 +5292,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_write(CYTHON_UNUSED s
           __pyx_t_1 = (__pyx_v_c->woff < __pyx_v_c->wlen);
           if (!__pyx_t_1) break;
 
-          /* "kvxdb/core/reactor.pyx":347
+          /* "kvxdb/core/reactor.pyx":340
  *         with nogil:
  *             while c.woff < c.wlen:
  *                 n = c_write(c.fd, c.wbuf + c.woff, c.wlen - c.woff)             # <<<<<<<<<<<<<<
@@ -5298,7 +5301,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_write(CYTHON_UNUSED s
 */
           __pyx_v_n = write(__pyx_v_c->fd, (__pyx_v_c->wbuf + __pyx_v_c->woff), (__pyx_v_c->wlen - __pyx_v_c->woff));
 
-          /* "kvxdb/core/reactor.pyx":348
+          /* "kvxdb/core/reactor.pyx":341
  *             while c.woff < c.wlen:
  *                 n = c_write(c.fd, c.wbuf + c.woff, c.wlen - c.woff)
  *                 if n < 0:             # <<<<<<<<<<<<<<
@@ -5308,7 +5311,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_write(CYTHON_UNUSED s
           __pyx_t_1 = (__pyx_v_n < 0);
           if (__pyx_t_1) {
 
-            /* "kvxdb/core/reactor.pyx":349
+            /* "kvxdb/core/reactor.pyx":342
  *                 n = c_write(c.fd, c.wbuf + c.woff, c.wlen - c.woff)
  *                 if n < 0:
  *                     if errno == EINTR:             # <<<<<<<<<<<<<<
@@ -5318,7 +5321,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_write(CYTHON_UNUSED s
             __pyx_t_1 = (errno == EINTR);
             if (__pyx_t_1) {
 
-              /* "kvxdb/core/reactor.pyx":350
+              /* "kvxdb/core/reactor.pyx":343
  *                 if n < 0:
  *                     if errno == EINTR:
  *                         continue             # <<<<<<<<<<<<<<
@@ -5327,7 +5330,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_write(CYTHON_UNUSED s
 */
               goto __pyx_L7_continue;
 
-              /* "kvxdb/core/reactor.pyx":349
+              /* "kvxdb/core/reactor.pyx":342
  *                 n = c_write(c.fd, c.wbuf + c.woff, c.wlen - c.woff)
  *                 if n < 0:
  *                     if errno == EINTR:             # <<<<<<<<<<<<<<
@@ -5336,7 +5339,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_write(CYTHON_UNUSED s
 */
             }
 
-            /* "kvxdb/core/reactor.pyx":351
+            /* "kvxdb/core/reactor.pyx":344
  *                     if errno == EINTR:
  *                         continue
  *                     if errno == EAGAIN or errno == EWOULDBLOCK:             # <<<<<<<<<<<<<<
@@ -5354,7 +5357,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_write(CYTHON_UNUSED s
             __pyx_L12_bool_binop_done:;
             if (__pyx_t_1) {
 
-              /* "kvxdb/core/reactor.pyx":352
+              /* "kvxdb/core/reactor.pyx":345
  *                         continue
  *                     if errno == EAGAIN or errno == EWOULDBLOCK:
  *                         break             # <<<<<<<<<<<<<<
@@ -5363,7 +5366,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_write(CYTHON_UNUSED s
 */
               goto __pyx_L8_break;
 
-              /* "kvxdb/core/reactor.pyx":351
+              /* "kvxdb/core/reactor.pyx":344
  *                     if errno == EINTR:
  *                         continue
  *                     if errno == EAGAIN or errno == EWOULDBLOCK:             # <<<<<<<<<<<<<<
@@ -5372,7 +5375,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_write(CYTHON_UNUSED s
 */
             }
 
-            /* "kvxdb/core/reactor.pyx":353
+            /* "kvxdb/core/reactor.pyx":346
  *                     if errno == EAGAIN or errno == EWOULDBLOCK:
  *                         break
  *                     c.state = CONN_CLOSED             # <<<<<<<<<<<<<<
@@ -5381,7 +5384,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_write(CYTHON_UNUSED s
 */
             __pyx_v_c->state = __pyx_e_5kvxdb_4core_7reactor_CONN_CLOSED;
 
-            /* "kvxdb/core/reactor.pyx":354
+            /* "kvxdb/core/reactor.pyx":347
  *                         break
  *                     c.state = CONN_CLOSED
  *                     return             # <<<<<<<<<<<<<<
@@ -5390,7 +5393,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_write(CYTHON_UNUSED s
 */
             goto __pyx_L4_return;
 
-            /* "kvxdb/core/reactor.pyx":348
+            /* "kvxdb/core/reactor.pyx":341
  *             while c.woff < c.wlen:
  *                 n = c_write(c.fd, c.wbuf + c.woff, c.wlen - c.woff)
  *                 if n < 0:             # <<<<<<<<<<<<<<
@@ -5399,7 +5402,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_write(CYTHON_UNUSED s
 */
           }
 
-          /* "kvxdb/core/reactor.pyx":355
+          /* "kvxdb/core/reactor.pyx":348
  *                     c.state = CONN_CLOSED
  *                     return
  *                 c.woff += <size_t>n             # <<<<<<<<<<<<<<
@@ -5408,7 +5411,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_write(CYTHON_UNUSED s
 */
           __pyx_v_c->woff = (__pyx_v_c->woff + ((size_t)__pyx_v_n));
 
-          /* "kvxdb/core/reactor.pyx":356
+          /* "kvxdb/core/reactor.pyx":349
  *                     return
  *                 c.woff += <size_t>n
  *                 c.last_active_ms = now_ms()             # <<<<<<<<<<<<<<
@@ -5421,7 +5424,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_write(CYTHON_UNUSED s
         __pyx_L8_break:;
       }
 
-      /* "kvxdb/core/reactor.pyx":345
+      /* "kvxdb/core/reactor.pyx":338
  *             return
  *         cdef ssize_t n
  *         with nogil:             # <<<<<<<<<<<<<<
@@ -5443,7 +5446,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_write(CYTHON_UNUSED s
       }
   }
 
-  /* "kvxdb/core/reactor.pyx":357
+  /* "kvxdb/core/reactor.pyx":350
  *                 c.woff += <size_t>n
  *                 c.last_active_ms = now_ms()
  *         if c.woff == c.wlen:             # <<<<<<<<<<<<<<
@@ -5453,7 +5456,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_write(CYTHON_UNUSED s
   __pyx_t_1 = (__pyx_v_c->woff == __pyx_v_c->wlen);
   if (__pyx_t_1) {
 
-    /* "kvxdb/core/reactor.pyx":358
+    /* "kvxdb/core/reactor.pyx":351
  *                 c.last_active_ms = now_ms()
  *         if c.woff == c.wlen:
  *             c.woff = 0             # <<<<<<<<<<<<<<
@@ -5462,7 +5465,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_write(CYTHON_UNUSED s
 */
     __pyx_v_c->woff = 0;
 
-    /* "kvxdb/core/reactor.pyx":359
+    /* "kvxdb/core/reactor.pyx":352
  *         if c.woff == c.wlen:
  *             c.woff = 0
  *             c.wlen = 0             # <<<<<<<<<<<<<<
@@ -5471,7 +5474,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_write(CYTHON_UNUSED s
 */
     __pyx_v_c->wlen = 0;
 
-    /* "kvxdb/core/reactor.pyx":357
+    /* "kvxdb/core/reactor.pyx":350
  *                 c.woff += <size_t>n
  *                 c.last_active_ms = now_ms()
  *         if c.woff == c.wlen:             # <<<<<<<<<<<<<<
@@ -5480,7 +5483,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_write(CYTHON_UNUSED s
 */
   }
 
-  /* "kvxdb/core/reactor.pyx":341
+  /* "kvxdb/core/reactor.pyx":334
  *             self._handle_write(c)
  * 
  *     cdef void _handle_write(self, conn_t* c):             # <<<<<<<<<<<<<<
@@ -5492,7 +5495,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_write(CYTHON_UNUSED s
   __pyx_L0:;
 }
 
-/* "kvxdb/core/reactor.pyx":361
+/* "kvxdb/core/reactor.pyx":354
  *             c.wlen = 0
  * 
  *     cdef void _queue_write(self, conn_t* c, const char* data, size_t nbytes):             # <<<<<<<<<<<<<<
@@ -5504,7 +5507,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__queue_write(struct __pyx_obj
   size_t __pyx_v_need;
   int __pyx_t_1;
 
-  /* "kvxdb/core/reactor.pyx":362
+  /* "kvxdb/core/reactor.pyx":355
  * 
  *     cdef void _queue_write(self, conn_t* c, const char* data, size_t nbytes):
  *         if nbytes == 0:             # <<<<<<<<<<<<<<
@@ -5514,7 +5517,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__queue_write(struct __pyx_obj
   __pyx_t_1 = (__pyx_v_nbytes == 0);
   if (__pyx_t_1) {
 
-    /* "kvxdb/core/reactor.pyx":363
+    /* "kvxdb/core/reactor.pyx":356
  *     cdef void _queue_write(self, conn_t* c, const char* data, size_t nbytes):
  *         if nbytes == 0:
  *             return             # <<<<<<<<<<<<<<
@@ -5523,7 +5526,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__queue_write(struct __pyx_obj
 */
     goto __pyx_L0;
 
-    /* "kvxdb/core/reactor.pyx":362
+    /* "kvxdb/core/reactor.pyx":355
  * 
  *     cdef void _queue_write(self, conn_t* c, const char* data, size_t nbytes):
  *         if nbytes == 0:             # <<<<<<<<<<<<<<
@@ -5532,7 +5535,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__queue_write(struct __pyx_obj
 */
   }
 
-  /* "kvxdb/core/reactor.pyx":364
+  /* "kvxdb/core/reactor.pyx":357
  *         if nbytes == 0:
  *             return
  *         cdef size_t need = c.wlen + nbytes             # <<<<<<<<<<<<<<
@@ -5541,7 +5544,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__queue_write(struct __pyx_obj
 */
   __pyx_v_need = (__pyx_v_c->wlen + __pyx_v_nbytes);
 
-  /* "kvxdb/core/reactor.pyx":365
+  /* "kvxdb/core/reactor.pyx":358
  *             return
  *         cdef size_t need = c.wlen + nbytes
  *         with nogil:             # <<<<<<<<<<<<<<
@@ -5555,7 +5558,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__queue_write(struct __pyx_obj
       __Pyx_FastGIL_Remember();
       /*try:*/ {
 
-        /* "kvxdb/core/reactor.pyx":366
+        /* "kvxdb/core/reactor.pyx":359
  *         cdef size_t need = c.wlen + nbytes
  *         with nogil:
  *             if self._ensure_cap(&c.wbuf, &c.wcap, need, (<size_t>1<<31)) != 0:             # <<<<<<<<<<<<<<
@@ -5565,7 +5568,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__queue_write(struct __pyx_obj
         __pyx_t_1 = (__pyx_f_5kvxdb_4core_7reactor_7Reactor__ensure_cap(__pyx_v_self, (&__pyx_v_c->wbuf), (&__pyx_v_c->wcap), __pyx_v_need, (((size_t)1) << 31)) != 0);
         if (__pyx_t_1) {
 
-          /* "kvxdb/core/reactor.pyx":367
+          /* "kvxdb/core/reactor.pyx":360
  *         with nogil:
  *             if self._ensure_cap(&c.wbuf, &c.wcap, need, (<size_t>1<<31)) != 0:
  *                 c.state = CONN_CLOSED             # <<<<<<<<<<<<<<
@@ -5574,7 +5577,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__queue_write(struct __pyx_obj
 */
           __pyx_v_c->state = __pyx_e_5kvxdb_4core_7reactor_CONN_CLOSED;
 
-          /* "kvxdb/core/reactor.pyx":368
+          /* "kvxdb/core/reactor.pyx":361
  *             if self._ensure_cap(&c.wbuf, &c.wcap, need, (<size_t>1<<31)) != 0:
  *                 c.state = CONN_CLOSED
  *                 return             # <<<<<<<<<<<<<<
@@ -5583,7 +5586,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__queue_write(struct __pyx_obj
 */
           goto __pyx_L4_return;
 
-          /* "kvxdb/core/reactor.pyx":366
+          /* "kvxdb/core/reactor.pyx":359
  *         cdef size_t need = c.wlen + nbytes
  *         with nogil:
  *             if self._ensure_cap(&c.wbuf, &c.wcap, need, (<size_t>1<<31)) != 0:             # <<<<<<<<<<<<<<
@@ -5592,7 +5595,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__queue_write(struct __pyx_obj
 */
         }
 
-        /* "kvxdb/core/reactor.pyx":369
+        /* "kvxdb/core/reactor.pyx":362
  *                 c.state = CONN_CLOSED
  *                 return
  *             c_memcpy(c.wbuf + c.wlen, data, nbytes)             # <<<<<<<<<<<<<<
@@ -5601,17 +5604,17 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__queue_write(struct __pyx_obj
 */
         (void)(memcpy((__pyx_v_c->wbuf + __pyx_v_c->wlen), __pyx_v_data, __pyx_v_nbytes));
 
-        /* "kvxdb/core/reactor.pyx":370
+        /* "kvxdb/core/reactor.pyx":363
  *                 return
  *             c_memcpy(c.wbuf + c.wlen, data, nbytes)
  *             c.wlen += nbytes             # <<<<<<<<<<<<<<
  * 
- *     cdef void _process_requests(self, conn_t* c):
+ *     cdef inline bint _is_PING(self, char* buf, size_t start) noexcept:
 */
         __pyx_v_c->wlen = (__pyx_v_c->wlen + __pyx_v_nbytes);
       }
 
-      /* "kvxdb/core/reactor.pyx":365
+      /* "kvxdb/core/reactor.pyx":358
  *             return
  *         cdef size_t need = c.wlen + nbytes
  *         with nogil:             # <<<<<<<<<<<<<<
@@ -5633,7 +5636,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__queue_write(struct __pyx_obj
       }
   }
 
-  /* "kvxdb/core/reactor.pyx":361
+  /* "kvxdb/core/reactor.pyx":354
  *             c.wlen = 0
  * 
  *     cdef void _queue_write(self, conn_t* c, const char* data, size_t nbytes):             # <<<<<<<<<<<<<<
@@ -5645,12 +5648,93 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__queue_write(struct __pyx_obj
   __pyx_L0:;
 }
 
-/* "kvxdb/core/reactor.pyx":372
+/* "kvxdb/core/reactor.pyx":365
  *             c.wlen += nbytes
+ * 
+ *     cdef inline bint _is_PING(self, char* buf, size_t start) noexcept:             # <<<<<<<<<<<<<<
+ *         #   4   memcmp
+ *         return (buf[start]   == 'P' and
+*/
+
+static CYTHON_INLINE int __pyx_f_5kvxdb_4core_7reactor_7Reactor__is_PING(CYTHON_UNUSED struct __pyx_obj_5kvxdb_4core_7reactor_Reactor *__pyx_v_self, char *__pyx_v_buf, size_t __pyx_v_start) {
+  int __pyx_r;
+  int __pyx_t_1;
+  int __pyx_t_2;
+
+  /* "kvxdb/core/reactor.pyx":367
+ *     cdef inline bint _is_PING(self, char* buf, size_t start) noexcept:
+ *         #   4   memcmp
+ *         return (buf[start]   == 'P' and             # <<<<<<<<<<<<<<
+ *                 buf[start+1] == 'I' and
+ *                 buf[start+2] == 'N' and
+*/
+  __pyx_t_2 = ((__pyx_v_buf[__pyx_v_start]) == 'P');
+  if (__pyx_t_2) {
+  } else {
+    __pyx_t_1 = __pyx_t_2;
+    goto __pyx_L3_bool_binop_done;
+  }
+
+  /* "kvxdb/core/reactor.pyx":368
+ *         #   4   memcmp
+ *         return (buf[start]   == 'P' and
+ *                 buf[start+1] == 'I' and             # <<<<<<<<<<<<<<
+ *                 buf[start+2] == 'N' and
+ *                 buf[start+3] == 'G')
+*/
+  __pyx_t_2 = ((__pyx_v_buf[(__pyx_v_start + 1)]) == 'I');
+  if (__pyx_t_2) {
+  } else {
+    __pyx_t_1 = __pyx_t_2;
+    goto __pyx_L3_bool_binop_done;
+  }
+
+  /* "kvxdb/core/reactor.pyx":369
+ *         return (buf[start]   == 'P' and
+ *                 buf[start+1] == 'I' and
+ *                 buf[start+2] == 'N' and             # <<<<<<<<<<<<<<
+ *                 buf[start+3] == 'G')
+ * 
+*/
+  __pyx_t_2 = ((__pyx_v_buf[(__pyx_v_start + 2)]) == 'N');
+  if (__pyx_t_2) {
+  } else {
+    __pyx_t_1 = __pyx_t_2;
+    goto __pyx_L3_bool_binop_done;
+  }
+
+  /* "kvxdb/core/reactor.pyx":370
+ *                 buf[start+1] == 'I' and
+ *                 buf[start+2] == 'N' and
+ *                 buf[start+3] == 'G')             # <<<<<<<<<<<<<<
+ * 
+ *     cdef void _process_requests(self, conn_t* c):
+*/
+  __pyx_t_2 = ((__pyx_v_buf[(__pyx_v_start + 3)]) == 'G');
+  __pyx_t_1 = __pyx_t_2;
+  __pyx_L3_bool_binop_done:;
+  __pyx_r = __pyx_t_1;
+  goto __pyx_L0;
+
+  /* "kvxdb/core/reactor.pyx":365
+ *             c.wlen += nbytes
+ * 
+ *     cdef inline bint _is_PING(self, char* buf, size_t start) noexcept:             # <<<<<<<<<<<<<<
+ *         #   4   memcmp
+ *         return (buf[start]   == 'P' and
+*/
+
+  /* function exit code */
+  __pyx_L0:;
+  return __pyx_r;
+}
+
+/* "kvxdb/core/reactor.pyx":372
+ *                 buf[start+3] == 'G')
  * 
  *     cdef void _process_requests(self, conn_t* c):             # <<<<<<<<<<<<<<
  *         """
- *          . 'PING\n' -> 'PONG\n'.
+ *          . 'PING\\n' -> 'PONG\\n'.
 */
 
 static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__process_requests(struct __pyx_obj_5kvxdb_4core_7reactor_Reactor *__pyx_v_self, struct __pyx_t_5kvxdb_4core_7reactor_conn_t *__pyx_v_c) {
@@ -5686,8 +5770,8 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__process_requests(struct __py
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("_process_requests", 0);
 
-  /* "kvxdb/core/reactor.pyx":378
- *           consumed:int, out:bytes|None, close:bool
+  /* "kvxdb/core/reactor.pyx":377
+ *         on_request_cb(mv) -> consumed:int, out:bytes|None, close:bool
  *         """
  *         cdef size_t i = 0             # <<<<<<<<<<<<<<
  *         cdef size_t start = 0
@@ -5695,7 +5779,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__process_requests(struct __py
 */
   __pyx_v_i = 0;
 
-  /* "kvxdb/core/reactor.pyx":379
+  /* "kvxdb/core/reactor.pyx":378
  *         """
  *         cdef size_t i = 0
  *         cdef size_t start = 0             # <<<<<<<<<<<<<<
@@ -5704,7 +5788,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__process_requests(struct __py
 */
   __pyx_v_start = 0;
 
-  /* "kvxdb/core/reactor.pyx":383
+  /* "kvxdb/core/reactor.pyx":382
  *         cdef object mv
  *         cdef size_t cons
  *         cdef unsigned char NL = 10   # '\n'             # <<<<<<<<<<<<<<
@@ -5713,7 +5797,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__process_requests(struct __py
 */
   __pyx_v_NL = 10;
 
-  /* "kvxdb/core/reactor.pyx":384
+  /* "kvxdb/core/reactor.pyx":383
  *         cdef size_t cons
  *         cdef unsigned char NL = 10   # '\n'
  *         cdef unsigned char CR = 13   # '\r'             # <<<<<<<<<<<<<<
@@ -5722,9 +5806,9 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__process_requests(struct __py
 */
   __pyx_v_CR = 13;
 
-  /* "kvxdb/core/reactor.pyx":388
+  /* "kvxdb/core/reactor.pyx":386
+ *         cdef size_t ln
  * 
- *         #  callback
  *         if self.on_request_cb is not None:             # <<<<<<<<<<<<<<
  *             mv = PyMemoryView_FromMemory(<char*>c.rbuf, <Py_ssize_t>c.rlen, PyBUF_READ)
  *             try:
@@ -5732,19 +5816,19 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__process_requests(struct __py
   __pyx_t_1 = (__pyx_v_self->on_request_cb != Py_None);
   if (__pyx_t_1) {
 
-    /* "kvxdb/core/reactor.pyx":389
- *         #  callback
+    /* "kvxdb/core/reactor.pyx":387
+ * 
  *         if self.on_request_cb is not None:
  *             mv = PyMemoryView_FromMemory(<char*>c.rbuf, <Py_ssize_t>c.rlen, PyBUF_READ)             # <<<<<<<<<<<<<<
  *             try:
  *                 consumed, out, close_flag = self.on_request_cb(mv)
 */
-    __pyx_t_2 = PyMemoryView_FromMemory(((char *)__pyx_v_c->rbuf), ((Py_ssize_t)__pyx_v_c->rlen), PyBUF_READ); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 389, __pyx_L1_error)
+    __pyx_t_2 = PyMemoryView_FromMemory(((char *)__pyx_v_c->rbuf), ((Py_ssize_t)__pyx_v_c->rlen), PyBUF_READ); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 387, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_2);
     __pyx_v_mv = __pyx_t_2;
     __pyx_t_2 = 0;
 
-    /* "kvxdb/core/reactor.pyx":390
+    /* "kvxdb/core/reactor.pyx":388
  *         if self.on_request_cb is not None:
  *             mv = PyMemoryView_FromMemory(<char*>c.rbuf, <Py_ssize_t>c.rlen, PyBUF_READ)
  *             try:             # <<<<<<<<<<<<<<
@@ -5760,7 +5844,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__process_requests(struct __py
       __Pyx_XGOTREF(__pyx_t_5);
       /*try:*/ {
 
-        /* "kvxdb/core/reactor.pyx":391
+        /* "kvxdb/core/reactor.pyx":389
  *             mv = PyMemoryView_FromMemory(<char*>c.rbuf, <Py_ssize_t>c.rlen, PyBUF_READ)
  *             try:
  *                 consumed, out, close_flag = self.on_request_cb(mv)             # <<<<<<<<<<<<<<
@@ -5787,7 +5871,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__process_requests(struct __py
           __pyx_t_2 = __Pyx_PyObject_FastCall(__pyx_t_7, __pyx_callargs+__pyx_t_8, (2-__pyx_t_8) | (__pyx_t_8*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
           __Pyx_XDECREF(__pyx_t_6); __pyx_t_6 = 0;
           __Pyx_DECREF(__pyx_t_7); __pyx_t_7 = 0;
-          if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 391, __pyx_L4_error)
+          if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 389, __pyx_L4_error)
           __Pyx_GOTREF(__pyx_t_2);
         }
         if ((likely(PyTuple_CheckExact(__pyx_t_2))) || (PyList_CheckExact(__pyx_t_2))) {
@@ -5796,7 +5880,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__process_requests(struct __py
           if (unlikely(size != 3)) {
             if (size > 3) __Pyx_RaiseTooManyValuesError(3);
             else if (size >= 0) __Pyx_RaiseNeedMoreValuesError(size);
-            __PYX_ERR(0, 391, __pyx_L4_error)
+            __PYX_ERR(0, 389, __pyx_L4_error)
           }
           #if CYTHON_ASSUME_SAFE_MACROS && !CYTHON_AVOID_BORROWED_REFS
           if (likely(PyTuple_CheckExact(sequence))) {
@@ -5808,27 +5892,27 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__process_requests(struct __py
             __Pyx_INCREF(__pyx_t_9);
           } else {
             __pyx_t_7 = __Pyx_PyList_GetItemRef(sequence, 0);
-            if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 391, __pyx_L4_error)
+            if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 389, __pyx_L4_error)
             __Pyx_XGOTREF(__pyx_t_7);
             __pyx_t_6 = __Pyx_PyList_GetItemRef(sequence, 1);
-            if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 391, __pyx_L4_error)
+            if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 389, __pyx_L4_error)
             __Pyx_XGOTREF(__pyx_t_6);
             __pyx_t_9 = __Pyx_PyList_GetItemRef(sequence, 2);
-            if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 391, __pyx_L4_error)
+            if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 389, __pyx_L4_error)
             __Pyx_XGOTREF(__pyx_t_9);
           }
           #else
-          __pyx_t_7 = __Pyx_PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 391, __pyx_L4_error)
+          __pyx_t_7 = __Pyx_PySequence_ITEM(sequence, 0); if (unlikely(!__pyx_t_7)) __PYX_ERR(0, 389, __pyx_L4_error)
           __Pyx_GOTREF(__pyx_t_7);
-          __pyx_t_6 = __Pyx_PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 391, __pyx_L4_error)
+          __pyx_t_6 = __Pyx_PySequence_ITEM(sequence, 1); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 389, __pyx_L4_error)
           __Pyx_GOTREF(__pyx_t_6);
-          __pyx_t_9 = __Pyx_PySequence_ITEM(sequence, 2); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 391, __pyx_L4_error)
+          __pyx_t_9 = __Pyx_PySequence_ITEM(sequence, 2); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 389, __pyx_L4_error)
           __Pyx_GOTREF(__pyx_t_9);
           #endif
           __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
         } else {
           Py_ssize_t index = -1;
-          __pyx_t_10 = PyObject_GetIter(__pyx_t_2); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 391, __pyx_L4_error)
+          __pyx_t_10 = PyObject_GetIter(__pyx_t_2); if (unlikely(!__pyx_t_10)) __PYX_ERR(0, 389, __pyx_L4_error)
           __Pyx_GOTREF(__pyx_t_10);
           __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
           __pyx_t_11 = (CYTHON_COMPILING_IN_LIMITED_API) ? PyIter_Next : __Pyx_PyObject_GetIterNextFunc(__pyx_t_10);
@@ -5838,7 +5922,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__process_requests(struct __py
           __Pyx_GOTREF(__pyx_t_6);
           index = 2; __pyx_t_9 = __pyx_t_11(__pyx_t_10); if (unlikely(!__pyx_t_9)) goto __pyx_L10_unpacking_failed;
           __Pyx_GOTREF(__pyx_t_9);
-          if (__Pyx_IternextUnpackEndCheck(__pyx_t_11(__pyx_t_10), 3) < 0) __PYX_ERR(0, 391, __pyx_L4_error)
+          if (__Pyx_IternextUnpackEndCheck(__pyx_t_11(__pyx_t_10), 3) < 0) __PYX_ERR(0, 389, __pyx_L4_error)
           __pyx_t_11 = NULL;
           __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
           goto __pyx_L11_unpacking_done;
@@ -5846,7 +5930,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__process_requests(struct __py
           __Pyx_DECREF(__pyx_t_10); __pyx_t_10 = 0;
           __pyx_t_11 = NULL;
           if (__Pyx_IterFinish() == 0) __Pyx_RaiseNeedMoreValuesError(index);
-          __PYX_ERR(0, 391, __pyx_L4_error)
+          __PYX_ERR(0, 389, __pyx_L4_error)
           __pyx_L11_unpacking_done:;
         }
         __pyx_v_consumed = __pyx_t_7;
@@ -5856,7 +5940,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__process_requests(struct __py
         __pyx_v_close_flag = __pyx_t_9;
         __pyx_t_9 = 0;
 
-        /* "kvxdb/core/reactor.pyx":390
+        /* "kvxdb/core/reactor.pyx":388
  *         if self.on_request_cb is not None:
  *             mv = PyMemoryView_FromMemory(<char*>c.rbuf, <Py_ssize_t>c.rlen, PyBUF_READ)
  *             try:             # <<<<<<<<<<<<<<
@@ -5875,7 +5959,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__process_requests(struct __py
       __Pyx_XDECREF(__pyx_t_7); __pyx_t_7 = 0;
       __Pyx_XDECREF(__pyx_t_9); __pyx_t_9 = 0;
 
-      /* "kvxdb/core/reactor.pyx":392
+      /* "kvxdb/core/reactor.pyx":390
  *             try:
  *                 consumed, out, close_flag = self.on_request_cb(mv)
  *             except Exception:             # <<<<<<<<<<<<<<
@@ -5885,12 +5969,12 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__process_requests(struct __py
       __pyx_t_12 = __Pyx_PyErr_ExceptionMatches(((PyObject *)(((PyTypeObject*)PyExc_Exception))));
       if (__pyx_t_12) {
         __Pyx_AddTraceback("kvxdb.core.reactor.Reactor._process_requests", __pyx_clineno, __pyx_lineno, __pyx_filename);
-        if (__Pyx_GetException(&__pyx_t_2, &__pyx_t_9, &__pyx_t_6) < 0) __PYX_ERR(0, 392, __pyx_L6_except_error)
+        if (__Pyx_GetException(&__pyx_t_2, &__pyx_t_9, &__pyx_t_6) < 0) __PYX_ERR(0, 390, __pyx_L6_except_error)
         __Pyx_XGOTREF(__pyx_t_2);
         __Pyx_XGOTREF(__pyx_t_9);
         __Pyx_XGOTREF(__pyx_t_6);
 
-        /* "kvxdb/core/reactor.pyx":393
+        /* "kvxdb/core/reactor.pyx":391
  *                 consumed, out, close_flag = self.on_request_cb(mv)
  *             except Exception:
  *                 c.state = CONN_CLOSED             # <<<<<<<<<<<<<<
@@ -5899,7 +5983,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__process_requests(struct __py
 */
         __pyx_v_c->state = __pyx_e_5kvxdb_4core_7reactor_CONN_CLOSED;
 
-        /* "kvxdb/core/reactor.pyx":394
+        /* "kvxdb/core/reactor.pyx":392
  *             except Exception:
  *                 c.state = CONN_CLOSED
  *                 return             # <<<<<<<<<<<<<<
@@ -5913,7 +5997,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__process_requests(struct __py
       }
       goto __pyx_L6_except_error;
 
-      /* "kvxdb/core/reactor.pyx":390
+      /* "kvxdb/core/reactor.pyx":388
  *         if self.on_request_cb is not None:
  *             mv = PyMemoryView_FromMemory(<char*>c.rbuf, <Py_ssize_t>c.rlen, PyBUF_READ)
  *             try:             # <<<<<<<<<<<<<<
@@ -5935,42 +6019,42 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__process_requests(struct __py
       __pyx_L9_try_end:;
     }
 
-    /* "kvxdb/core/reactor.pyx":395
+    /* "kvxdb/core/reactor.pyx":393
  *                 c.state = CONN_CLOSED
  *                 return
  *             if consumed > 0 and consumed <= c.rlen:             # <<<<<<<<<<<<<<
  *                 cons = <size_t>consumed
  *                 with nogil:
 */
-    __pyx_t_6 = PyObject_RichCompare(__pyx_v_consumed, __pyx_mstate_global->__pyx_int_0, Py_GT); __Pyx_XGOTREF(__pyx_t_6); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 395, __pyx_L1_error)
-    __pyx_t_13 = __Pyx_PyObject_IsTrue(__pyx_t_6); if (unlikely((__pyx_t_13 < 0))) __PYX_ERR(0, 395, __pyx_L1_error)
+    __pyx_t_6 = PyObject_RichCompare(__pyx_v_consumed, __pyx_mstate_global->__pyx_int_0, Py_GT); __Pyx_XGOTREF(__pyx_t_6); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 393, __pyx_L1_error)
+    __pyx_t_13 = __Pyx_PyObject_IsTrue(__pyx_t_6); if (unlikely((__pyx_t_13 < 0))) __PYX_ERR(0, 393, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
     if (__pyx_t_13) {
     } else {
       __pyx_t_1 = __pyx_t_13;
       goto __pyx_L15_bool_binop_done;
     }
-    __pyx_t_6 = __Pyx_PyLong_FromSize_t(__pyx_v_c->rlen); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 395, __pyx_L1_error)
+    __pyx_t_6 = __Pyx_PyLong_FromSize_t(__pyx_v_c->rlen); if (unlikely(!__pyx_t_6)) __PYX_ERR(0, 393, __pyx_L1_error)
     __Pyx_GOTREF(__pyx_t_6);
-    __pyx_t_9 = PyObject_RichCompare(__pyx_v_consumed, __pyx_t_6, Py_LE); __Pyx_XGOTREF(__pyx_t_9); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 395, __pyx_L1_error)
+    __pyx_t_9 = PyObject_RichCompare(__pyx_v_consumed, __pyx_t_6, Py_LE); __Pyx_XGOTREF(__pyx_t_9); if (unlikely(!__pyx_t_9)) __PYX_ERR(0, 393, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_6); __pyx_t_6 = 0;
-    __pyx_t_13 = __Pyx_PyObject_IsTrue(__pyx_t_9); if (unlikely((__pyx_t_13 < 0))) __PYX_ERR(0, 395, __pyx_L1_error)
+    __pyx_t_13 = __Pyx_PyObject_IsTrue(__pyx_t_9); if (unlikely((__pyx_t_13 < 0))) __PYX_ERR(0, 393, __pyx_L1_error)
     __Pyx_DECREF(__pyx_t_9); __pyx_t_9 = 0;
     __pyx_t_1 = __pyx_t_13;
     __pyx_L15_bool_binop_done:;
     if (__pyx_t_1) {
 
-      /* "kvxdb/core/reactor.pyx":396
+      /* "kvxdb/core/reactor.pyx":394
  *                 return
  *             if consumed > 0 and consumed <= c.rlen:
  *                 cons = <size_t>consumed             # <<<<<<<<<<<<<<
  *                 with nogil:
  *                     if cons < c.rlen:
 */
-      __pyx_t_8 = __Pyx_PyLong_As_size_t(__pyx_v_consumed); if (unlikely((__pyx_t_8 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 396, __pyx_L1_error)
+      __pyx_t_8 = __Pyx_PyLong_As_size_t(__pyx_v_consumed); if (unlikely((__pyx_t_8 == (size_t)-1) && PyErr_Occurred())) __PYX_ERR(0, 394, __pyx_L1_error)
       __pyx_v_cons = ((size_t)__pyx_t_8);
 
-      /* "kvxdb/core/reactor.pyx":397
+      /* "kvxdb/core/reactor.pyx":395
  *             if consumed > 0 and consumed <= c.rlen:
  *                 cons = <size_t>consumed
  *                 with nogil:             # <<<<<<<<<<<<<<
@@ -5984,7 +6068,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__process_requests(struct __py
           __Pyx_FastGIL_Remember();
           /*try:*/ {
 
-            /* "kvxdb/core/reactor.pyx":398
+            /* "kvxdb/core/reactor.pyx":396
  *                 cons = <size_t>consumed
  *                 with nogil:
  *                     if cons < c.rlen:             # <<<<<<<<<<<<<<
@@ -5994,7 +6078,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__process_requests(struct __py
             __pyx_t_1 = (__pyx_v_cons < __pyx_v_c->rlen);
             if (__pyx_t_1) {
 
-              /* "kvxdb/core/reactor.pyx":399
+              /* "kvxdb/core/reactor.pyx":397
  *                 with nogil:
  *                     if cons < c.rlen:
  *                         c_memmove(c.rbuf, c.rbuf + cons, c.rlen - cons)             # <<<<<<<<<<<<<<
@@ -6003,7 +6087,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__process_requests(struct __py
 */
               (void)(memmove(__pyx_v_c->rbuf, (__pyx_v_c->rbuf + __pyx_v_cons), (__pyx_v_c->rlen - __pyx_v_cons)));
 
-              /* "kvxdb/core/reactor.pyx":398
+              /* "kvxdb/core/reactor.pyx":396
  *                 cons = <size_t>consumed
  *                 with nogil:
  *                     if cons < c.rlen:             # <<<<<<<<<<<<<<
@@ -6012,17 +6096,17 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__process_requests(struct __py
 */
             }
 
-            /* "kvxdb/core/reactor.pyx":400
+            /* "kvxdb/core/reactor.pyx":398
  *                     if cons < c.rlen:
  *                         c_memmove(c.rbuf, c.rbuf + cons, c.rlen - cons)
  *                     c.rlen -= cons             # <<<<<<<<<<<<<<
  *             if out:
- *                 # :     wbuf
+ *                 self._queue_write(c, <const char*>out, <size_t>len(out))
 */
             __pyx_v_c->rlen = (__pyx_v_c->rlen - __pyx_v_cons);
           }
 
-          /* "kvxdb/core/reactor.pyx":397
+          /* "kvxdb/core/reactor.pyx":395
  *             if consumed > 0 and consumed <= c.rlen:
  *                 cons = <size_t>consumed
  *                 with nogil:             # <<<<<<<<<<<<<<
@@ -6039,7 +6123,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__process_requests(struct __py
           }
       }
 
-      /* "kvxdb/core/reactor.pyx":395
+      /* "kvxdb/core/reactor.pyx":393
  *                 c.state = CONN_CLOSED
  *                 return
  *             if consumed > 0 and consumed <= c.rlen:             # <<<<<<<<<<<<<<
@@ -6048,48 +6132,57 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__process_requests(struct __py
 */
     }
 
-    /* "kvxdb/core/reactor.pyx":401
+    /* "kvxdb/core/reactor.pyx":399
  *                         c_memmove(c.rbuf, c.rbuf + cons, c.rlen - cons)
  *                     c.rlen -= cons
  *             if out:             # <<<<<<<<<<<<<<
- *                 # :     wbuf
  *                 self._queue_write(c, <const char*>out, <size_t>len(out))
+ *                 #
 */
-    __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_out); if (unlikely((__pyx_t_1 < 0))) __PYX_ERR(0, 401, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_out); if (unlikely((__pyx_t_1 < 0))) __PYX_ERR(0, 399, __pyx_L1_error)
     if (__pyx_t_1) {
 
-      /* "kvxdb/core/reactor.pyx":403
+      /* "kvxdb/core/reactor.pyx":400
+ *                     c.rlen -= cons
  *             if out:
- *                 # :     wbuf
  *                 self._queue_write(c, <const char*>out, <size_t>len(out))             # <<<<<<<<<<<<<<
+ *                 #
+ *                 self._handle_write(c)
+*/
+      __pyx_t_14 = __Pyx_PyObject_AsString(__pyx_v_out); if (unlikely((!__pyx_t_14) && PyErr_Occurred())) __PYX_ERR(0, 400, __pyx_L1_error)
+      __pyx_t_15 = PyObject_Length(__pyx_v_out); if (unlikely(__pyx_t_15 == ((Py_ssize_t)-1))) __PYX_ERR(0, 400, __pyx_L1_error)
+      ((struct __pyx_vtabstruct_5kvxdb_4core_7reactor_Reactor *)__pyx_v_self->__pyx_vtab)->_queue_write(__pyx_v_self, __pyx_v_c, ((char const *)__pyx_t_14), ((size_t)__pyx_t_15)); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 400, __pyx_L1_error)
+
+      /* "kvxdb/core/reactor.pyx":402
+ *                 self._queue_write(c, <const char*>out, <size_t>len(out))
+ *                 #
+ *                 self._handle_write(c)             # <<<<<<<<<<<<<<
  *             if close_flag:
  *                 c.state = CONN_CLOSED
 */
-      __pyx_t_14 = __Pyx_PyObject_AsString(__pyx_v_out); if (unlikely((!__pyx_t_14) && PyErr_Occurred())) __PYX_ERR(0, 403, __pyx_L1_error)
-      __pyx_t_15 = PyObject_Length(__pyx_v_out); if (unlikely(__pyx_t_15 == ((Py_ssize_t)-1))) __PYX_ERR(0, 403, __pyx_L1_error)
-      ((struct __pyx_vtabstruct_5kvxdb_4core_7reactor_Reactor *)__pyx_v_self->__pyx_vtab)->_queue_write(__pyx_v_self, __pyx_v_c, ((char const *)__pyx_t_14), ((size_t)__pyx_t_15)); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 403, __pyx_L1_error)
+      ((struct __pyx_vtabstruct_5kvxdb_4core_7reactor_Reactor *)__pyx_v_self->__pyx_vtab)->_handle_write(__pyx_v_self, __pyx_v_c); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 402, __pyx_L1_error)
 
-      /* "kvxdb/core/reactor.pyx":401
+      /* "kvxdb/core/reactor.pyx":399
  *                         c_memmove(c.rbuf, c.rbuf + cons, c.rlen - cons)
  *                     c.rlen -= cons
  *             if out:             # <<<<<<<<<<<<<<
- *                 # :     wbuf
  *                 self._queue_write(c, <const char*>out, <size_t>len(out))
+ *                 #
 */
     }
 
-    /* "kvxdb/core/reactor.pyx":404
- *                 # :     wbuf
- *                 self._queue_write(c, <const char*>out, <size_t>len(out))
+    /* "kvxdb/core/reactor.pyx":403
+ *                 #
+ *                 self._handle_write(c)
  *             if close_flag:             # <<<<<<<<<<<<<<
  *                 c.state = CONN_CLOSED
  *             return
 */
-    __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_close_flag); if (unlikely((__pyx_t_1 < 0))) __PYX_ERR(0, 404, __pyx_L1_error)
+    __pyx_t_1 = __Pyx_PyObject_IsTrue(__pyx_v_close_flag); if (unlikely((__pyx_t_1 < 0))) __PYX_ERR(0, 403, __pyx_L1_error)
     if (__pyx_t_1) {
 
-      /* "kvxdb/core/reactor.pyx":405
- *                 self._queue_write(c, <const char*>out, <size_t>len(out))
+      /* "kvxdb/core/reactor.pyx":404
+ *                 self._handle_write(c)
  *             if close_flag:
  *                 c.state = CONN_CLOSED             # <<<<<<<<<<<<<<
  *             return
@@ -6097,16 +6190,16 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__process_requests(struct __py
 */
       __pyx_v_c->state = __pyx_e_5kvxdb_4core_7reactor_CONN_CLOSED;
 
-      /* "kvxdb/core/reactor.pyx":404
- *                 # :     wbuf
- *                 self._queue_write(c, <const char*>out, <size_t>len(out))
+      /* "kvxdb/core/reactor.pyx":403
+ *                 #
+ *                 self._handle_write(c)
  *             if close_flag:             # <<<<<<<<<<<<<<
  *                 c.state = CONN_CLOSED
  *             return
 */
     }
 
-    /* "kvxdb/core/reactor.pyx":406
+    /* "kvxdb/core/reactor.pyx":405
  *             if close_flag:
  *                 c.state = CONN_CLOSED
  *             return             # <<<<<<<<<<<<<<
@@ -6115,16 +6208,16 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__process_requests(struct __py
 */
     goto __pyx_L0;
 
-    /* "kvxdb/core/reactor.pyx":388
+    /* "kvxdb/core/reactor.pyx":386
+ *         cdef size_t ln
  * 
- *         #  callback
  *         if self.on_request_cb is not None:             # <<<<<<<<<<<<<<
  *             mv = PyMemoryView_FromMemory(<char*>c.rbuf, <Py_ssize_t>c.rlen, PyBUF_READ)
  *             try:
 */
   }
 
-  /* "kvxdb/core/reactor.pyx":409
+  /* "kvxdb/core/reactor.pyx":408
  * 
  *         #  :
  *         while i < c.rlen:             # <<<<<<<<<<<<<<
@@ -6135,36 +6228,36 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__process_requests(struct __py
     __pyx_t_1 = (__pyx_v_i < __pyx_v_c->rlen);
     if (!__pyx_t_1) break;
 
-    /* "kvxdb/core/reactor.pyx":410
+    /* "kvxdb/core/reactor.pyx":409
  *         #  :
  *         while i < c.rlen:
  *             if <unsigned char>c.rbuf[i] == NL:             # <<<<<<<<<<<<<<
  *                 pos = i
- *                 #    '\n' (  '\r')
+ *                 ln = pos - start
 */
     __pyx_t_1 = (((unsigned char)(__pyx_v_c->rbuf[__pyx_v_i])) == __pyx_v_NL);
     if (__pyx_t_1) {
 
-      /* "kvxdb/core/reactor.pyx":411
+      /* "kvxdb/core/reactor.pyx":410
  *         while i < c.rlen:
  *             if <unsigned char>c.rbuf[i] == NL:
  *                 pos = i             # <<<<<<<<<<<<<<
- *                 #    '\n' (  '\r')
  *                 ln = pos - start
+ *                 if ln > 0 and <unsigned char>c.rbuf[pos - 1] == CR:
 */
       __pyx_v_pos = __pyx_v_i;
 
-      /* "kvxdb/core/reactor.pyx":413
+      /* "kvxdb/core/reactor.pyx":411
+ *             if <unsigned char>c.rbuf[i] == NL:
  *                 pos = i
- *                 #    '\n' (  '\r')
  *                 ln = pos - start             # <<<<<<<<<<<<<<
  *                 if ln > 0 and <unsigned char>c.rbuf[pos - 1] == CR:
  *                     ln -= 1
 */
       __pyx_v_ln = (__pyx_v_pos - __pyx_v_start);
 
-      /* "kvxdb/core/reactor.pyx":414
- *                 #    '\n' (  '\r')
+      /* "kvxdb/core/reactor.pyx":412
+ *                 pos = i
  *                 ln = pos - start
  *                 if ln > 0 and <unsigned char>c.rbuf[pos - 1] == CR:             # <<<<<<<<<<<<<<
  *                     ln -= 1
@@ -6181,17 +6274,17 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__process_requests(struct __py
       __pyx_L27_bool_binop_done:;
       if (__pyx_t_1) {
 
-        /* "kvxdb/core/reactor.pyx":415
+        /* "kvxdb/core/reactor.pyx":413
  *                 ln = pos - start
  *                 if ln > 0 and <unsigned char>c.rbuf[pos - 1] == CR:
  *                     ln -= 1             # <<<<<<<<<<<<<<
  * 
- *                 if ln == 4 and c_memcmp(c.rbuf + start, b"PING", 4) == 0:
+ *                 if ln == 4 and self._is_PING(c.rbuf, start):
 */
         __pyx_v_ln = (__pyx_v_ln - 1);
 
-        /* "kvxdb/core/reactor.pyx":414
- *                 #    '\n' (  '\r')
+        /* "kvxdb/core/reactor.pyx":412
+ *                 pos = i
  *                 ln = pos - start
  *                 if ln > 0 and <unsigned char>c.rbuf[pos - 1] == CR:             # <<<<<<<<<<<<<<
  *                     ln -= 1
@@ -6199,12 +6292,12 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__process_requests(struct __py
 */
       }
 
-      /* "kvxdb/core/reactor.pyx":417
+      /* "kvxdb/core/reactor.pyx":415
  *                     ln -= 1
  * 
- *                 if ln == 4 and c_memcmp(c.rbuf + start, b"PING", 4) == 0:             # <<<<<<<<<<<<<<
+ *                 if ln == 4 and self._is_PING(c.rbuf, start):             # <<<<<<<<<<<<<<
  *                     self._queue_write(c, b"PONG\n", 5)
- *                 #
+ *                     # flush
 */
       __pyx_t_13 = (__pyx_v_ln == 4);
       if (__pyx_t_13) {
@@ -6212,49 +6305,58 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__process_requests(struct __py
         __pyx_t_1 = __pyx_t_13;
         goto __pyx_L30_bool_binop_done;
       }
-      __pyx_t_13 = (memcmp((__pyx_v_c->rbuf + __pyx_v_start), ((char *)"PING"), 4) == 0);
+      __pyx_t_13 = __pyx_f_5kvxdb_4core_7reactor_7Reactor__is_PING(__pyx_v_self, __pyx_v_c->rbuf, __pyx_v_start);
       __pyx_t_1 = __pyx_t_13;
       __pyx_L30_bool_binop_done:;
       if (__pyx_t_1) {
 
-        /* "kvxdb/core/reactor.pyx":418
+        /* "kvxdb/core/reactor.pyx":416
  * 
- *                 if ln == 4 and c_memcmp(c.rbuf + start, b"PING", 4) == 0:
+ *                 if ln == 4 and self._is_PING(c.rbuf, start):
  *                     self._queue_write(c, b"PONG\n", 5)             # <<<<<<<<<<<<<<
- *                 #
- * 
+ *                     # flush
+ *                     self._handle_write(c)
 */
-        ((struct __pyx_vtabstruct_5kvxdb_4core_7reactor_Reactor *)__pyx_v_self->__pyx_vtab)->_queue_write(__pyx_v_self, __pyx_v_c, ((char const *)"PONG\n"), 5); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 418, __pyx_L1_error)
+        ((struct __pyx_vtabstruct_5kvxdb_4core_7reactor_Reactor *)__pyx_v_self->__pyx_vtab)->_queue_write(__pyx_v_self, __pyx_v_c, ((char const *)"PONG\n"), 5); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 416, __pyx_L1_error)
 
-        /* "kvxdb/core/reactor.pyx":417
+        /* "kvxdb/core/reactor.pyx":418
+ *                     self._queue_write(c, b"PONG\n", 5)
+ *                     # flush
+ *                     self._handle_write(c)             # <<<<<<<<<<<<<<
+ * 
+ *                 start = i + 1
+*/
+        ((struct __pyx_vtabstruct_5kvxdb_4core_7reactor_Reactor *)__pyx_v_self->__pyx_vtab)->_handle_write(__pyx_v_self, __pyx_v_c); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 418, __pyx_L1_error)
+
+        /* "kvxdb/core/reactor.pyx":415
  *                     ln -= 1
  * 
- *                 if ln == 4 and c_memcmp(c.rbuf + start, b"PING", 4) == 0:             # <<<<<<<<<<<<<<
+ *                 if ln == 4 and self._is_PING(c.rbuf, start):             # <<<<<<<<<<<<<<
  *                     self._queue_write(c, b"PONG\n", 5)
- *                 #
+ *                     # flush
 */
       }
 
-      /* "kvxdb/core/reactor.pyx":422
+      /* "kvxdb/core/reactor.pyx":420
+ *                     self._handle_write(c)
  * 
- *                 #     '\n'
  *                 start = i + 1             # <<<<<<<<<<<<<<
  *             i += 1
  * 
 */
       __pyx_v_start = (__pyx_v_i + 1);
 
-      /* "kvxdb/core/reactor.pyx":410
+      /* "kvxdb/core/reactor.pyx":409
  *         #  :
  *         while i < c.rlen:
  *             if <unsigned char>c.rbuf[i] == NL:             # <<<<<<<<<<<<<<
  *                 pos = i
- *                 #    '\n' (  '\r')
+ *                 ln = pos - start
 */
     }
 
-    /* "kvxdb/core/reactor.pyx":423
- *                 #     '\n'
+    /* "kvxdb/core/reactor.pyx":421
+ * 
  *                 start = i + 1
  *             i += 1             # <<<<<<<<<<<<<<
  * 
@@ -6263,7 +6365,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__process_requests(struct __py
     __pyx_v_i = (__pyx_v_i + 1);
   }
 
-  /* "kvxdb/core/reactor.pyx":426
+  /* "kvxdb/core/reactor.pyx":424
  * 
  *         #   (   '\n')
  *         if start > 0:             # <<<<<<<<<<<<<<
@@ -6273,7 +6375,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__process_requests(struct __py
   __pyx_t_1 = (__pyx_v_start > 0);
   if (__pyx_t_1) {
 
-    /* "kvxdb/core/reactor.pyx":427
+    /* "kvxdb/core/reactor.pyx":425
  *         #   (   '\n')
  *         if start > 0:
  *             with nogil:             # <<<<<<<<<<<<<<
@@ -6287,7 +6389,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__process_requests(struct __py
         __Pyx_FastGIL_Remember();
         /*try:*/ {
 
-          /* "kvxdb/core/reactor.pyx":428
+          /* "kvxdb/core/reactor.pyx":426
  *         if start > 0:
  *             with nogil:
  *                 if start < c.rlen:             # <<<<<<<<<<<<<<
@@ -6297,7 +6399,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__process_requests(struct __py
           __pyx_t_1 = (__pyx_v_start < __pyx_v_c->rlen);
           if (__pyx_t_1) {
 
-            /* "kvxdb/core/reactor.pyx":429
+            /* "kvxdb/core/reactor.pyx":427
  *             with nogil:
  *                 if start < c.rlen:
  *                     c_memmove(c.rbuf, c.rbuf + start, c.rlen - start)             # <<<<<<<<<<<<<<
@@ -6306,7 +6408,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__process_requests(struct __py
 */
             (void)(memmove(__pyx_v_c->rbuf, (__pyx_v_c->rbuf + __pyx_v_start), (__pyx_v_c->rlen - __pyx_v_start)));
 
-            /* "kvxdb/core/reactor.pyx":428
+            /* "kvxdb/core/reactor.pyx":426
  *         if start > 0:
  *             with nogil:
  *                 if start < c.rlen:             # <<<<<<<<<<<<<<
@@ -6315,7 +6417,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__process_requests(struct __py
 */
           }
 
-          /* "kvxdb/core/reactor.pyx":430
+          /* "kvxdb/core/reactor.pyx":428
  *                 if start < c.rlen:
  *                     c_memmove(c.rbuf, c.rbuf + start, c.rlen - start)
  *                 c.rlen -= start             # <<<<<<<<<<<<<<
@@ -6325,7 +6427,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__process_requests(struct __py
           __pyx_v_c->rlen = (__pyx_v_c->rlen - __pyx_v_start);
         }
 
-        /* "kvxdb/core/reactor.pyx":427
+        /* "kvxdb/core/reactor.pyx":425
  *         #   (   '\n')
  *         if start > 0:
  *             with nogil:             # <<<<<<<<<<<<<<
@@ -6342,7 +6444,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__process_requests(struct __py
         }
     }
 
-    /* "kvxdb/core/reactor.pyx":426
+    /* "kvxdb/core/reactor.pyx":424
  * 
  *         #   (   '\n')
  *         if start > 0:             # <<<<<<<<<<<<<<
@@ -6352,11 +6454,11 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__process_requests(struct __py
   }
 
   /* "kvxdb/core/reactor.pyx":372
- *             c.wlen += nbytes
+ *                 buf[start+3] == 'G')
  * 
  *     cdef void _process_requests(self, conn_t* c):             # <<<<<<<<<<<<<<
  *         """
- *          . 'PING\n' -> 'PONG\n'.
+ *          . 'PING\\n' -> 'PONG\\n'.
 */
 
   /* function exit code */
@@ -6376,7 +6478,7 @@ static void __pyx_f_5kvxdb_4core_7reactor_7Reactor__process_requests(struct __py
   __Pyx_RefNannyFinishContext();
 }
 
-/* "kvxdb/core/reactor.pyx":432
+/* "kvxdb/core/reactor.pyx":430
  *                 c.rlen -= start
  * 
  *     cdef int _ensure_pfds_cap(self, int need) noexcept nogil:             # <<<<<<<<<<<<<<
@@ -6393,7 +6495,7 @@ static int __pyx_f_5kvxdb_4core_7reactor_7Reactor__ensure_pfds_cap(struct __pyx_
   int __pyx_t_2;
   int __pyx_t_3;
 
-  /* "kvxdb/core/reactor.pyx":433
+  /* "kvxdb/core/reactor.pyx":431
  * 
  *     cdef int _ensure_pfds_cap(self, int need) noexcept nogil:
  *         if self.pfds_cap >= need:             # <<<<<<<<<<<<<<
@@ -6403,7 +6505,7 @@ static int __pyx_f_5kvxdb_4core_7reactor_7Reactor__ensure_pfds_cap(struct __pyx_
   __pyx_t_1 = (__pyx_v_self->pfds_cap >= __pyx_v_need);
   if (__pyx_t_1) {
 
-    /* "kvxdb/core/reactor.pyx":434
+    /* "kvxdb/core/reactor.pyx":432
  *     cdef int _ensure_pfds_cap(self, int need) noexcept nogil:
  *         if self.pfds_cap >= need:
  *             return 0             # <<<<<<<<<<<<<<
@@ -6413,7 +6515,7 @@ static int __pyx_f_5kvxdb_4core_7reactor_7Reactor__ensure_pfds_cap(struct __pyx_
     __pyx_r = 0;
     goto __pyx_L0;
 
-    /* "kvxdb/core/reactor.pyx":433
+    /* "kvxdb/core/reactor.pyx":431
  * 
  *     cdef int _ensure_pfds_cap(self, int need) noexcept nogil:
  *         if self.pfds_cap >= need:             # <<<<<<<<<<<<<<
@@ -6422,7 +6524,7 @@ static int __pyx_f_5kvxdb_4core_7reactor_7Reactor__ensure_pfds_cap(struct __pyx_
 */
   }
 
-  /* "kvxdb/core/reactor.pyx":435
+  /* "kvxdb/core/reactor.pyx":433
  *         if self.pfds_cap >= need:
  *             return 0
  *         cdef int newcap = self.pfds_cap if self.pfds_cap > 0 else 64             # <<<<<<<<<<<<<<
@@ -6437,38 +6539,38 @@ static int __pyx_f_5kvxdb_4core_7reactor_7Reactor__ensure_pfds_cap(struct __pyx_
   }
   __pyx_v_newcap = __pyx_t_2;
 
-  /* "kvxdb/core/reactor.pyx":436
+  /* "kvxdb/core/reactor.pyx":434
  *             return 0
  *         cdef int newcap = self.pfds_cap if self.pfds_cap > 0 else 64
  *         while newcap < need:             # <<<<<<<<<<<<<<
  *             newcap *= 2
- * 
+ *         cdef void* npfds = c_malloc(newcap * sizeof(pollfd))
 */
   while (1) {
     __pyx_t_1 = (__pyx_v_newcap < __pyx_v_need);
     if (!__pyx_t_1) break;
 
-    /* "kvxdb/core/reactor.pyx":437
+    /* "kvxdb/core/reactor.pyx":435
  *         cdef int newcap = self.pfds_cap if self.pfds_cap > 0 else 64
  *         while newcap < need:
  *             newcap *= 2             # <<<<<<<<<<<<<<
- * 
- *         #  :   ->  ->
+ *         cdef void* npfds = c_malloc(newcap * sizeof(pollfd))
+ *         if npfds == NULL:
 */
     __pyx_v_newcap = (__pyx_v_newcap * 2);
   }
 
-  /* "kvxdb/core/reactor.pyx":440
- * 
- *         #  :   ->  ->
+  /* "kvxdb/core/reactor.pyx":436
+ *         while newcap < need:
+ *             newcap *= 2
  *         cdef void* npfds = c_malloc(newcap * sizeof(pollfd))             # <<<<<<<<<<<<<<
  *         if npfds == NULL:
  *             return -1
 */
   __pyx_v_npfds = malloc((__pyx_v_newcap * (sizeof(struct pollfd))));
 
-  /* "kvxdb/core/reactor.pyx":441
- *         #  :   ->  ->
+  /* "kvxdb/core/reactor.pyx":437
+ *             newcap *= 2
  *         cdef void* npfds = c_malloc(newcap * sizeof(pollfd))
  *         if npfds == NULL:             # <<<<<<<<<<<<<<
  *             return -1
@@ -6477,7 +6579,7 @@ static int __pyx_f_5kvxdb_4core_7reactor_7Reactor__ensure_pfds_cap(struct __pyx_
   __pyx_t_1 = (__pyx_v_npfds == NULL);
   if (__pyx_t_1) {
 
-    /* "kvxdb/core/reactor.pyx":442
+    /* "kvxdb/core/reactor.pyx":438
  *         cdef void* npfds = c_malloc(newcap * sizeof(pollfd))
  *         if npfds == NULL:
  *             return -1             # <<<<<<<<<<<<<<
@@ -6487,8 +6589,8 @@ static int __pyx_f_5kvxdb_4core_7reactor_7Reactor__ensure_pfds_cap(struct __pyx_
     __pyx_r = -1;
     goto __pyx_L0;
 
-    /* "kvxdb/core/reactor.pyx":441
- *         #  :   ->  ->
+    /* "kvxdb/core/reactor.pyx":437
+ *             newcap *= 2
  *         cdef void* npfds = c_malloc(newcap * sizeof(pollfd))
  *         if npfds == NULL:             # <<<<<<<<<<<<<<
  *             return -1
@@ -6496,7 +6598,7 @@ static int __pyx_f_5kvxdb_4core_7reactor_7Reactor__ensure_pfds_cap(struct __pyx_
 */
   }
 
-  /* "kvxdb/core/reactor.pyx":443
+  /* "kvxdb/core/reactor.pyx":439
  *         if npfds == NULL:
  *             return -1
  *         cdef void* npconns = c_malloc(newcap * sizeof(conn_t*))             # <<<<<<<<<<<<<<
@@ -6505,7 +6607,7 @@ static int __pyx_f_5kvxdb_4core_7reactor_7Reactor__ensure_pfds_cap(struct __pyx_
 */
   __pyx_v_npconns = malloc((__pyx_v_newcap * (sizeof(struct __pyx_t_5kvxdb_4core_7reactor_conn_t *))));
 
-  /* "kvxdb/core/reactor.pyx":444
+  /* "kvxdb/core/reactor.pyx":440
  *             return -1
  *         cdef void* npconns = c_malloc(newcap * sizeof(conn_t*))
  *         if npconns == NULL:             # <<<<<<<<<<<<<<
@@ -6515,7 +6617,7 @@ static int __pyx_f_5kvxdb_4core_7reactor_7Reactor__ensure_pfds_cap(struct __pyx_
   __pyx_t_1 = (__pyx_v_npconns == NULL);
   if (__pyx_t_1) {
 
-    /* "kvxdb/core/reactor.pyx":445
+    /* "kvxdb/core/reactor.pyx":441
  *         cdef void* npconns = c_malloc(newcap * sizeof(conn_t*))
  *         if npconns == NULL:
  *             c_free(npfds)             # <<<<<<<<<<<<<<
@@ -6524,7 +6626,7 @@ static int __pyx_f_5kvxdb_4core_7reactor_7Reactor__ensure_pfds_cap(struct __pyx_
 */
     free(__pyx_v_npfds);
 
-    /* "kvxdb/core/reactor.pyx":446
+    /* "kvxdb/core/reactor.pyx":442
  *         if npconns == NULL:
  *             c_free(npfds)
  *             return -1             # <<<<<<<<<<<<<<
@@ -6534,7 +6636,7 @@ static int __pyx_f_5kvxdb_4core_7reactor_7Reactor__ensure_pfds_cap(struct __pyx_
     __pyx_r = -1;
     goto __pyx_L0;
 
-    /* "kvxdb/core/reactor.pyx":444
+    /* "kvxdb/core/reactor.pyx":440
  *             return -1
  *         cdef void* npconns = c_malloc(newcap * sizeof(conn_t*))
  *         if npconns == NULL:             # <<<<<<<<<<<<<<
@@ -6543,7 +6645,7 @@ static int __pyx_f_5kvxdb_4core_7reactor_7Reactor__ensure_pfds_cap(struct __pyx_
 */
   }
 
-  /* "kvxdb/core/reactor.pyx":448
+  /* "kvxdb/core/reactor.pyx":444
  *             return -1
  * 
  *         if self.pfds != NULL and self.pfds_cap > 0:             # <<<<<<<<<<<<<<
@@ -6561,7 +6663,7 @@ static int __pyx_f_5kvxdb_4core_7reactor_7Reactor__ensure_pfds_cap(struct __pyx_
   __pyx_L9_bool_binop_done:;
   if (__pyx_t_1) {
 
-    /* "kvxdb/core/reactor.pyx":449
+    /* "kvxdb/core/reactor.pyx":445
  * 
  *         if self.pfds != NULL and self.pfds_cap > 0:
  *             c_memcpy(npfds, self.pfds, self.pfds_cap * sizeof(pollfd))             # <<<<<<<<<<<<<<
@@ -6570,7 +6672,7 @@ static int __pyx_f_5kvxdb_4core_7reactor_7Reactor__ensure_pfds_cap(struct __pyx_
 */
     (void)(memcpy(__pyx_v_npfds, __pyx_v_self->pfds, (__pyx_v_self->pfds_cap * (sizeof(struct pollfd)))));
 
-    /* "kvxdb/core/reactor.pyx":448
+    /* "kvxdb/core/reactor.pyx":444
  *             return -1
  * 
  *         if self.pfds != NULL and self.pfds_cap > 0:             # <<<<<<<<<<<<<<
@@ -6579,7 +6681,7 @@ static int __pyx_f_5kvxdb_4core_7reactor_7Reactor__ensure_pfds_cap(struct __pyx_
 */
   }
 
-  /* "kvxdb/core/reactor.pyx":450
+  /* "kvxdb/core/reactor.pyx":446
  *         if self.pfds != NULL and self.pfds_cap > 0:
  *             c_memcpy(npfds, self.pfds, self.pfds_cap * sizeof(pollfd))
  *         if self.pconns != NULL and self.pfds_cap > 0:             # <<<<<<<<<<<<<<
@@ -6597,7 +6699,7 @@ static int __pyx_f_5kvxdb_4core_7reactor_7Reactor__ensure_pfds_cap(struct __pyx_
   __pyx_L12_bool_binop_done:;
   if (__pyx_t_1) {
 
-    /* "kvxdb/core/reactor.pyx":451
+    /* "kvxdb/core/reactor.pyx":447
  *             c_memcpy(npfds, self.pfds, self.pfds_cap * sizeof(pollfd))
  *         if self.pconns != NULL and self.pfds_cap > 0:
  *             c_memcpy(npconns, self.pconns, self.pfds_cap * sizeof(conn_t*))             # <<<<<<<<<<<<<<
@@ -6606,7 +6708,7 @@ static int __pyx_f_5kvxdb_4core_7reactor_7Reactor__ensure_pfds_cap(struct __pyx_
 */
     (void)(memcpy(__pyx_v_npconns, __pyx_v_self->pconns, (__pyx_v_self->pfds_cap * (sizeof(struct __pyx_t_5kvxdb_4core_7reactor_conn_t *)))));
 
-    /* "kvxdb/core/reactor.pyx":450
+    /* "kvxdb/core/reactor.pyx":446
  *         if self.pfds != NULL and self.pfds_cap > 0:
  *             c_memcpy(npfds, self.pfds, self.pfds_cap * sizeof(pollfd))
  *         if self.pconns != NULL and self.pfds_cap > 0:             # <<<<<<<<<<<<<<
@@ -6615,7 +6717,7 @@ static int __pyx_f_5kvxdb_4core_7reactor_7Reactor__ensure_pfds_cap(struct __pyx_
 */
   }
 
-  /* "kvxdb/core/reactor.pyx":453
+  /* "kvxdb/core/reactor.pyx":449
  *             c_memcpy(npconns, self.pconns, self.pfds_cap * sizeof(conn_t*))
  * 
  *         if self.pfds != NULL:             # <<<<<<<<<<<<<<
@@ -6625,7 +6727,7 @@ static int __pyx_f_5kvxdb_4core_7reactor_7Reactor__ensure_pfds_cap(struct __pyx_
   __pyx_t_1 = (__pyx_v_self->pfds != NULL);
   if (__pyx_t_1) {
 
-    /* "kvxdb/core/reactor.pyx":454
+    /* "kvxdb/core/reactor.pyx":450
  * 
  *         if self.pfds != NULL:
  *             c_free(self.pfds)             # <<<<<<<<<<<<<<
@@ -6634,7 +6736,7 @@ static int __pyx_f_5kvxdb_4core_7reactor_7Reactor__ensure_pfds_cap(struct __pyx_
 */
     free(__pyx_v_self->pfds);
 
-    /* "kvxdb/core/reactor.pyx":453
+    /* "kvxdb/core/reactor.pyx":449
  *             c_memcpy(npconns, self.pconns, self.pfds_cap * sizeof(conn_t*))
  * 
  *         if self.pfds != NULL:             # <<<<<<<<<<<<<<
@@ -6643,7 +6745,7 @@ static int __pyx_f_5kvxdb_4core_7reactor_7Reactor__ensure_pfds_cap(struct __pyx_
 */
   }
 
-  /* "kvxdb/core/reactor.pyx":455
+  /* "kvxdb/core/reactor.pyx":451
  *         if self.pfds != NULL:
  *             c_free(self.pfds)
  *         if self.pconns != NULL:             # <<<<<<<<<<<<<<
@@ -6653,7 +6755,7 @@ static int __pyx_f_5kvxdb_4core_7reactor_7Reactor__ensure_pfds_cap(struct __pyx_
   __pyx_t_1 = (__pyx_v_self->pconns != NULL);
   if (__pyx_t_1) {
 
-    /* "kvxdb/core/reactor.pyx":456
+    /* "kvxdb/core/reactor.pyx":452
  *             c_free(self.pfds)
  *         if self.pconns != NULL:
  *             c_free(self.pconns)             # <<<<<<<<<<<<<<
@@ -6662,7 +6764,7 @@ static int __pyx_f_5kvxdb_4core_7reactor_7Reactor__ensure_pfds_cap(struct __pyx_
 */
     free(__pyx_v_self->pconns);
 
-    /* "kvxdb/core/reactor.pyx":455
+    /* "kvxdb/core/reactor.pyx":451
  *         if self.pfds != NULL:
  *             c_free(self.pfds)
  *         if self.pconns != NULL:             # <<<<<<<<<<<<<<
@@ -6671,7 +6773,7 @@ static int __pyx_f_5kvxdb_4core_7reactor_7Reactor__ensure_pfds_cap(struct __pyx_
 */
   }
 
-  /* "kvxdb/core/reactor.pyx":458
+  /* "kvxdb/core/reactor.pyx":454
  *             c_free(self.pconns)
  * 
  *         self.pfds   = <pollfd*>npfds             # <<<<<<<<<<<<<<
@@ -6680,7 +6782,7 @@ static int __pyx_f_5kvxdb_4core_7reactor_7Reactor__ensure_pfds_cap(struct __pyx_
 */
   __pyx_v_self->pfds = ((struct pollfd *)__pyx_v_npfds);
 
-  /* "kvxdb/core/reactor.pyx":459
+  /* "kvxdb/core/reactor.pyx":455
  * 
  *         self.pfds   = <pollfd*>npfds
  *         self.pconns = <conn_t**>npconns             # <<<<<<<<<<<<<<
@@ -6689,7 +6791,7 @@ static int __pyx_f_5kvxdb_4core_7reactor_7Reactor__ensure_pfds_cap(struct __pyx_
 */
   __pyx_v_self->pconns = ((struct __pyx_t_5kvxdb_4core_7reactor_conn_t **)__pyx_v_npconns);
 
-  /* "kvxdb/core/reactor.pyx":460
+  /* "kvxdb/core/reactor.pyx":456
  *         self.pfds   = <pollfd*>npfds
  *         self.pconns = <conn_t**>npconns
  *         self.pfds_cap = newcap             # <<<<<<<<<<<<<<
@@ -6698,7 +6800,7 @@ static int __pyx_f_5kvxdb_4core_7reactor_7Reactor__ensure_pfds_cap(struct __pyx_
 */
   __pyx_v_self->pfds_cap = __pyx_v_newcap;
 
-  /* "kvxdb/core/reactor.pyx":461
+  /* "kvxdb/core/reactor.pyx":457
  *         self.pconns = <conn_t**>npconns
  *         self.pfds_cap = newcap
  *         return 0             # <<<<<<<<<<<<<<
@@ -6708,7 +6810,7 @@ static int __pyx_f_5kvxdb_4core_7reactor_7Reactor__ensure_pfds_cap(struct __pyx_
   __pyx_r = 0;
   goto __pyx_L0;
 
-  /* "kvxdb/core/reactor.pyx":432
+  /* "kvxdb/core/reactor.pyx":430
  *                 c.rlen -= start
  * 
  *     cdef int _ensure_pfds_cap(self, int need) noexcept nogil:             # <<<<<<<<<<<<<<
@@ -6721,7 +6823,7 @@ static int __pyx_f_5kvxdb_4core_7reactor_7Reactor__ensure_pfds_cap(struct __pyx_
   return __pyx_r;
 }
 
-/* "kvxdb/core/reactor.pyx":463
+/* "kvxdb/core/reactor.pyx":459
  *         return 0
  * 
  *     cpdef run(self):             # <<<<<<<<<<<<<<
@@ -6787,7 +6889,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
     if (unlikely(!__Pyx_object_dict_version_matches(((PyObject *)__pyx_v_self), __pyx_tp_dict_version, __pyx_obj_dict_version))) {
       PY_UINT64_T __pyx_typedict_guard = __Pyx_get_tp_dict_version(((PyObject *)__pyx_v_self));
       #endif
-      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_mstate_global->__pyx_n_u_run); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 463, __pyx_L1_error)
+      __pyx_t_1 = __Pyx_PyObject_GetAttrStr(((PyObject *)__pyx_v_self), __pyx_mstate_global->__pyx_n_u_run); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 459, __pyx_L1_error)
       __Pyx_GOTREF(__pyx_t_1);
       if (!__Pyx_IsSameCFunction(__pyx_t_1, (void(*)(void)) __pyx_pw_5kvxdb_4core_7reactor_7Reactor_7run)) {
         __Pyx_XDECREF(__pyx_r);
@@ -6811,7 +6913,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
           __pyx_t_2 = __Pyx_PyObject_FastCall(__pyx_t_4, __pyx_callargs+__pyx_t_5, (1-__pyx_t_5) | (__pyx_t_5*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
           __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
           __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-          if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 463, __pyx_L1_error)
+          if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 459, __pyx_L1_error)
           __Pyx_GOTREF(__pyx_t_2);
         }
         __pyx_r = __pyx_t_2;
@@ -6832,7 +6934,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
     #endif
   }
 
-  /* "kvxdb/core/reactor.pyx":464
+  /* "kvxdb/core/reactor.pyx":460
  * 
  *     cpdef run(self):
  *         cdef uint64_t next_tick_ms = now_ms() + <uint64_t>self.tick_ms             # <<<<<<<<<<<<<<
@@ -6841,7 +6943,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
 */
   __pyx_v_next_tick_ms = (__pyx_f_5kvxdb_4core_7reactor_now_ms() + ((uint64_t)__pyx_v_self->tick_ms));
 
-  /* "kvxdb/core/reactor.pyx":472
+  /* "kvxdb/core/reactor.pyx":468
  *         cdef conn_t* nx
  * 
  *         self.running = 1             # <<<<<<<<<<<<<<
@@ -6850,7 +6952,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
 */
   __pyx_v_self->running = 1;
 
-  /* "kvxdb/core/reactor.pyx":473
+  /* "kvxdb/core/reactor.pyx":469
  * 
  *         self.running = 1
  *         try:             # <<<<<<<<<<<<<<
@@ -6859,7 +6961,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
 */
   /*try:*/ {
 
-    /* "kvxdb/core/reactor.pyx":474
+    /* "kvxdb/core/reactor.pyx":470
  *         self.running = 1
  *         try:
  *             while self.running:             # <<<<<<<<<<<<<<
@@ -6870,7 +6972,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
       __pyx_t_6 = (__pyx_v_self->running != 0);
       if (!__pyx_t_6) break;
 
-      /* "kvxdb/core/reactor.pyx":475
+      /* "kvxdb/core/reactor.pyx":471
  *         try:
  *             while self.running:
  *                 nitems = self.cur_conns + 1             # <<<<<<<<<<<<<<
@@ -6879,7 +6981,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
 */
       __pyx_v_nitems = (__pyx_v_self->cur_conns + 1);
 
-      /* "kvxdb/core/reactor.pyx":476
+      /* "kvxdb/core/reactor.pyx":472
  *             while self.running:
  *                 nitems = self.cur_conns + 1
  *                 with nogil:             # <<<<<<<<<<<<<<
@@ -6893,7 +6995,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
           __Pyx_FastGIL_Remember();
           /*try:*/ {
 
-            /* "kvxdb/core/reactor.pyx":477
+            /* "kvxdb/core/reactor.pyx":473
  *                 nitems = self.cur_conns + 1
  *                 with nogil:
  *                     if self._ensure_pfds_cap(nitems) != 0:             # <<<<<<<<<<<<<<
@@ -6905,7 +7007,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
             }
           }
 
-          /* "kvxdb/core/reactor.pyx":476
+          /* "kvxdb/core/reactor.pyx":472
  *             while self.running:
  *                 nitems = self.cur_conns + 1
  *                 with nogil:             # <<<<<<<<<<<<<<
@@ -6922,7 +7024,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
           }
       }
 
-      /* "kvxdb/core/reactor.pyx":479
+      /* "kvxdb/core/reactor.pyx":475
  *                     if self._ensure_pfds_cap(nitems) != 0:
  *                         pass
  *                 pfds = self.pfds             # <<<<<<<<<<<<<<
@@ -6932,7 +7034,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
       __pyx_t_7 = __pyx_v_self->pfds;
       __pyx_v_pfds = __pyx_t_7;
 
-      /* "kvxdb/core/reactor.pyx":480
+      /* "kvxdb/core/reactor.pyx":476
  *                         pass
  *                 pfds = self.pfds
  *                 pconns = self.pconns             # <<<<<<<<<<<<<<
@@ -6942,7 +7044,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
       __pyx_t_8 = __pyx_v_self->pconns;
       __pyx_v_pconns = __pyx_t_8;
 
-      /* "kvxdb/core/reactor.pyx":482
+      /* "kvxdb/core/reactor.pyx":478
  *                 pconns = self.pconns
  * 
  *                 pfds[0].fd = self.lfd             # <<<<<<<<<<<<<<
@@ -6952,7 +7054,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
       __pyx_t_9 = __pyx_v_self->lfd;
       (__pyx_v_pfds[0]).fd = __pyx_t_9;
 
-      /* "kvxdb/core/reactor.pyx":483
+      /* "kvxdb/core/reactor.pyx":479
  * 
  *                 pfds[0].fd = self.lfd
  *                 pfds[0].events = <short>POLLIN             # <<<<<<<<<<<<<<
@@ -6961,7 +7063,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
 */
       (__pyx_v_pfds[0]).events = ((short)POLLIN);
 
-      /* "kvxdb/core/reactor.pyx":484
+      /* "kvxdb/core/reactor.pyx":480
  *                 pfds[0].fd = self.lfd
  *                 pfds[0].events = <short>POLLIN
  *                 pfds[0].revents = 0             # <<<<<<<<<<<<<<
@@ -6970,7 +7072,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
 */
       (__pyx_v_pfds[0]).revents = 0;
 
-      /* "kvxdb/core/reactor.pyx":485
+      /* "kvxdb/core/reactor.pyx":481
  *                 pfds[0].events = <short>POLLIN
  *                 pfds[0].revents = 0
  *                 pconns[0] = NULL             # <<<<<<<<<<<<<<
@@ -6979,7 +7081,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
 */
       (__pyx_v_pconns[0]) = NULL;
 
-      /* "kvxdb/core/reactor.pyx":487
+      /* "kvxdb/core/reactor.pyx":483
  *                 pconns[0] = NULL
  * 
  *                 c = self.head             # <<<<<<<<<<<<<<
@@ -6989,7 +7091,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
       __pyx_t_10 = __pyx_v_self->head;
       __pyx_v_c = __pyx_t_10;
 
-      /* "kvxdb/core/reactor.pyx":488
+      /* "kvxdb/core/reactor.pyx":484
  * 
  *                 c = self.head
  *                 i = 1             # <<<<<<<<<<<<<<
@@ -6998,7 +7100,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
 */
       __pyx_v_i = 1;
 
-      /* "kvxdb/core/reactor.pyx":489
+      /* "kvxdb/core/reactor.pyx":485
  *                 c = self.head
  *                 i = 1
  *                 while c != NULL:             # <<<<<<<<<<<<<<
@@ -7009,7 +7111,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
         __pyx_t_6 = (__pyx_v_c != NULL);
         if (!__pyx_t_6) break;
 
-        /* "kvxdb/core/reactor.pyx":490
+        /* "kvxdb/core/reactor.pyx":486
  *                 i = 1
  *                 while c != NULL:
  *                     pfds[i].fd = c.fd             # <<<<<<<<<<<<<<
@@ -7019,7 +7121,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
         __pyx_t_9 = __pyx_v_c->fd;
         (__pyx_v_pfds[__pyx_v_i]).fd = __pyx_t_9;
 
-        /* "kvxdb/core/reactor.pyx":491
+        /* "kvxdb/core/reactor.pyx":487
  *                 while c != NULL:
  *                     pfds[i].fd = c.fd
  *                     pfds[i].events = <short>POLLIN             # <<<<<<<<<<<<<<
@@ -7028,7 +7130,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
 */
         (__pyx_v_pfds[__pyx_v_i]).events = ((short)POLLIN);
 
-        /* "kvxdb/core/reactor.pyx":492
+        /* "kvxdb/core/reactor.pyx":488
  *                     pfds[i].fd = c.fd
  *                     pfds[i].events = <short>POLLIN
  *                     if c.wlen > c.woff:             # <<<<<<<<<<<<<<
@@ -7038,7 +7140,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
         __pyx_t_6 = (__pyx_v_c->wlen > __pyx_v_c->woff);
         if (__pyx_t_6) {
 
-          /* "kvxdb/core/reactor.pyx":493
+          /* "kvxdb/core/reactor.pyx":489
  *                     pfds[i].events = <short>POLLIN
  *                     if c.wlen > c.woff:
  *                         pfds[i].events = <short>(pfds[i].events | POLLOUT)             # <<<<<<<<<<<<<<
@@ -7047,7 +7149,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
 */
           (__pyx_v_pfds[__pyx_v_i]).events = ((short)((__pyx_v_pfds[__pyx_v_i]).events | POLLOUT));
 
-          /* "kvxdb/core/reactor.pyx":492
+          /* "kvxdb/core/reactor.pyx":488
  *                     pfds[i].fd = c.fd
  *                     pfds[i].events = <short>POLLIN
  *                     if c.wlen > c.woff:             # <<<<<<<<<<<<<<
@@ -7056,7 +7158,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
 */
         }
 
-        /* "kvxdb/core/reactor.pyx":494
+        /* "kvxdb/core/reactor.pyx":490
  *                     if c.wlen > c.woff:
  *                         pfds[i].events = <short>(pfds[i].events | POLLOUT)
  *                     pfds[i].revents = 0             # <<<<<<<<<<<<<<
@@ -7065,7 +7167,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
 */
         (__pyx_v_pfds[__pyx_v_i]).revents = 0;
 
-        /* "kvxdb/core/reactor.pyx":495
+        /* "kvxdb/core/reactor.pyx":491
  *                         pfds[i].events = <short>(pfds[i].events | POLLOUT)
  *                     pfds[i].revents = 0
  *                     pconns[i] = c             # <<<<<<<<<<<<<<
@@ -7074,7 +7176,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
 */
         (__pyx_v_pconns[__pyx_v_i]) = __pyx_v_c;
 
-        /* "kvxdb/core/reactor.pyx":496
+        /* "kvxdb/core/reactor.pyx":492
  *                     pfds[i].revents = 0
  *                     pconns[i] = c
  *                     c = c.next             # <<<<<<<<<<<<<<
@@ -7084,19 +7186,19 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
         __pyx_t_10 = __pyx_v_c->next;
         __pyx_v_c = __pyx_t_10;
 
-        /* "kvxdb/core/reactor.pyx":497
+        /* "kvxdb/core/reactor.pyx":493
  *                     pconns[i] = c
  *                     c = c.next
  *                     i += 1             # <<<<<<<<<<<<<<
  * 
- *                 #  GIL   poll     Python
+ *                 with nogil:
 */
         __pyx_v_i = (__pyx_v_i + 1);
       }
 
-      /* "kvxdb/core/reactor.pyx":500
+      /* "kvxdb/core/reactor.pyx":495
+ *                     i += 1
  * 
- *                 #  GIL   poll     Python
  *                 with nogil:             # <<<<<<<<<<<<<<
  *                     nready = poll(pfds, nitems, self.tick_ms)
  *                 if nready < 0:
@@ -7108,8 +7210,8 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
           __Pyx_FastGIL_Remember();
           /*try:*/ {
 
-            /* "kvxdb/core/reactor.pyx":501
- *                 #  GIL   poll     Python
+            /* "kvxdb/core/reactor.pyx":496
+ * 
  *                 with nogil:
  *                     nready = poll(pfds, nitems, self.tick_ms)             # <<<<<<<<<<<<<<
  *                 if nready < 0:
@@ -7118,9 +7220,9 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
             __pyx_v_nready = poll(__pyx_v_pfds, __pyx_v_nitems, __pyx_v_self->tick_ms);
           }
 
-          /* "kvxdb/core/reactor.pyx":500
+          /* "kvxdb/core/reactor.pyx":495
+ *                     i += 1
  * 
- *                 #  GIL   poll     Python
  *                 with nogil:             # <<<<<<<<<<<<<<
  *                     nready = poll(pfds, nitems, self.tick_ms)
  *                 if nready < 0:
@@ -7135,7 +7237,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
           }
       }
 
-      /* "kvxdb/core/reactor.pyx":502
+      /* "kvxdb/core/reactor.pyx":497
  *                 with nogil:
  *                     nready = poll(pfds, nitems, self.tick_ms)
  *                 if nready < 0:             # <<<<<<<<<<<<<<
@@ -7145,7 +7247,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
       __pyx_t_6 = (__pyx_v_nready < 0);
       if (__pyx_t_6) {
 
-        /* "kvxdb/core/reactor.pyx":503
+        /* "kvxdb/core/reactor.pyx":498
  *                     nready = poll(pfds, nitems, self.tick_ms)
  *                 if nready < 0:
  *                     if errno == EINTR:             # <<<<<<<<<<<<<<
@@ -7155,7 +7257,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
         __pyx_t_6 = (errno == EINTR);
         if (__pyx_t_6) {
 
-          /* "kvxdb/core/reactor.pyx":504
+          /* "kvxdb/core/reactor.pyx":499
  *                 if nready < 0:
  *                     if errno == EINTR:
  *                         continue             # <<<<<<<<<<<<<<
@@ -7164,7 +7266,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
 */
           goto __pyx_L6_continue;
 
-          /* "kvxdb/core/reactor.pyx":503
+          /* "kvxdb/core/reactor.pyx":498
  *                     nready = poll(pfds, nitems, self.tick_ms)
  *                 if nready < 0:
  *                     if errno == EINTR:             # <<<<<<<<<<<<<<
@@ -7173,7 +7275,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
 */
         }
 
-        /* "kvxdb/core/reactor.pyx":505
+        /* "kvxdb/core/reactor.pyx":500
  *                     if errno == EINTR:
  *                         continue
  *                     raise OSError(errno, "poll failed")             # <<<<<<<<<<<<<<
@@ -7183,7 +7285,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
         __pyx_t_2 = NULL;
         __Pyx_INCREF(__pyx_builtin_OSError);
         __pyx_t_4 = __pyx_builtin_OSError; 
-        __pyx_t_3 = __Pyx_PyLong_From_int(errno); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 505, __pyx_L4_error)
+        __pyx_t_3 = __Pyx_PyLong_From_int(errno); if (unlikely(!__pyx_t_3)) __PYX_ERR(0, 500, __pyx_L4_error)
         __Pyx_GOTREF(__pyx_t_3);
         __pyx_t_5 = 1;
         {
@@ -7192,14 +7294,14 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
           __Pyx_XDECREF(__pyx_t_2); __pyx_t_2 = 0;
           __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
           __Pyx_DECREF(__pyx_t_4); __pyx_t_4 = 0;
-          if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 505, __pyx_L4_error)
+          if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 500, __pyx_L4_error)
           __Pyx_GOTREF(__pyx_t_1);
         }
         __Pyx_Raise(__pyx_t_1, 0, 0, 0);
         __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
-        __PYX_ERR(0, 505, __pyx_L4_error)
+        __PYX_ERR(0, 500, __pyx_L4_error)
 
-        /* "kvxdb/core/reactor.pyx":502
+        /* "kvxdb/core/reactor.pyx":497
  *                 with nogil:
  *                     nready = poll(pfds, nitems, self.tick_ms)
  *                 if nready < 0:             # <<<<<<<<<<<<<<
@@ -7208,7 +7310,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
 */
       }
 
-      /* "kvxdb/core/reactor.pyx":507
+      /* "kvxdb/core/reactor.pyx":502
  *                     raise OSError(errno, "poll failed")
  * 
  *                 if nready > 0:             # <<<<<<<<<<<<<<
@@ -7218,7 +7320,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
       __pyx_t_6 = (__pyx_v_nready > 0);
       if (__pyx_t_6) {
 
-        /* "kvxdb/core/reactor.pyx":508
+        /* "kvxdb/core/reactor.pyx":503
  * 
  *                 if nready > 0:
  *                     if pfds[0].revents & (POLLIN | POLLERR | POLLHUP):             # <<<<<<<<<<<<<<
@@ -7228,16 +7330,16 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
         __pyx_t_6 = (((__pyx_v_pfds[0]).revents & ((POLLIN | POLLERR) | POLLHUP)) != 0);
         if (__pyx_t_6) {
 
-          /* "kvxdb/core/reactor.pyx":509
+          /* "kvxdb/core/reactor.pyx":504
  *                 if nready > 0:
  *                     if pfds[0].revents & (POLLIN | POLLERR | POLLHUP):
  *                         self._accept_loop()             # <<<<<<<<<<<<<<
  * 
  *                     i = 1
 */
-          ((struct __pyx_vtabstruct_5kvxdb_4core_7reactor_Reactor *)__pyx_v_self->__pyx_vtab)->_accept_loop(__pyx_v_self); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 509, __pyx_L4_error)
+          ((struct __pyx_vtabstruct_5kvxdb_4core_7reactor_Reactor *)__pyx_v_self->__pyx_vtab)->_accept_loop(__pyx_v_self); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 504, __pyx_L4_error)
 
-          /* "kvxdb/core/reactor.pyx":508
+          /* "kvxdb/core/reactor.pyx":503
  * 
  *                 if nready > 0:
  *                     if pfds[0].revents & (POLLIN | POLLERR | POLLHUP):             # <<<<<<<<<<<<<<
@@ -7246,7 +7348,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
 */
         }
 
-        /* "kvxdb/core/reactor.pyx":511
+        /* "kvxdb/core/reactor.pyx":506
  *                         self._accept_loop()
  * 
  *                     i = 1             # <<<<<<<<<<<<<<
@@ -7255,7 +7357,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
 */
         __pyx_v_i = 1;
 
-        /* "kvxdb/core/reactor.pyx":512
+        /* "kvxdb/core/reactor.pyx":507
  * 
  *                     i = 1
  *                     while i < nitems:             # <<<<<<<<<<<<<<
@@ -7266,7 +7368,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
           __pyx_t_6 = (__pyx_v_i < __pyx_v_nitems);
           if (!__pyx_t_6) break;
 
-          /* "kvxdb/core/reactor.pyx":513
+          /* "kvxdb/core/reactor.pyx":508
  *                     i = 1
  *                     while i < nitems:
  *                         c = pconns[i]             # <<<<<<<<<<<<<<
@@ -7275,7 +7377,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
 */
           __pyx_v_c = (__pyx_v_pconns[__pyx_v_i]);
 
-          /* "kvxdb/core/reactor.pyx":514
+          /* "kvxdb/core/reactor.pyx":509
  *                     while i < nitems:
  *                         c = pconns[i]
  *                         if c != NULL:             # <<<<<<<<<<<<<<
@@ -7285,7 +7387,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
           __pyx_t_6 = (__pyx_v_c != NULL);
           if (__pyx_t_6) {
 
-            /* "kvxdb/core/reactor.pyx":515
+            /* "kvxdb/core/reactor.pyx":510
  *                         c = pconns[i]
  *                         if c != NULL:
  *                             if pfds[i].revents & (POLLERR | POLLHUP):             # <<<<<<<<<<<<<<
@@ -7295,7 +7397,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
             __pyx_t_6 = (((__pyx_v_pfds[__pyx_v_i]).revents & (POLLERR | POLLHUP)) != 0);
             if (__pyx_t_6) {
 
-              /* "kvxdb/core/reactor.pyx":516
+              /* "kvxdb/core/reactor.pyx":511
  *                         if c != NULL:
  *                             if pfds[i].revents & (POLLERR | POLLHUP):
  *                                 c.state = CONN_CLOSED             # <<<<<<<<<<<<<<
@@ -7304,7 +7406,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
 */
               __pyx_v_c->state = __pyx_e_5kvxdb_4core_7reactor_CONN_CLOSED;
 
-              /* "kvxdb/core/reactor.pyx":515
+              /* "kvxdb/core/reactor.pyx":510
  *                         c = pconns[i]
  *                         if c != NULL:
  *                             if pfds[i].revents & (POLLERR | POLLHUP):             # <<<<<<<<<<<<<<
@@ -7314,38 +7416,38 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
               goto __pyx_L29;
             }
 
-            /* "kvxdb/core/reactor.pyx":518
+            /* "kvxdb/core/reactor.pyx":513
  *                                 c.state = CONN_CLOSED
  *                             else:
  *                                 if pfds[i].revents & POLLIN:             # <<<<<<<<<<<<<<
  *                                     self._handle_read(c)
- *                                 # >>> :    POLLOUT,
+ *                                 #    POLLOUT,
 */
             /*else*/ {
               __pyx_t_6 = (((__pyx_v_pfds[__pyx_v_i]).revents & POLLIN) != 0);
               if (__pyx_t_6) {
 
-                /* "kvxdb/core/reactor.pyx":519
+                /* "kvxdb/core/reactor.pyx":514
  *                             else:
  *                                 if pfds[i].revents & POLLIN:
  *                                     self._handle_read(c)             # <<<<<<<<<<<<<<
- *                                 # >>> :    POLLOUT,
+ *                                 #    POLLOUT,
  *                                 if c.state != CONN_CLOSED and ((pfds[i].revents & POLLOUT) or (c.wlen > c.woff)):
 */
-                ((struct __pyx_vtabstruct_5kvxdb_4core_7reactor_Reactor *)__pyx_v_self->__pyx_vtab)->_handle_read(__pyx_v_self, __pyx_v_c); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 519, __pyx_L4_error)
+                ((struct __pyx_vtabstruct_5kvxdb_4core_7reactor_Reactor *)__pyx_v_self->__pyx_vtab)->_handle_read(__pyx_v_self, __pyx_v_c); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 514, __pyx_L4_error)
 
-                /* "kvxdb/core/reactor.pyx":518
+                /* "kvxdb/core/reactor.pyx":513
  *                                 c.state = CONN_CLOSED
  *                             else:
  *                                 if pfds[i].revents & POLLIN:             # <<<<<<<<<<<<<<
  *                                     self._handle_read(c)
- *                                 # >>> :    POLLOUT,
+ *                                 #    POLLOUT,
 */
               }
 
-              /* "kvxdb/core/reactor.pyx":521
+              /* "kvxdb/core/reactor.pyx":516
  *                                     self._handle_read(c)
- *                                 # >>> :    POLLOUT,
+ *                                 #    POLLOUT,
  *                                 if c.state != CONN_CLOSED and ((pfds[i].revents & POLLOUT) or (c.wlen > c.woff)):             # <<<<<<<<<<<<<<
  *                                     self._handle_write(c)
  * 
@@ -7367,18 +7469,18 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
               __pyx_L32_bool_binop_done:;
               if (__pyx_t_6) {
 
-                /* "kvxdb/core/reactor.pyx":522
- *                                 # >>> :    POLLOUT,
+                /* "kvxdb/core/reactor.pyx":517
+ *                                 #    POLLOUT,
  *                                 if c.state != CONN_CLOSED and ((pfds[i].revents & POLLOUT) or (c.wlen > c.woff)):
  *                                     self._handle_write(c)             # <<<<<<<<<<<<<<
  * 
  *                             if c.state == CONN_CLOSED:
 */
-                ((struct __pyx_vtabstruct_5kvxdb_4core_7reactor_Reactor *)__pyx_v_self->__pyx_vtab)->_handle_write(__pyx_v_self, __pyx_v_c); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 522, __pyx_L4_error)
+                ((struct __pyx_vtabstruct_5kvxdb_4core_7reactor_Reactor *)__pyx_v_self->__pyx_vtab)->_handle_write(__pyx_v_self, __pyx_v_c); if (unlikely(PyErr_Occurred())) __PYX_ERR(0, 517, __pyx_L4_error)
 
-                /* "kvxdb/core/reactor.pyx":521
+                /* "kvxdb/core/reactor.pyx":516
  *                                     self._handle_read(c)
- *                                 # >>> :    POLLOUT,
+ *                                 #    POLLOUT,
  *                                 if c.state != CONN_CLOSED and ((pfds[i].revents & POLLOUT) or (c.wlen > c.woff)):             # <<<<<<<<<<<<<<
  *                                     self._handle_write(c)
  * 
@@ -7387,7 +7489,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
             }
             __pyx_L29:;
 
-            /* "kvxdb/core/reactor.pyx":524
+            /* "kvxdb/core/reactor.pyx":519
  *                                     self._handle_write(c)
  * 
  *                             if c.state == CONN_CLOSED:             # <<<<<<<<<<<<<<
@@ -7397,7 +7499,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
             __pyx_t_6 = (__pyx_v_c->state == __pyx_e_5kvxdb_4core_7reactor_CONN_CLOSED);
             if (__pyx_t_6) {
 
-              /* "kvxdb/core/reactor.pyx":525
+              /* "kvxdb/core/reactor.pyx":520
  * 
  *                             if c.state == CONN_CLOSED:
  *                                 with nogil:             # <<<<<<<<<<<<<<
@@ -7411,7 +7513,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
                   __Pyx_FastGIL_Remember();
                   /*try:*/ {
 
-                    /* "kvxdb/core/reactor.pyx":526
+                    /* "kvxdb/core/reactor.pyx":521
  *                             if c.state == CONN_CLOSED:
  *                                 with nogil:
  *                                     self._list_del(c)             # <<<<<<<<<<<<<<
@@ -7421,7 +7523,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
                     __pyx_f_5kvxdb_4core_7reactor_7Reactor__list_del(__pyx_v_self, __pyx_v_c);
                   }
 
-                  /* "kvxdb/core/reactor.pyx":525
+                  /* "kvxdb/core/reactor.pyx":520
  * 
  *                             if c.state == CONN_CLOSED:
  *                                 with nogil:             # <<<<<<<<<<<<<<
@@ -7438,7 +7540,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
                   }
               }
 
-              /* "kvxdb/core/reactor.pyx":527
+              /* "kvxdb/core/reactor.pyx":522
  *                                 with nogil:
  *                                     self._list_del(c)
  *                                 self.cur_conns -= 1             # <<<<<<<<<<<<<<
@@ -7447,7 +7549,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
 */
               __pyx_v_self->cur_conns = (__pyx_v_self->cur_conns - 1);
 
-              /* "kvxdb/core/reactor.pyx":528
+              /* "kvxdb/core/reactor.pyx":523
  *                                     self._list_del(c)
  *                                 self.cur_conns -= 1
  *                                 with nogil:             # <<<<<<<<<<<<<<
@@ -7461,7 +7563,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
                   __Pyx_FastGIL_Remember();
                   /*try:*/ {
 
-                    /* "kvxdb/core/reactor.pyx":529
+                    /* "kvxdb/core/reactor.pyx":524
  *                                 self.cur_conns -= 1
  *                                 with nogil:
  *                                     self._free_conn(c)             # <<<<<<<<<<<<<<
@@ -7471,7 +7573,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
                     __pyx_f_5kvxdb_4core_7reactor_7Reactor__free_conn(__pyx_v_self, __pyx_v_c);
                   }
 
-                  /* "kvxdb/core/reactor.pyx":528
+                  /* "kvxdb/core/reactor.pyx":523
  *                                     self._list_del(c)
  *                                 self.cur_conns -= 1
  *                                 with nogil:             # <<<<<<<<<<<<<<
@@ -7488,7 +7590,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
                   }
               }
 
-              /* "kvxdb/core/reactor.pyx":524
+              /* "kvxdb/core/reactor.pyx":519
  *                                     self._handle_write(c)
  * 
  *                             if c.state == CONN_CLOSED:             # <<<<<<<<<<<<<<
@@ -7497,7 +7599,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
 */
             }
 
-            /* "kvxdb/core/reactor.pyx":514
+            /* "kvxdb/core/reactor.pyx":509
  *                     while i < nitems:
  *                         c = pconns[i]
  *                         if c != NULL:             # <<<<<<<<<<<<<<
@@ -7506,7 +7608,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
 */
           }
 
-          /* "kvxdb/core/reactor.pyx":530
+          /* "kvxdb/core/reactor.pyx":525
  *                                 with nogil:
  *                                     self._free_conn(c)
  *                         i += 1             # <<<<<<<<<<<<<<
@@ -7516,7 +7618,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
           __pyx_v_i = (__pyx_v_i + 1);
         }
 
-        /* "kvxdb/core/reactor.pyx":507
+        /* "kvxdb/core/reactor.pyx":502
  *                     raise OSError(errno, "poll failed")
  * 
  *                 if nready > 0:             # <<<<<<<<<<<<<<
@@ -7525,7 +7627,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
 */
       }
 
-      /* "kvxdb/core/reactor.pyx":532
+      /* "kvxdb/core/reactor.pyx":527
  *                         i += 1
  * 
  *                 if now_ms() >= next_tick_ms:             # <<<<<<<<<<<<<<
@@ -7535,7 +7637,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
       __pyx_t_6 = (__pyx_f_5kvxdb_4core_7reactor_now_ms() >= __pyx_v_next_tick_ms);
       if (__pyx_t_6) {
 
-        /* "kvxdb/core/reactor.pyx":533
+        /* "kvxdb/core/reactor.pyx":528
  * 
  *                 if now_ms() >= next_tick_ms:
  *                     next_tick_ms += <uint64_t>self.tick_ms             # <<<<<<<<<<<<<<
@@ -7544,7 +7646,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
 */
         __pyx_v_next_tick_ms = (__pyx_v_next_tick_ms + ((uint64_t)__pyx_v_self->tick_ms));
 
-        /* "kvxdb/core/reactor.pyx":534
+        /* "kvxdb/core/reactor.pyx":529
  *                 if now_ms() >= next_tick_ms:
  *                     next_tick_ms += <uint64_t>self.tick_ms
  *                     if self.on_tick_cb is not None:             # <<<<<<<<<<<<<<
@@ -7554,7 +7656,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
         __pyx_t_6 = (__pyx_v_self->on_tick_cb != Py_None);
         if (__pyx_t_6) {
 
-          /* "kvxdb/core/reactor.pyx":535
+          /* "kvxdb/core/reactor.pyx":530
  *                     next_tick_ms += <uint64_t>self.tick_ms
  *                     if self.on_tick_cb is not None:
  *                         try:             # <<<<<<<<<<<<<<
@@ -7570,7 +7672,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
             __Pyx_XGOTREF(__pyx_t_14);
             /*try:*/ {
 
-              /* "kvxdb/core/reactor.pyx":536
+              /* "kvxdb/core/reactor.pyx":531
  *                     if self.on_tick_cb is not None:
  *                         try:
  *                             self.on_tick_cb()             # <<<<<<<<<<<<<<
@@ -7597,12 +7699,12 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
                 __pyx_t_1 = __Pyx_PyObject_FastCall(__pyx_t_3, __pyx_callargs+__pyx_t_5, (1-__pyx_t_5) | (__pyx_t_5*__Pyx_PY_VECTORCALL_ARGUMENTS_OFFSET));
                 __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
                 __Pyx_DECREF(__pyx_t_3); __pyx_t_3 = 0;
-                if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 536, __pyx_L48_error)
+                if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 531, __pyx_L48_error)
                 __Pyx_GOTREF(__pyx_t_1);
               }
               __Pyx_DECREF(__pyx_t_1); __pyx_t_1 = 0;
 
-              /* "kvxdb/core/reactor.pyx":535
+              /* "kvxdb/core/reactor.pyx":530
  *                     next_tick_ms += <uint64_t>self.tick_ms
  *                     if self.on_tick_cb is not None:
  *                         try:             # <<<<<<<<<<<<<<
@@ -7620,7 +7722,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
             __Pyx_XDECREF(__pyx_t_3); __pyx_t_3 = 0;
             __Pyx_XDECREF(__pyx_t_4); __pyx_t_4 = 0;
 
-            /* "kvxdb/core/reactor.pyx":537
+            /* "kvxdb/core/reactor.pyx":532
  *                         try:
  *                             self.on_tick_cb()
  *                         except Exception:             # <<<<<<<<<<<<<<
@@ -7634,7 +7736,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
             }
             goto __pyx_L50_except_error;
 
-            /* "kvxdb/core/reactor.pyx":535
+            /* "kvxdb/core/reactor.pyx":530
  *                     next_tick_ms += <uint64_t>self.tick_ms
  *                     if self.on_tick_cb is not None:
  *                         try:             # <<<<<<<<<<<<<<
@@ -7655,7 +7757,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
             __pyx_L55_try_end:;
           }
 
-          /* "kvxdb/core/reactor.pyx":534
+          /* "kvxdb/core/reactor.pyx":529
  *                 if now_ms() >= next_tick_ms:
  *                     next_tick_ms += <uint64_t>self.tick_ms
  *                     if self.on_tick_cb is not None:             # <<<<<<<<<<<<<<
@@ -7664,7 +7766,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
 */
         }
 
-        /* "kvxdb/core/reactor.pyx":532
+        /* "kvxdb/core/reactor.pyx":527
  *                         i += 1
  * 
  *                 if now_ms() >= next_tick_ms:             # <<<<<<<<<<<<<<
@@ -7676,7 +7778,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
     }
   }
 
-  /* "kvxdb/core/reactor.pyx":541
+  /* "kvxdb/core/reactor.pyx":536
  * 
  *         finally:
  *             it = self.head             # <<<<<<<<<<<<<<
@@ -7688,7 +7790,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
       __pyx_t_10 = __pyx_v_self->head;
       __pyx_v_it = __pyx_t_10;
 
-      /* "kvxdb/core/reactor.pyx":542
+      /* "kvxdb/core/reactor.pyx":537
  *         finally:
  *             it = self.head
  *             while it != NULL:             # <<<<<<<<<<<<<<
@@ -7699,7 +7801,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
         __pyx_t_6 = (__pyx_v_it != NULL);
         if (!__pyx_t_6) break;
 
-        /* "kvxdb/core/reactor.pyx":543
+        /* "kvxdb/core/reactor.pyx":538
  *             it = self.head
  *             while it != NULL:
  *                 nx = it.next             # <<<<<<<<<<<<<<
@@ -7709,7 +7811,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
         __pyx_t_10 = __pyx_v_it->next;
         __pyx_v_nx = __pyx_t_10;
 
-        /* "kvxdb/core/reactor.pyx":544
+        /* "kvxdb/core/reactor.pyx":539
  *             while it != NULL:
  *                 nx = it.next
  *                 self._free_conn(it)             # <<<<<<<<<<<<<<
@@ -7718,7 +7820,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
 */
         __pyx_f_5kvxdb_4core_7reactor_7Reactor__free_conn(__pyx_v_self, __pyx_v_it);
 
-        /* "kvxdb/core/reactor.pyx":545
+        /* "kvxdb/core/reactor.pyx":540
  *                 nx = it.next
  *                 self._free_conn(it)
  *                 it = nx             # <<<<<<<<<<<<<<
@@ -7728,7 +7830,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
         __pyx_v_it = __pyx_v_nx;
       }
 
-      /* "kvxdb/core/reactor.pyx":546
+      /* "kvxdb/core/reactor.pyx":541
  *                 self._free_conn(it)
  *                 it = nx
  *             self.head = NULL             # <<<<<<<<<<<<<<
@@ -7737,7 +7839,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
 */
       __pyx_v_self->head = NULL;
 
-      /* "kvxdb/core/reactor.pyx":547
+      /* "kvxdb/core/reactor.pyx":542
  *                 it = nx
  *             self.head = NULL
  *             if self.pfds != NULL:             # <<<<<<<<<<<<<<
@@ -7747,7 +7849,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
       __pyx_t_6 = (__pyx_v_self->pfds != NULL);
       if (__pyx_t_6) {
 
-        /* "kvxdb/core/reactor.pyx":548
+        /* "kvxdb/core/reactor.pyx":543
  *             self.head = NULL
  *             if self.pfds != NULL:
  *                 c_free(self.pfds); self.pfds = NULL             # <<<<<<<<<<<<<<
@@ -7757,7 +7859,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
         free(__pyx_v_self->pfds);
         __pyx_v_self->pfds = NULL;
 
-        /* "kvxdb/core/reactor.pyx":547
+        /* "kvxdb/core/reactor.pyx":542
  *                 it = nx
  *             self.head = NULL
  *             if self.pfds != NULL:             # <<<<<<<<<<<<<<
@@ -7766,7 +7868,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
 */
       }
 
-      /* "kvxdb/core/reactor.pyx":549
+      /* "kvxdb/core/reactor.pyx":544
  *             if self.pfds != NULL:
  *                 c_free(self.pfds); self.pfds = NULL
  *             if self.pconns != NULL:             # <<<<<<<<<<<<<<
@@ -7776,7 +7878,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
       __pyx_t_6 = (__pyx_v_self->pconns != NULL);
       if (__pyx_t_6) {
 
-        /* "kvxdb/core/reactor.pyx":550
+        /* "kvxdb/core/reactor.pyx":545
  *                 c_free(self.pfds); self.pfds = NULL
  *             if self.pconns != NULL:
  *                 c_free(self.pconns); self.pconns = NULL             # <<<<<<<<<<<<<<
@@ -7786,7 +7888,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
         free(__pyx_v_self->pconns);
         __pyx_v_self->pconns = NULL;
 
-        /* "kvxdb/core/reactor.pyx":549
+        /* "kvxdb/core/reactor.pyx":544
  *             if self.pfds != NULL:
  *                 c_free(self.pfds); self.pfds = NULL
  *             if self.pconns != NULL:             # <<<<<<<<<<<<<<
@@ -7795,7 +7897,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
 */
       }
 
-      /* "kvxdb/core/reactor.pyx":551
+      /* "kvxdb/core/reactor.pyx":546
  *             if self.pconns != NULL:
  *                 c_free(self.pconns); self.pconns = NULL
  *             self.pfds_cap = 0             # <<<<<<<<<<<<<<
@@ -7825,7 +7927,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
       __pyx_t_9 = __pyx_lineno; __pyx_t_15 = __pyx_clineno; __pyx_t_16 = __pyx_filename;
       {
 
-        /* "kvxdb/core/reactor.pyx":541
+        /* "kvxdb/core/reactor.pyx":536
  * 
  *         finally:
  *             it = self.head             # <<<<<<<<<<<<<<
@@ -7835,7 +7937,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
         __pyx_t_10 = __pyx_v_self->head;
         __pyx_v_it = __pyx_t_10;
 
-        /* "kvxdb/core/reactor.pyx":542
+        /* "kvxdb/core/reactor.pyx":537
  *         finally:
  *             it = self.head
  *             while it != NULL:             # <<<<<<<<<<<<<<
@@ -7846,7 +7948,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
           __pyx_t_6 = (__pyx_v_it != NULL);
           if (!__pyx_t_6) break;
 
-          /* "kvxdb/core/reactor.pyx":543
+          /* "kvxdb/core/reactor.pyx":538
  *             it = self.head
  *             while it != NULL:
  *                 nx = it.next             # <<<<<<<<<<<<<<
@@ -7856,7 +7958,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
           __pyx_t_10 = __pyx_v_it->next;
           __pyx_v_nx = __pyx_t_10;
 
-          /* "kvxdb/core/reactor.pyx":544
+          /* "kvxdb/core/reactor.pyx":539
  *             while it != NULL:
  *                 nx = it.next
  *                 self._free_conn(it)             # <<<<<<<<<<<<<<
@@ -7865,7 +7967,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
 */
           __pyx_f_5kvxdb_4core_7reactor_7Reactor__free_conn(__pyx_v_self, __pyx_v_it);
 
-          /* "kvxdb/core/reactor.pyx":545
+          /* "kvxdb/core/reactor.pyx":540
  *                 nx = it.next
  *                 self._free_conn(it)
  *                 it = nx             # <<<<<<<<<<<<<<
@@ -7875,7 +7977,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
           __pyx_v_it = __pyx_v_nx;
         }
 
-        /* "kvxdb/core/reactor.pyx":546
+        /* "kvxdb/core/reactor.pyx":541
  *                 self._free_conn(it)
  *                 it = nx
  *             self.head = NULL             # <<<<<<<<<<<<<<
@@ -7884,7 +7986,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
 */
         __pyx_v_self->head = NULL;
 
-        /* "kvxdb/core/reactor.pyx":547
+        /* "kvxdb/core/reactor.pyx":542
  *                 it = nx
  *             self.head = NULL
  *             if self.pfds != NULL:             # <<<<<<<<<<<<<<
@@ -7894,7 +7996,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
         __pyx_t_6 = (__pyx_v_self->pfds != NULL);
         if (__pyx_t_6) {
 
-          /* "kvxdb/core/reactor.pyx":548
+          /* "kvxdb/core/reactor.pyx":543
  *             self.head = NULL
  *             if self.pfds != NULL:
  *                 c_free(self.pfds); self.pfds = NULL             # <<<<<<<<<<<<<<
@@ -7904,7 +8006,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
           free(__pyx_v_self->pfds);
           __pyx_v_self->pfds = NULL;
 
-          /* "kvxdb/core/reactor.pyx":547
+          /* "kvxdb/core/reactor.pyx":542
  *                 it = nx
  *             self.head = NULL
  *             if self.pfds != NULL:             # <<<<<<<<<<<<<<
@@ -7913,7 +8015,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
 */
         }
 
-        /* "kvxdb/core/reactor.pyx":549
+        /* "kvxdb/core/reactor.pyx":544
  *             if self.pfds != NULL:
  *                 c_free(self.pfds); self.pfds = NULL
  *             if self.pconns != NULL:             # <<<<<<<<<<<<<<
@@ -7923,7 +8025,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
         __pyx_t_6 = (__pyx_v_self->pconns != NULL);
         if (__pyx_t_6) {
 
-          /* "kvxdb/core/reactor.pyx":550
+          /* "kvxdb/core/reactor.pyx":545
  *                 c_free(self.pfds); self.pfds = NULL
  *             if self.pconns != NULL:
  *                 c_free(self.pconns); self.pconns = NULL             # <<<<<<<<<<<<<<
@@ -7933,7 +8035,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
           free(__pyx_v_self->pconns);
           __pyx_v_self->pconns = NULL;
 
-          /* "kvxdb/core/reactor.pyx":549
+          /* "kvxdb/core/reactor.pyx":544
  *             if self.pfds != NULL:
  *                 c_free(self.pfds); self.pfds = NULL
  *             if self.pconns != NULL:             # <<<<<<<<<<<<<<
@@ -7942,7 +8044,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
 */
         }
 
-        /* "kvxdb/core/reactor.pyx":551
+        /* "kvxdb/core/reactor.pyx":546
  *             if self.pconns != NULL:
  *                 c_free(self.pconns); self.pconns = NULL
  *             self.pfds_cap = 0             # <<<<<<<<<<<<<<
@@ -7966,7 +8068,7 @@ static PyObject *__pyx_f_5kvxdb_4core_7reactor_7Reactor_run(struct __pyx_obj_5kv
     __pyx_L5:;
   }
 
-  /* "kvxdb/core/reactor.pyx":463
+  /* "kvxdb/core/reactor.pyx":459
  *         return 0
  * 
  *     cpdef run(self):             # <<<<<<<<<<<<<<
@@ -8041,7 +8143,7 @@ static PyObject *__pyx_pf_5kvxdb_4core_7reactor_7Reactor_6run(struct __pyx_obj_5
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("run", 0);
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __pyx_f_5kvxdb_4core_7reactor_7Reactor_run(__pyx_v_self, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 463, __pyx_L1_error)
+  __pyx_t_1 = __pyx_f_5kvxdb_4core_7reactor_7Reactor_run(__pyx_v_self, 1); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 459, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
@@ -8058,7 +8160,7 @@ static PyObject *__pyx_pf_5kvxdb_4core_7reactor_7Reactor_6run(struct __pyx_obj_5
   return __pyx_r;
 }
 
-/* "kvxdb/core/reactor.pyx":553
+/* "kvxdb/core/reactor.pyx":548
  *             self.pfds_cap = 0
  * 
  *     @property             # <<<<<<<<<<<<<<
@@ -8090,7 +8192,7 @@ static PyObject *__pyx_pf_5kvxdb_4core_7reactor_7Reactor_11connections___get__(s
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "kvxdb/core/reactor.pyx":555
+  /* "kvxdb/core/reactor.pyx":550
  *     @property
  *     def connections(self) -> int:
  *         return self.cur_conns             # <<<<<<<<<<<<<<
@@ -8098,13 +8200,13 @@ static PyObject *__pyx_pf_5kvxdb_4core_7reactor_7Reactor_11connections___get__(s
  *     @property
 */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyLong_From_int(__pyx_v_self->cur_conns); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 555, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyLong_From_int(__pyx_v_self->cur_conns); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 550, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "kvxdb/core/reactor.pyx":553
+  /* "kvxdb/core/reactor.pyx":548
  *             self.pfds_cap = 0
  * 
  *     @property             # <<<<<<<<<<<<<<
@@ -8123,7 +8225,7 @@ static PyObject *__pyx_pf_5kvxdb_4core_7reactor_7Reactor_11connections___get__(s
   return __pyx_r;
 }
 
-/* "kvxdb/core/reactor.pyx":557
+/* "kvxdb/core/reactor.pyx":552
  *         return self.cur_conns
  * 
  *     @property             # <<<<<<<<<<<<<<
@@ -8155,19 +8257,19 @@ static PyObject *__pyx_pf_5kvxdb_4core_7reactor_7Reactor_5limit___get__(struct _
   int __pyx_clineno = 0;
   __Pyx_RefNannySetupContext("__get__", 0);
 
-  /* "kvxdb/core/reactor.pyx":559
+  /* "kvxdb/core/reactor.pyx":554
  *     @property
  *     def limit(self) -> int:
  *         return self.max_conns             # <<<<<<<<<<<<<<
 */
   __Pyx_XDECREF(__pyx_r);
-  __pyx_t_1 = __Pyx_PyLong_From_int(__pyx_v_self->max_conns); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 559, __pyx_L1_error)
+  __pyx_t_1 = __Pyx_PyLong_From_int(__pyx_v_self->max_conns); if (unlikely(!__pyx_t_1)) __PYX_ERR(0, 554, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_1);
   __pyx_r = __pyx_t_1;
   __pyx_t_1 = 0;
   goto __pyx_L0;
 
-  /* "kvxdb/core/reactor.pyx":557
+  /* "kvxdb/core/reactor.pyx":552
  *         return self.cur_conns
  * 
  *     @property             # <<<<<<<<<<<<<<
@@ -8649,29 +8751,30 @@ static int __Pyx_modinit_type_init_code(__pyx_mstatetype *__pyx_mstate) {
   __pyx_vtable_5kvxdb_4core_7reactor_Reactor._handle_read = (void (*)(struct __pyx_obj_5kvxdb_4core_7reactor_Reactor *, struct __pyx_t_5kvxdb_4core_7reactor_conn_t *))__pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_read;
   __pyx_vtable_5kvxdb_4core_7reactor_Reactor._handle_write = (void (*)(struct __pyx_obj_5kvxdb_4core_7reactor_Reactor *, struct __pyx_t_5kvxdb_4core_7reactor_conn_t *))__pyx_f_5kvxdb_4core_7reactor_7Reactor__handle_write;
   __pyx_vtable_5kvxdb_4core_7reactor_Reactor._queue_write = (void (*)(struct __pyx_obj_5kvxdb_4core_7reactor_Reactor *, struct __pyx_t_5kvxdb_4core_7reactor_conn_t *, char const *, size_t))__pyx_f_5kvxdb_4core_7reactor_7Reactor__queue_write;
+  __pyx_vtable_5kvxdb_4core_7reactor_Reactor._is_PING = (int (*)(struct __pyx_obj_5kvxdb_4core_7reactor_Reactor *, char *, size_t))__pyx_f_5kvxdb_4core_7reactor_7Reactor__is_PING;
   __pyx_vtable_5kvxdb_4core_7reactor_Reactor._process_requests = (void (*)(struct __pyx_obj_5kvxdb_4core_7reactor_Reactor *, struct __pyx_t_5kvxdb_4core_7reactor_conn_t *))__pyx_f_5kvxdb_4core_7reactor_7Reactor__process_requests;
   __pyx_vtable_5kvxdb_4core_7reactor_Reactor._ensure_pfds_cap = (int (*)(struct __pyx_obj_5kvxdb_4core_7reactor_Reactor *, int))__pyx_f_5kvxdb_4core_7reactor_7Reactor__ensure_pfds_cap;
   __pyx_vtable_5kvxdb_4core_7reactor_Reactor.run = (PyObject *(*)(struct __pyx_obj_5kvxdb_4core_7reactor_Reactor *, int __pyx_skip_dispatch))__pyx_f_5kvxdb_4core_7reactor_7Reactor_run;
   #if CYTHON_USE_TYPE_SPECS
-  __pyx_mstate->__pyx_ptype_5kvxdb_4core_7reactor_Reactor = (PyTypeObject *) __Pyx_PyType_FromModuleAndSpec(__pyx_m, &__pyx_type_5kvxdb_4core_7reactor_Reactor_spec, NULL); if (unlikely(!__pyx_mstate->__pyx_ptype_5kvxdb_4core_7reactor_Reactor)) __PYX_ERR(0, 119, __pyx_L1_error)
-  if (__Pyx_fix_up_extension_type_from_spec(&__pyx_type_5kvxdb_4core_7reactor_Reactor_spec, __pyx_mstate->__pyx_ptype_5kvxdb_4core_7reactor_Reactor) < 0) __PYX_ERR(0, 119, __pyx_L1_error)
+  __pyx_mstate->__pyx_ptype_5kvxdb_4core_7reactor_Reactor = (PyTypeObject *) __Pyx_PyType_FromModuleAndSpec(__pyx_m, &__pyx_type_5kvxdb_4core_7reactor_Reactor_spec, NULL); if (unlikely(!__pyx_mstate->__pyx_ptype_5kvxdb_4core_7reactor_Reactor)) __PYX_ERR(0, 117, __pyx_L1_error)
+  if (__Pyx_fix_up_extension_type_from_spec(&__pyx_type_5kvxdb_4core_7reactor_Reactor_spec, __pyx_mstate->__pyx_ptype_5kvxdb_4core_7reactor_Reactor) < 0) __PYX_ERR(0, 117, __pyx_L1_error)
   #else
   __pyx_mstate->__pyx_ptype_5kvxdb_4core_7reactor_Reactor = &__pyx_type_5kvxdb_4core_7reactor_Reactor;
   #endif
   #if !CYTHON_COMPILING_IN_LIMITED_API
   #endif
   #if !CYTHON_USE_TYPE_SPECS
-  if (__Pyx_PyType_Ready(__pyx_mstate->__pyx_ptype_5kvxdb_4core_7reactor_Reactor) < 0) __PYX_ERR(0, 119, __pyx_L1_error)
+  if (__Pyx_PyType_Ready(__pyx_mstate->__pyx_ptype_5kvxdb_4core_7reactor_Reactor) < 0) __PYX_ERR(0, 117, __pyx_L1_error)
   #endif
   #if !CYTHON_COMPILING_IN_LIMITED_API
   if ((CYTHON_USE_TYPE_SLOTS && CYTHON_USE_PYTYPE_LOOKUP) && likely(!__pyx_mstate->__pyx_ptype_5kvxdb_4core_7reactor_Reactor->tp_dictoffset && __pyx_mstate->__pyx_ptype_5kvxdb_4core_7reactor_Reactor->tp_getattro == PyObject_GenericGetAttr)) {
     __pyx_mstate->__pyx_ptype_5kvxdb_4core_7reactor_Reactor->tp_getattro = PyObject_GenericGetAttr;
   }
   #endif
-  if (__Pyx_SetVtable(__pyx_mstate->__pyx_ptype_5kvxdb_4core_7reactor_Reactor, __pyx_vtabptr_5kvxdb_4core_7reactor_Reactor) < 0) __PYX_ERR(0, 119, __pyx_L1_error)
-  if (__Pyx_MergeVtables(__pyx_mstate->__pyx_ptype_5kvxdb_4core_7reactor_Reactor) < 0) __PYX_ERR(0, 119, __pyx_L1_error)
-  if (PyObject_SetAttr(__pyx_m, __pyx_mstate_global->__pyx_n_u_Reactor, (PyObject *) __pyx_mstate->__pyx_ptype_5kvxdb_4core_7reactor_Reactor) < 0) __PYX_ERR(0, 119, __pyx_L1_error)
-  if (__Pyx_setup_reduce((PyObject *) __pyx_mstate->__pyx_ptype_5kvxdb_4core_7reactor_Reactor) < 0) __PYX_ERR(0, 119, __pyx_L1_error)
+  if (__Pyx_SetVtable(__pyx_mstate->__pyx_ptype_5kvxdb_4core_7reactor_Reactor, __pyx_vtabptr_5kvxdb_4core_7reactor_Reactor) < 0) __PYX_ERR(0, 117, __pyx_L1_error)
+  if (__Pyx_MergeVtables(__pyx_mstate->__pyx_ptype_5kvxdb_4core_7reactor_Reactor) < 0) __PYX_ERR(0, 117, __pyx_L1_error)
+  if (PyObject_SetAttr(__pyx_m, __pyx_mstate_global->__pyx_n_u_Reactor, (PyObject *) __pyx_mstate->__pyx_ptype_5kvxdb_4core_7reactor_Reactor) < 0) __PYX_ERR(0, 117, __pyx_L1_error)
+  if (__Pyx_setup_reduce((PyObject *) __pyx_mstate->__pyx_ptype_5kvxdb_4core_7reactor_Reactor) < 0) __PYX_ERR(0, 117, __pyx_L1_error)
   __Pyx_RefNannyFinishContext();
   return 0;
   __pyx_L1_error:;
@@ -8988,40 +9091,40 @@ __Pyx_RefNannySetupContext("PyInit_reactor", 0);
   (void)__Pyx_modinit_function_import_code(__pyx_mstate);
   /*--- Execution code ---*/
 
-  /* "kvxdb/core/reactor.pyx":196
+  /* "kvxdb/core/reactor.pyx":190
  *         self.lfd = -1
  * 
  *     def close(self):             # <<<<<<<<<<<<<<
  *         self.stop()
  *         if self.lfd >= 0:
 */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_5kvxdb_4core_7reactor_7Reactor_3close, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_Reactor_close, NULL, __pyx_mstate_global->__pyx_n_u_kvxdb_core_reactor, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[0])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 196, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_5kvxdb_4core_7reactor_7Reactor_3close, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_Reactor_close, NULL, __pyx_mstate_global->__pyx_n_u_kvxdb_core_reactor, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[0])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 190, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_5kvxdb_4core_7reactor_Reactor, __pyx_mstate_global->__pyx_n_u_close, __pyx_t_2) < 0) __PYX_ERR(0, 196, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_5kvxdb_4core_7reactor_Reactor, __pyx_mstate_global->__pyx_n_u_close, __pyx_t_2) < 0) __PYX_ERR(0, 190, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "kvxdb/core/reactor.pyx":202
+  /* "kvxdb/core/reactor.pyx":196
  *             self.lfd = -1
  * 
  *     def stop(self):             # <<<<<<<<<<<<<<
  *         self.running = 0
  * 
 */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_5kvxdb_4core_7reactor_7Reactor_5stop, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_Reactor_stop, NULL, __pyx_mstate_global->__pyx_n_u_kvxdb_core_reactor, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[1])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 202, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_5kvxdb_4core_7reactor_7Reactor_5stop, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_Reactor_stop, NULL, __pyx_mstate_global->__pyx_n_u_kvxdb_core_reactor, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[1])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 196, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_5kvxdb_4core_7reactor_Reactor, __pyx_mstate_global->__pyx_n_u_stop, __pyx_t_2) < 0) __PYX_ERR(0, 202, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_5kvxdb_4core_7reactor_Reactor, __pyx_mstate_global->__pyx_n_u_stop, __pyx_t_2) < 0) __PYX_ERR(0, 196, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
-  /* "kvxdb/core/reactor.pyx":463
+  /* "kvxdb/core/reactor.pyx":459
  *         return 0
  * 
  *     cpdef run(self):             # <<<<<<<<<<<<<<
  *         cdef uint64_t next_tick_ms = now_ms() + <uint64_t>self.tick_ms
  *         cdef int nready, i, nitems
 */
-  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_5kvxdb_4core_7reactor_7Reactor_7run, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_Reactor_run, NULL, __pyx_mstate_global->__pyx_n_u_kvxdb_core_reactor, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[2])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 463, __pyx_L1_error)
+  __pyx_t_2 = __Pyx_CyFunction_New(&__pyx_mdef_5kvxdb_4core_7reactor_7Reactor_7run, __Pyx_CYFUNCTION_CCLASS, __pyx_mstate_global->__pyx_n_u_Reactor_run, NULL, __pyx_mstate_global->__pyx_n_u_kvxdb_core_reactor, __pyx_mstate_global->__pyx_d, ((PyObject *)__pyx_mstate_global->__pyx_codeobj_tab[2])); if (unlikely(!__pyx_t_2)) __PYX_ERR(0, 459, __pyx_L1_error)
   __Pyx_GOTREF(__pyx_t_2);
-  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_5kvxdb_4core_7reactor_Reactor, __pyx_mstate_global->__pyx_n_u_run, __pyx_t_2) < 0) __PYX_ERR(0, 463, __pyx_L1_error)
+  if (__Pyx_SetItemOnTypeDict(__pyx_mstate_global->__pyx_ptype_5kvxdb_4core_7reactor_Reactor, __pyx_mstate_global->__pyx_n_u_run, __pyx_t_2) < 0) __PYX_ERR(0, 459, __pyx_L1_error)
   __Pyx_DECREF(__pyx_t_2); __pyx_t_2 = 0;
 
   /* "(tree fragment)":1
@@ -9178,7 +9281,7 @@ static int __Pyx_InitStrings(__Pyx_StringTabEntry const *t, PyObject **target, c
 
 static int __Pyx_InitCachedBuiltins(__pyx_mstatetype *__pyx_mstate) {
   CYTHON_UNUSED_VAR(__pyx_mstate);
-  __pyx_builtin_OSError = __Pyx_GetBuiltinName(__pyx_mstate->__pyx_n_u_OSError); if (!__pyx_builtin_OSError) __PYX_ERR(0, 163, __pyx_L1_error)
+  __pyx_builtin_OSError = __Pyx_GetBuiltinName(__pyx_mstate->__pyx_n_u_OSError); if (!__pyx_builtin_OSError) __PYX_ERR(0, 160, __pyx_L1_error)
   __pyx_builtin_TypeError = __Pyx_GetBuiltinName(__pyx_mstate->__pyx_n_u_TypeError); if (!__pyx_builtin_TypeError) __PYX_ERR(1, 2, __pyx_L1_error)
   return 0;
   __pyx_L1_error:;
@@ -9231,17 +9334,17 @@ static int __Pyx_CreateCodeObjects(__pyx_mstatetype *__pyx_mstate) {
   PyObject* tuple_dedup_map = PyDict_New();
   if (unlikely(!tuple_dedup_map)) return -1;
   {
-    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 196, 36};
+    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 190, 36};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self};
     __pyx_mstate_global->__pyx_codeobj_tab[0] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_src_kvxdb_core_reactor_pyx, __pyx_mstate->__pyx_n_u_close, __pyx_k_A_E_4uCq_1D, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[0])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 202, 9};
+    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 196, 9};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self};
     __pyx_mstate_global->__pyx_codeobj_tab[1] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_src_kvxdb_core_reactor_pyx, __pyx_mstate->__pyx_n_u_stop, __pyx_k_A_Kq, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[1])) goto bad;
   }
   {
-    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 463, 664};
+    const __Pyx_PyCode_New_function_description descr = {1, 0, 0, 1, (unsigned int)(CO_OPTIMIZED|CO_NEWLOCALS), 459, 662};
     PyObject* const varnames[] = {__pyx_mstate->__pyx_n_u_self};
     __pyx_mstate_global->__pyx_codeobj_tab[2] = __Pyx_PyCode_New(descr, varnames, __pyx_mstate->__pyx_kp_u_src_kvxdb_core_reactor_pyx, __pyx_mstate->__pyx_n_u_run, __pyx_k_A_V3b_a_Kq_a_t_AXS_t1_Q_ARvT_ARz, tuple_dedup_map); if (unlikely(!__pyx_mstate_global->__pyx_codeobj_tab[2])) goto bad;
   }
