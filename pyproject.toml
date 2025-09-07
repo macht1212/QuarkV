@@ -25,6 +25,7 @@ classifiers = [
 packages = [
   { include = "kvxdb", from = "src" }
 ]
+
 include = [
   { path = "src/kvxdb/**/*.so", format = "wheel" },
   { path = "src/kvxdb/**/*.pyx", format = "sdist" },
