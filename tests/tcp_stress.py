@@ -1,11 +1,12 @@
 # tests/tcp_stress.py
 import socket, threading, time, sys
 
-HOST, PORT = "127.0.0.1", int(sys.argv[1]) if len(sys.argv)>1 else 11211
-N = int(sys.argv[2]) if len(sys.argv)>2 else 500
+HOST, PORT = "127.0.0.1", int(sys.argv[1]) if len(sys.argv) > 1 else 11211
+N = int(sys.argv[2]) if len(sys.argv) > 2 else 500
 
 ok = 0
 lock = threading.Lock()
+
 
 def worker():
     global ok
@@ -19,6 +20,7 @@ def worker():
                 ok += 1
     except Exception:
         pass
+
 
 ts = [threading.Thread(target=worker) for _ in range(N)]
 [t.start() for t in ts]

@@ -12,6 +12,7 @@ try:
 except Exception as e:
     pytest.skip(f"Reactor import failed: {e}", allow_module_level=True)
 
+
 def _pick_free_port() -> int:
     s = socket.socket()
     s.bind(("127.0.0.1", 0))
@@ -19,18 +20,21 @@ def _pick_free_port() -> int:
     s.close()
     return port
 
+
 def _run_reactor_in_thread(port, **kwargs):
     done = threading.Event()
     err = {"exc": None}
+
     # дефолтный PING/PONG парсер, если не передан свой
     def default_on_request(mv):
         data = bytes(mv)
         if b"\n" in data:
             line, _ = data.split(b"\n", 1)
             if line == b"PING":
-                return len(line)+1, b"PONG\n", False
-            return len(line)+1, b"", False
+                return len(line) + 1, b"PONG\n", False
+            return len(line) + 1, b"", False
         return 0, None, False
+
     on_request_cb = kwargs.pop("on_request_cb", default_on_request)
 
     r = Reactor(port=port, on_request_cb=on_request_cb, **kwargs)
@@ -40,6 +44,7 @@ def _run_reactor_in_thread(port, **kwargs):
     time.sleep(0.05)
     return r, th, done, err
 
+
 def _reactor_run(r, done_evt, err_box):
     try:
         r.run()
@@ -48,17 +53,20 @@ def _reactor_run(r, done_evt, err_box):
     finally:
         done_evt.set()
 
+
 def _stop_reactor(r, th):
     r.stop()
     th.join(timeout=2.0)
     assert not th.is_alive(), "reactor thread did not stop in time"
 
+
 def _conn(port, timeout=1.0):
     return socket.create_connection(("127.0.0.1", port), timeout=timeout)
 
+
 def test_ping_pong():
     port = _pick_free_port()
-    r, th, done, err = _run_reactor_in_thread(port, tick_ms=20, max_conns=256, max_bulk=4*1024*1024)
+    r, th, done, err = _run_reactor_in_thread(port, tick_ms=20, max_conns=256, max_bulk=4 * 1024 * 1024)
     try:
         s = _conn(port)
         s.sendall(b"PING\n")
@@ -69,9 +77,10 @@ def test_ping_pong():
     finally:
         _stop_reactor(r, th)
 
+
 def test_pipeline_three():
     port = _pick_free_port()
-    r, th, done, err = _run_reactor_in_thread(port, tick_ms=20, max_conns=256, max_bulk=4*1024*1024)
+    r, th, done, err = _run_reactor_in_thread(port, tick_ms=20, max_conns=256, max_bulk=4 * 1024 * 1024)
     try:
         s = _conn(port)
         s.sendall(b"PING\nPING\nPING\n")
@@ -82,17 +91,21 @@ def test_pipeline_three():
     finally:
         _stop_reactor(r, th)
 
+
 def test_tick_called():
     port = _pick_free_port()
     ticks = {"n": 0}
+
     def on_tick():
         ticks["n"] += 1
+
     r, th, done, err = _run_reactor_in_thread(port, tick_ms=20, on_tick_cb=on_tick)
     try:
         time.sleep(0.12)
         assert ticks["n"] >= 3  # примерно раз в 20мс
     finally:
         _stop_reactor(r, th)
+
 
 def test_max_bulk_close():
     port = _pick_free_port()
@@ -110,6 +123,7 @@ def test_max_bulk_close():
         assert data == b"", "expected server to close connection due to max_bulk"
     finally:
         _stop_reactor(r, th)
+
 
 def test_max_conns_limit():
     port = _pick_free_port()
@@ -142,6 +156,7 @@ def test_max_conns_limit():
                 pass
         _stop_reactor(r, th)
 
+
 @pytest.mark.timeout(5)
 def test_large_write_partial_path():
     """
@@ -150,13 +165,14 @@ def test_large_write_partial_path():
     """
     port = _pick_free_port()
     big = b"X" * (1 << 20)  # 1 MiB
+
     def on_request(mv):
         data = bytes(mv)
         if b"\n" in data:
             line, _ = data.split(b"\n", 1)
             if line == b"BIG":
-                return len(line)+1, big, False
-            return len(line)+1, b"", False
+                return len(line) + 1, big, False
+            return len(line) + 1, b"", False
         return 0, None, False
 
     r, th, done, err = _run_reactor_in_thread(port, on_request_cb=on_request)

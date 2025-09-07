@@ -50,7 +50,7 @@ async def _roundtrip():
 
     reader, writer = await asyncio.open_unix_connection(uds)
 
-    writer.write(rp.encode_command("PING")) 
+    writer.write(rp.encode_command("PING"))
     await writer.drain()
     got = await read_one(reader)
     assert got == b"+PONG\r\n"
@@ -81,4 +81,3 @@ async def _roundtrip():
 def test_resp_server_roundtrip():
     # Запускаем асинхронную проверку в рамках теста
     asyncio.run(_roundtrip())
-
