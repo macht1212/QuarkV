@@ -45,7 +45,7 @@ cdef extern from "<netinet/in.h>":
 
 # ------------- sys/socket.h ------------
 cdef extern from "<sys/socket.h>":
-    cdef struct sockaddr:          # <— было ctypedef, должно быть cdef
+    cdef struct sockaddr:
         pass
     ctypedef unsigned int socklen_t
 
@@ -62,7 +62,7 @@ cdef extern from "<sys/socket.h>":
     cdef int SO_REUSEADDR
     cdef int SO_REUSEPORT
 
-# ---------------- unistd.h -------------
+# ---------------- unistд.h -------------
 cdef extern from "<unistd.h>":
     int     c_close "close"(int fd) nogil
     ssize_t c_read  "read" (int fd, void* buf,  size_t count) nogil
@@ -334,6 +334,10 @@ cdef class Reactor:
 
         self._process_requests(c)
 
+        # >>> Новое: мгновенная запись ответов после парсинга
+        if c.state != CONN_CLOSED and c.wlen > c.woff:
+            self._handle_write(c)
+
     cdef void _handle_write(self, conn_t* c):
         if c.wlen == c.woff:
             return
@@ -367,7 +371,7 @@ cdef class Reactor:
 
     cdef void _process_requests(self, conn_t* c):
         """
-        Построчный протокол. 'PING\\n' -> 'PONG\\n'.
+        Построчный протокол. 'PING\n' -> 'PONG\n'.
         Если задан on_request_cb(memoryview), он должен вернуть:
           consumed:int, out:bytes|None, close:bool
         """
@@ -395,7 +399,7 @@ cdef class Reactor:
                         c_memmove(c.rbuf, c.rbuf + cons, c.rlen - cons)
                     c.rlen -= cons
             if out:
-                # безопасно: мы копируем байты в свой wbuf
+                # безопасно: копируем байты в свой wbuf
                 self._queue_write(c, <const char*>out, <size_t>len(out))
             if close_flag:
                 c.state = CONN_CLOSED
@@ -405,7 +409,7 @@ cdef class Reactor:
         while i < c.rlen:
             if <unsigned char>c.rbuf[i] == NL:
                 pos = i
-                # длина содержимого строки без '\n' (и возможного '\r')
+                # длина строки без '\n' (и возможного '\r')
                 ln = pos - start
                 if ln > 0 and <unsigned char>c.rbuf[pos - 1] == CR:
                     ln -= 1
@@ -513,7 +517,8 @@ cdef class Reactor:
                             else:
                                 if pfds[i].revents & POLLIN:
                                     self._handle_read(c)
-                                if c.state != CONN_CLOSED and (pfds[i].revents & POLLOUT):
+                                # >>> Новое: пишем либо по POLLOUT, либо если уже есть что писать
+                                if c.state != CONN_CLOSED and ((pfds[i].revents & POLLOUT) or (c.wlen > c.woff)):
                                     self._handle_write(c)
 
                             if c.state == CONN_CLOSED:
