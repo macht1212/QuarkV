@@ -6,7 +6,7 @@ import os
 # Импорт модуля — выберите вариант, который у вас собирается
 # from kvxdb.core import respParser as rp
 # или так, если вам удобнее путь через src:
-from src.kvxdb.core import respParser as rp
+from kvxdb.core import respParser as rp
 
 
 async def read_one(reader: asyncio.StreamReader) -> bytes:
