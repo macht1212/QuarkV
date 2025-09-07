@@ -2,27 +2,49 @@ name: CI
 
 on:
   push:
+    branches: [ "**" ]
   pull_request:
+    branches: [ "**" ]
+
+# Отменяем старый ран, если прилетел новый в ту же ветку/PR
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
-  test:
-    runs-on: ubuntu-latest
+  test-build:
+    name: Tests & Build (${{ matrix.os }}, py${{ matrix.python }})
+    runs-on: ${{ matrix.os }}
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ ubuntu-latest, macos-latest ]
+        python: [ "3.11", "3.12", "3.13" ]
 
     defaults:
       run:
-        # если pyproject.toml в корне — оставь '.'
-        working-directory: .
+        working-directory: .   # поменяй, если pyproject.toml лежит не в корне
+
+    env:
+      PIP_DISABLE_PIP_VERSION_CHECK: "1"
+      PIP_NO_PYTHON_VERSION_WARNING: "1"
+      POETRY_VIRTUALENVS_IN_PROJECT: "true"  # .venv рядом с проектом
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-        with:
-          submodules: false  # true, если реально используешь git submodules
 
-      - name: Set up Python
+      # Для Linux ставим базовые тулчейны (на macOS уже есть clang)
+      - name: Install system deps (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y build-essential
+
+      - name: Set up Python ${{ matrix.python }}
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: ${{ matrix.python }}
 
       - name: Install Poetry 2.1.4
         run: pipx install poetry==2.1.4
@@ -32,20 +54,44 @@ jobs:
           poetry --version
           poetry config virtualenvs.in-project true
 
-      # (опционально) кэшируем .venv по хэшу lock-файла
+      # Кэш .venv по хэшу lock-файла и версии Python/OS
       - name: Cache virtualenv
         uses: actions/cache@v4
         with:
           path: .venv
-          key: venv-${{ runner.os }}-${{ steps.py.outputs.python-version || '3.11' }}-${{ hashFiles('poetry.lock') }}
+          key: venv-${{ runner.os }}-py${{ matrix.python }}-${{ hashFiles('poetry.lock') }}
           restore-keys: |
-            venv-${{ runner.os }}-${{ steps.py.outputs.python-version || '3.11' }}-
+            venv-${{ runner.os }}-py${{ matrix.python }}-
 
-      - name: Install dependencies (sync)
-        env:
-          PIP_DISABLE_PIP_VERSION_CHECK: '1'
-          PIP_NO_PYTHON_VERSION_WARNING: '1'
-        run: poetry sync --no-interaction --all-extras
+      - name: Sync deps (main + dev + ai groups)
+        run: poetry sync --no-interaction --with dev,ai --all-extras
 
-      - name: Run tests
-        run: poetry run pytest -q
+      - name: Show env
+        run: |
+          poetry run python -V
+          poetry show --tree
+
+      # --- Линтеры/статанализ ---
+      - name: Ruff (lint)
+        run: poetry run ruff check .
+
+      - name: Black (check)
+        run: poetry run black --check .
+
+      - name: Mypy
+        run: poetry run mypy
+
+      # --- Тесты ---
+      - name: Pytest
+        run: poetry run pytest
+
+      # --- Сборка пакета (wheel + sdist) ---
+      - name: Build package
+        run: poetry build
+
+      - name: Upload dist artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: dist-${{ runner.os }}-py${{ matrix.python }}
+          path: dist/*
+          if-no-files-found: error
