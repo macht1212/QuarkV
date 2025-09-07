@@ -7,7 +7,7 @@ from cpython.buffer     cimport PyBUF_READ
 
 from libc.stdint  cimport uint64_t
 from libc.stddef  cimport size_t
-ctypedef long ssize_t
+ctypedef long ssize_t   # универсально для Linux/macOS
 
 # ---------------- errno ----------------
 cdef extern from "<errno.h>":
@@ -327,7 +327,6 @@ cdef class Reactor:
 
         self._process_requests(c)
 
-        # мгновенно пробуем отдать накопившееся
         if c.state != CONN_CLOSED and c.wlen > c.woff:
             self._handle_write(c)
 
@@ -363,7 +362,6 @@ cdef class Reactor:
             c.wlen += nbytes
 
     cdef inline bint _is_PING(self, char* buf, size_t start) noexcept:
-        # ручная проверка 4 байт вместо memcmp
         return (buf[start]   == 'P' and
                 buf[start+1] == 'I' and
                 buf[start+2] == 'N' and
@@ -372,7 +370,8 @@ cdef class Reactor:
     cdef void _process_requests(self, conn_t* c):
         """
         Построчный протокол. 'PING\\n' -> 'PONG\\n'.
-        on_request_cb(mv) -> consumed:int, out:bytes|None, close:bool
+        Если задан on_request_cb(memoryview), он должен вернуть:
+          consumed:int, out:bytes|None, close:bool
         """
         cdef size_t i = 0
         cdef size_t start = 0
@@ -383,28 +382,43 @@ cdef class Reactor:
         cdef unsigned char CR = 13   # '\r'
         cdef size_t ln
 
+        # --- Колбэк: вызываем ПОКА он что-то потребляет из буфера ---
         if self.on_request_cb is not None:
-            mv = PyMemoryView_FromMemory(<char*>c.rbuf, <Py_ssize_t>c.rlen, PyBUF_READ)
-            try:
-                consumed, out, close_flag = self.on_request_cb(mv)
-            except Exception:
-                c.state = CONN_CLOSED
-                return
-            if consumed > 0 and consumed <= c.rlen:
-                cons = <size_t>consumed
-                with nogil:
-                    if cons < c.rlen:
-                        c_memmove(c.rbuf, c.rbuf + cons, c.rlen - cons)
-                    c.rlen -= cons
-            if out:
-                self._queue_write(c, <const char*>out, <size_t>len(out))
-                # немедленно отдаём
+            while c.rlen > 0:
+                mv = PyMemoryView_FromMemory(<char*>c.rbuf, <Py_ssize_t>c.rlen, PyBUF_READ)
+                try:
+                    consumed, out, close_flag = self.on_request_cb(mv)
+                except Exception:
+                    c.state = CONN_CLOSED
+                    return
+
+                if consumed > 0 and consumed <= c.rlen:
+                    cons = <size_t>consumed
+                    with nogil:
+                        if cons < c.rlen:
+                            c_memmove(c.rbuf, c.rbuf + cons, c.rlen - cons)
+                        c.rlen -= cons
+                else:
+                    # ничего не потреблено — прекращаем цикл до следующего POLLIN
+                    pass
+
+                if out:
+                    self._queue_write(c, <const char*>out, <size_t>len(out))
+
+                if close_flag:
+                    c.state = CONN_CLOSED
+                    break
+
+                if consumed <= 0:
+                    # не продвинулись — выходим, чтобы не крутить CPU
+                    break
+
+            # один общий flush после серии обработок
+            if c.state != CONN_CLOSED and c.wlen > c.woff:
                 self._handle_write(c)
-            if close_flag:
-                c.state = CONN_CLOSED
             return
 
-        # Демонстрационный обработчик: несколько команд в одном буфере
+        # --- Простейший обработчик строк без колбэка ---
         while i < c.rlen:
             if <unsigned char>c.rbuf[i] == NL:
                 pos = i
@@ -414,13 +428,10 @@ cdef class Reactor:
 
                 if ln == 4 and self._is_PING(c.rbuf, start):
                     self._queue_write(c, b"PONG\n", 5)
-                    # flush сразу после каждой команды
-                    self._handle_write(c)
 
                 start = i + 1
             i += 1
 
-        # Компактируем хвост (частичная команда без '\n')
         if start > 0:
             with nogil:
                 if start < c.rlen:
@@ -433,6 +444,7 @@ cdef class Reactor:
         cdef int newcap = self.pfds_cap if self.pfds_cap > 0 else 64
         while newcap < need:
             newcap *= 2
+
         cdef void* npfds = c_malloc(newcap * sizeof(pollfd))
         if npfds == NULL:
             return -1
@@ -512,7 +524,6 @@ cdef class Reactor:
                             else:
                                 if pfds[i].revents & POLLIN:
                                     self._handle_read(c)
-                                # пишем либо по POLLOUT, либо если уже есть данные к отправке
                                 if c.state != CONN_CLOSED and ((pfds[i].revents & POLLOUT) or (c.wlen > c.woff)):
                                     self._handle_write(c)
 
