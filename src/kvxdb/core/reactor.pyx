@@ -45,7 +45,7 @@ cdef extern from "<netinet/in.h>":
 
 # ------------- sys/socket.h ------------
 cdef extern from "<sys/socket.h>":
-    cdef struct sockaddr:          # <— было ctypedef, должно быть cdef
+    cdef struct sockaddr:
         pass
     ctypedef unsigned int socklen_t
 
@@ -79,7 +79,6 @@ cdef extern from "<string.h>":
     void* c_memcpy  "memcpy"(void*, const void*, size_t) nogil
     void* c_memmove "memmove"(void*, const void*, size_t) nogil
     void* c_memset  "memset"(void*, int, size_t) nogil
-    int   c_memcmp  "memcmp"(const void*, const void*, size_t) nogil
 
 # ---------------- poll.h ---------------
 cdef extern from "<poll.h>":
@@ -95,7 +94,6 @@ cdef extern from "<poll.h>":
 
 # -------------- helpers ----------------
 cdef inline uint64_t now_ms() noexcept nogil:
-    # грубая миллисекундная метка — для тикера достаточно
     return <uint64_t>time(NULL) * 1000
 
 cdef enum ConnState:
@@ -157,24 +155,20 @@ cdef class Reactor:
         cdef int yes = 1
         cdef sockaddr_in addr
 
-        # socket()
         self.lfd = socket(AF_INET, SOCK_STREAM, 0)
         if self.lfd < 0:
             raise OSError(errno, "socket failed")
 
-        # CLOEXEC + NONBLOCK
         cdef int flags = fcntl(self.lfd, F_GETFD)
         fcntl(self.lfd, F_SETFD, flags | FD_CLOEXEC)
         flags = fcntl(self.lfd, F_GETFL)
         fcntl(self.lfd, F_SETFL, flags | O_NONBLOCK)
 
-        # REUSEADDR / REUSEPORT
         if setsockopt(self.lfd, SOL_SOCKET, SO_REUSEADDR, &yes, <socklen_t>sizeof(int)) != 0:
             self._cleanup()
             raise OSError(errno, "setsockopt SO_REUSEADDR failed")
         setsockopt(self.lfd, SOL_SOCKET, SO_REUSEPORT, &yes, <socklen_t>sizeof(int))
 
-        # bind()
         c_memset(&addr, 0, sizeof(addr))
         addr.sin_family = AF_INET
         addr.sin_port = htons(<unsigned short>port)
@@ -286,7 +280,6 @@ cdef class Reactor:
                         break
                     break
 
-                # fcntl(...) — varargs: берём GIL на время вызовов
                 with gil:
                     fl = fcntl(nfd, F_GETFD)
                     fcntl(nfd, F_SETFD, fl | FD_CLOEXEC)
@@ -334,6 +327,9 @@ cdef class Reactor:
 
         self._process_requests(c)
 
+        if c.state != CONN_CLOSED and c.wlen > c.woff:
+            self._handle_write(c)
+
     cdef void _handle_write(self, conn_t* c):
         if c.wlen == c.woff:
             return
@@ -365,9 +361,15 @@ cdef class Reactor:
             c_memcpy(c.wbuf + c.wlen, data, nbytes)
             c.wlen += nbytes
 
+    cdef inline bint _is_PING(self, char* buf, size_t start) noexcept:
+        return (buf[start]   == 'P' and
+                buf[start+1] == 'I' and
+                buf[start+2] == 'N' and
+                buf[start+3] == 'G')
+
     cdef void _process_requests(self, conn_t* c):
         """
-        По умолчанию: построчный протокол. 'PING\\n' -> 'PONG\\n'.
+        Построчный протокол. 'PING\\n' -> 'PONG\\n'.
         Если задан on_request_cb(memoryview), он должен вернуть:
           consumed:int, out:bytes|None, close:bool
         """
@@ -376,33 +378,57 @@ cdef class Reactor:
         cdef size_t pos
         cdef object mv
         cdef size_t cons
-        cdef unsigned char NL = 10  # '\n'
+        cdef unsigned char NL = 10   # '\n'
+        cdef unsigned char CR = 13   # '\r'
+        cdef size_t ln
 
+        # --- Колбэк: вызываем ПОКА он что-то потребляет из буфера ---
         if self.on_request_cb is not None:
-            mv = PyMemoryView_FromMemory(<char*>c.rbuf, <Py_ssize_t>c.rlen, PyBUF_READ)
-            try:
-                consumed, out, close_flag = self.on_request_cb(mv)
-            except Exception:
-                c.state = CONN_CLOSED
-                return
-            if consumed > 0 and consumed <= c.rlen:
-                cons = <size_t>consumed
-                with nogil:
-                    if cons < c.rlen:
-                        c_memmove(c.rbuf, c.rbuf + cons, c.rlen - cons)
-                    c.rlen -= cons
-            if out:
-                self._queue_write(c, out, len(out))
-            if close_flag:
-                c.state = CONN_CLOSED
+            while c.rlen > 0:
+                mv = PyMemoryView_FromMemory(<char*>c.rbuf, <Py_ssize_t>c.rlen, PyBUF_READ)
+                try:
+                    consumed, out, close_flag = self.on_request_cb(mv)
+                except Exception:
+                    c.state = CONN_CLOSED
+                    return
+
+                if consumed > 0 and consumed <= c.rlen:
+                    cons = <size_t>consumed
+                    with nogil:
+                        if cons < c.rlen:
+                            c_memmove(c.rbuf, c.rbuf + cons, c.rlen - cons)
+                        c.rlen -= cons
+                else:
+                    # ничего не потреблено — прекращаем цикл до следующего POLLIN
+                    pass
+
+                if out:
+                    self._queue_write(c, <const char*>out, <size_t>len(out))
+
+                if close_flag:
+                    c.state = CONN_CLOSED
+                    break
+
+                if consumed <= 0:
+                    # не продвинулись — выходим, чтобы не крутить CPU
+                    break
+
+            # один общий flush после серии обработок
+            if c.state != CONN_CLOSED and c.wlen > c.woff:
+                self._handle_write(c)
             return
 
-        # демо: ищем '\n' и отвечаем на PING
+        # --- Простейший обработчик строк без колбэка ---
         while i < c.rlen:
             if <unsigned char>c.rbuf[i] == NL:
                 pos = i
-                if (pos - start + 1) == 5 and c_memcmp(c.rbuf + start, b"PING", 4) == 0:
+                ln = pos - start
+                if ln > 0 and <unsigned char>c.rbuf[pos - 1] == CR:
+                    ln -= 1
+
+                if ln == 4 and self._is_PING(c.rbuf, start):
                     self._queue_write(c, b"PONG\n", 5)
+
                 start = i + 1
             i += 1
 
@@ -419,7 +445,6 @@ cdef class Reactor:
         while newcap < need:
             newcap *= 2
 
-        # Атомарное расширение: новые буферы -> копирование -> замена
         cdef void* npfds = c_malloc(newcap * sizeof(pollfd))
         if npfds == NULL:
             return -1
@@ -479,7 +504,6 @@ cdef class Reactor:
                     c = c.next
                     i += 1
 
-                # Освобождаем GIL на время poll — чтобы не блокировать Python
                 with nogil:
                     nready = poll(pfds, nitems, self.tick_ms)
                 if nready < 0:
@@ -500,7 +524,7 @@ cdef class Reactor:
                             else:
                                 if pfds[i].revents & POLLIN:
                                     self._handle_read(c)
-                                if c.state != CONN_CLOSED and (pfds[i].revents & POLLOUT):
+                                if c.state != CONN_CLOSED and ((pfds[i].revents & POLLOUT) or (c.wlen > c.woff)):
                                     self._handle_write(c)
 
                             if c.state == CONN_CLOSED:

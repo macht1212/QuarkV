@@ -25,6 +25,7 @@ classifiers = [
 packages = [
   { include = "quarkv", from = "src" }
 ]
+
 include = [
   { path = "src/kvxdb/**/*.so", format = "wheel" },
   { path = "src/kvxdb/**/*.pyx", format = "sdist" },
@@ -69,6 +70,7 @@ target-version = "py311"
 select = ["E", "F", "I", "B", "UP"]
 ignore = [
   "E203",  # whitespace before ':' (конфликтует с black)
+  "F403",
 ]
 fix = true
 
